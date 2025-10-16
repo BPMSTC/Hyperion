@@ -1,4 +1,8 @@
 <div class="task-content">
   <h3 class="task-title">{{task.title}}</h3>
   <p class="task-description">{{ task.description }}</p>
+  <div class="overdue-indicator" *ngIf="isOverdue">
+    <span class="overdue-icon">⚠️</span>
+    <span class="overdue-text">Overdue</span>
+  </div>
 </div>

@@ -106,6 +106,33 @@
 	box-sizing: border-box;
 }
 
+/* Overdue task row styling - Highlights the entire task row in orange */
+.task-row.overdue-row,
+#overdueTaskRow {
+	background-color: #ff8c00 !important; /* Full orange background for entire row */
+	border: 2px solid #cc5500 !important; /* Dark orange border */
+	box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4) !important; /* Orange glow effect */
+	padding: 0.75rem !important; /* Extra padding for prominence */
+}
+
+/* Override text colors within overdue rows for visibility */
+.task-row.overdue-row .task-title,
+#overdueTaskRow .task-title {
+	color: #ffffff !important; /* White text on orange background */
+	font-weight: 600 !important; /* Bold for better readability */
+}
+
+.task-row.overdue-row .task-description,
+#overdueTaskRow .task-description {
+	color: #fff8f0 !important; /* Light cream text for description */
+}
+
+.task-row.overdue-row .task-due-display,
+#overdueTaskRow .task-due-display {
+	color: #ffffff !important; /* White text for due date */
+	font-weight: 500 !important;
+}
+
 .task-meta {
 	display: flex;
 	align-items: flex-start;
