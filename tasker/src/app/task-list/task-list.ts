@@ -187,4 +187,22 @@ export class TaskList {
   isEditing(task: Task): boolean {
     return this.editingTaskId === task.id;
   }
+
+  // Method to check if a task is overdue
+  isTaskOverdue(task: Task): boolean {
+    if (!task.dueDate || task.completed) {
+      return false;
+    }
+    const today = new Date();
+    const dueDate = new Date(task.dueDate);
+    // Set time to start of day for accurate comparison
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    return dueDate < today;
+  }
+
+  // Method to get ID for overdue task rows
+  getOverdueRowId(task: Task): string | null {
+    return this.isTaskOverdue(task) ? 'overdueTaskRow' : null;
+  }
 }

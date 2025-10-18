@@ -42,7 +42,7 @@
 		<!-- Tasks list -->
 		<!-- Give the list the legacy `.task-list` class so global styles apply -->
 		<ul class="tasks task-list">
-		<li *ngFor="let task of tasks" class="task-row">
+		<li *ngFor="let task of tasks" class="task-row" [class.overdue-row]="isTaskOverdue(task)" [id]="getOverdueRowId(task)">
 			<!-- checkbox toggles completed state -->
 			<label class="task-meta">
 				<input type="checkbox" [checked]="task.completed" (change)="toggleComplete(task)" [attr.aria-label]="'Toggle completion for task: ' + task.title" />

@@ -26,3 +26,55 @@
   white-space: pre-wrap;
   word-break: break-word; /* prevent overflow on long words */
 }
+
+/* Overdue task styling - Orange theme targeting the entire component */
+/* Using :host selector to target the whole component element */
+
+/* Target the entire component when it has the overdueTask ID */
+:host(#overdueTask) {
+  display: block !important; /* Ensure proper display */
+  background-color: #ff8c00 !important; /* Full orange background for whole task */
+  border: 2px solid #cc5500 !important; /* Dark orange border */
+  border-radius: 8px !important; /* Rounded corners for visibility */
+  padding: 0.75rem !important; /* Extra padding for prominence */
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3) !important; /* Orange glow effect */
+  margin: 0.25rem 0 !important; /* Slight margin for separation */
+}
+
+/* Override text colors within overdue host for visibility on orange background */
+:host(#overdueTask) .task-title {
+  color: #ffffff !important; /* White text on orange background */
+  font-weight: 600 !important; /* Bold for better readability */
+}
+
+:host(#overdueTask) .task-description {
+  color: #fff8f0 !important; /* Light cream text for description */
+}
+
+/* Adjust task-content padding when host is overdue to prevent double padding */
+:host(#overdueTask) .task-content {
+  padding: 0 !important; /* Remove inner padding since host has padding */
+}
+
+.overdue-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #cc5500; /* Darker orange for indicator on orange background */
+  border: 1px solid #994000; /* Even darker border */
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  color: #ffffff; /* White text for visibility */
+}
+
+.overdue-icon {
+  font-size: 0.9rem;
+}
+
+.overdue-text {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
