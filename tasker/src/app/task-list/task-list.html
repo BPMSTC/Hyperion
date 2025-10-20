@@ -85,11 +85,6 @@
 			<!-- Display mode: show task content -->
 			<div *ngIf="!isEditing(task)" class="task-item">
 				<app-task-item [task]="task"></app-task-item>
-				<!-- Show due date (if present). Editing the due date requires entering
-					 edit mode using the pencil button. -->
-				<div class="task-due-row">
-					<span class="task-due-display" *ngIf="task.dueDate">Due: {{ task.dueDate }}</span>
-				</div>
 			</div>
 
 			<!-- Action buttons (edit, remove) -->

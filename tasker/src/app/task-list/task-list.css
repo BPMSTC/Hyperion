@@ -81,15 +81,10 @@
 }
 
 /* Success state styling for button feedback */
-.btn-demo.success {
-	background: #28a745 !important; /* Green for success */
-	transform: scale(1.05); /* Slightly grow */
-	transition: all 0.3s ease;
-}
-
+.btn-demo.success,
 .btn-demo-clear.success {
 	background: #28a745 !important; /* Green for success */
-	transform: scale(1.05);
+	transform: scale(1.05); /* Slightly grow */
 	transition: all 0.3s ease;
 }
 
@@ -178,8 +173,8 @@
 
 .task-row.overdue-row .task-due-display,
 #overdueTaskRow .task-due-display {
-	color: #ffffff !important; /* White text for due date */
-	font-weight: 500 !important;
+	color: #000000 !important; /* White text for due date */
+	font-weight: 800 !important;
 }
 
 .task-meta {
