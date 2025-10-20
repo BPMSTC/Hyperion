@@ -5,15 +5,19 @@
 		 - Each task in `tasks` is rendered using the existing <app-task-item>
 			 component so the display format matches the task-item component.
 -->
+<button class="btn-demo" (click)="generateContentForDemoPurposes()">Load Demo Data</button>
+
 <section class="task-list-wrapper">
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
+
 	<div class="task-list-card">
 		<!-- Header: title + subtitle help orient the user and distinguish the area -->
+		<!-- Demo button positioned in top right corner -->
+		
 		<header class="task-list-header">
 			<h2 class="task-list-title">Your Tasks</h2>
 			<p class="task-list-subtitle">Add, complete, and remove tasks below.</p>
-			<button class="btn-demo" (click)="generateContentForDemoPurposes()">Load Demo Data</button>
 		</header>
 
 		<!-- Form: title required, description optional -->

@@ -13,6 +13,7 @@
 	width: 100%;
 	margin: 0 auto;
 	padding: 1rem;
+	position: relative; /* Enable absolute positioning for child elements */
 }
 
 /* Raised card that contains header, form and list */
@@ -43,9 +44,11 @@
 	font-size: 0.95rem;
 }
 
-/* Demo button styling */
+/* Demo button styling - positioned in top right corner */
 .btn-demo {
-	margin-top: 0.5rem;
+	position: absolute;
+	top: 2rem;
+	right: 2rem;
 	padding: 0.5rem 1rem;
 	background: #6c757d;
 	color: white;
@@ -53,8 +56,8 @@
 	border-radius: 6px;
 	cursor: pointer;
 	font-size: 0.9rem;
-	align-self: flex-start;
 	transition: background-color 0.2s ease;
+	z-index: 100; /* Ensure it stays above other content */
 }
 
 .btn-demo:hover {
