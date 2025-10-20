@@ -206,17 +206,17 @@ export class TaskList {
     return this.isTaskOverdue(task) ? 'overdueTaskRow' : null;
   }
 
-  generateContentForDemoPurposes(): void {
+  generateTasksForDemo(): void {
     const sampleTasks: Task[] = [
       {
         id: this.nextId++,
-        title: 'Buy groceries',
+        title: 'DEMO - Buy groceries',
         description: 'Milk, Bread, Eggs, Butter',
         completed: false
       },
       {
         id: this.nextId++,
-        title: 'Finish project report',
+        title: 'DEMO - Finish project report',
         description: 'Complete the final draft of the project report and send it to the manager.',
         dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0], // 2 days ago
         completed: false
@@ -227,4 +227,14 @@ export class TaskList {
     this.tasks = [...sampleTasks, ...this.tasks];
     this.saveTasks();
   }
+
+  clearTasksForDemo(): void {
+    // Define the titles of sample tasks to remove
+    const sampleTaskTitles = ['DEMO - Buy groceries', 'DEMO - Finish project report'];
+    
+    // Filter out only the sample tasks, keeping all other tasks
+    this.tasks = this.tasks.filter(task => !sampleTaskTitles.includes(task.title));
+    this.saveTasks();
+  }
+
 }
