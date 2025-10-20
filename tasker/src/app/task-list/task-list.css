@@ -12,7 +12,6 @@
 	max-width: 1000px;
 	width: 100%;
 	margin: 0 auto;
-	padding: 1rem;
 	position: relative; /* Enable absolute positioning for child elements */
 }
 
@@ -44,14 +43,13 @@
 	font-size: 0.95rem;
 }
 
-/* Demo buttons container - positioned in top right corner */
+/* Demo buttons container - centered */
 .demo-buttons-container {
-	position: absolute;
-	top: 2rem;
-	right: 2rem;
 	display: flex;
 	gap: 0.5rem; /* Space between buttons */
-	z-index: 100; /* Ensure it stays above other content */
+	justify-content: center; /* Center the buttons horizontally */
+	margin: 0 auto; /* Center the container itself */
+	margin-bottom: 1rem; /* Add space below the buttons */
 }
 
 /* Demo button styling */
