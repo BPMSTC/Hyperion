@@ -43,6 +43,24 @@
 	font-size: 0.95rem;
 }
 
+/* Demo button styling */
+.btn-demo {
+	margin-top: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: #6c757d;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	align-self: flex-start;
+	transition: background-color 0.2s ease;
+}
+
+.btn-demo:hover {
+	background: #5a6268;
+}
+
 .task-form {
 	display: flex;
 	flex-direction: column;

@@ -205,4 +205,26 @@ export class TaskList {
   getOverdueRowId(task: Task): string | null {
     return this.isTaskOverdue(task) ? 'overdueTaskRow' : null;
   }
+
+  generateContentForDemoPurposes(): void {
+    const sampleTasks: Task[] = [
+      {
+        id: this.nextId++,
+        title: 'Buy groceries',
+        description: 'Milk, Bread, Eggs, Butter',
+        completed: false
+      },
+      {
+        id: this.nextId++,
+        title: 'Finish project report',
+        description: 'Complete the final draft of the project report and send it to the manager.',
+        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0], // 2 days ago
+        completed: false
+      }
+    ];
+    
+    // Add sample tasks to the current tasks list
+    this.tasks = [...sampleTasks, ...this.tasks];
+    this.saveTasks();
+  }
 }
