@@ -44,11 +44,18 @@
 	font-size: 0.95rem;
 }
 
-/* Demo button styling - positioned in top right corner */
-.btn-demo {
+/* Demo buttons container - positioned in top right corner */
+.demo-buttons-container {
 	position: absolute;
 	top: 2rem;
 	right: 2rem;
+	display: flex;
+	gap: 0.5rem; /* Space between buttons */
+	z-index: 100; /* Ensure it stays above other content */
+}
+
+/* Demo button styling */
+.btn-demo {
 	padding: 0.5rem 1rem;
 	background: #6c757d;
 	color: white;
@@ -57,11 +64,33 @@
 	cursor: pointer;
 	font-size: 0.9rem;
 	transition: background-color 0.2s ease;
-	z-index: 100; /* Ensure it stays above other content */
+	white-space: nowrap; /* Prevent text wrapping */
 }
 
 .btn-demo:hover {
 	background: #5a6268;
+}
+
+/* Optional: Different styling for clear button */
+.btn-demo-clear {
+	background: #dc3545; /* Red background for clear action */
+}
+
+.btn-demo-clear:hover {
+	background: #c82333;
+}
+
+/* Success state styling for button feedback */
+.btn-demo.success {
+	background: #28a745 !important; /* Green for success */
+	transform: scale(1.05); /* Slightly grow */
+	transition: all 0.3s ease;
+}
+
+.btn-demo-clear.success {
+	background: #28a745 !important; /* Green for success */
+	transform: scale(1.05);
+	transition: all 0.3s ease;
 }
 
 .task-form {

@@ -226,6 +226,18 @@ export class TaskList {
     // Add sample tasks to the current tasks list
     this.tasks = [...sampleTasks, ...this.tasks];
     this.saveTasks();
+
+    // Visual feedback - change button text and style
+    const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
+    if (button) {
+      const originalText = button.textContent;
+      button.textContent = '✓ Demo Data Loaded!';
+      button.classList.add('success');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('success');
+      }, 2000);
+    }
   }
 
   clearTasksForDemo(): void {
@@ -235,6 +247,18 @@ export class TaskList {
     // Filter out only the sample tasks, keeping all other tasks
     this.tasks = this.tasks.filter(task => !sampleTaskTitles.includes(task.title));
     this.saveTasks();
+
+    // Visual feedback - change button text and style
+    const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
+    if (button) {
+      const originalText = button.textContent;
+      button.textContent = '✓ Demo Data Cleared!';
+      button.classList.add('success');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('success');
+      }, 2000);
+    }
   }
 
 }

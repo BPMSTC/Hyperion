@@ -5,7 +5,10 @@
 		 - Each task in `tasks` is rendered using the existing <app-task-item>
 			 component so the display format matches the task-item component.
 -->
-<button class="btn-demo" (click)="generateTasksForDemo()">Load Demo Data</button>
+<div class="demo-buttons-container">
+	<button class="btn-demo" (click)="generateTasksForDemo()">Load Demo Data</button>
+	<button class="btn-demo btn-demo-clear" (click)="clearTasksForDemo()">Clear Demo Data</button>
+</div>
 
 <section class="task-list-wrapper">
 	<!-- task-list-card: visually separates the TaskList from surrounding page
