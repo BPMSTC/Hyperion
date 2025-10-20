@@ -159,8 +159,7 @@
 /* Overdue task row styling - Highlights the entire task row in orange */
 .task-row.overdue-row,
 #overdueTaskRow {
-	background-color: #ff8c00 !important; /* Full orange background for entire row */
-	border: 2px solid #cc5500 !important; /* Dark orange border */
+	background-color: #ff8c009b !important; /* Full orange background for entire row */
 	box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4) !important; /* Orange glow effect */
 	padding: 0.75rem !important; /* Extra padding for prominence */
 }

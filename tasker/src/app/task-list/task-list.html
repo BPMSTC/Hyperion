@@ -32,7 +32,6 @@
 			<input id="newTitleInput" name="title" class="task-input" [(ngModel)]="newTitle" placeholder="Task title" required maxlength="50" />
 			<div class="char-counter">{{ (newTitle || '').length }}/50</div>
 			<!-- Add legacy `add-button` class so the button uses original styling -->
-			<button class="btn-add add-button" type="submit">Add</button>
 		</div>
 
 		<div class="form-row">
@@ -44,6 +43,8 @@
 		<div class="form-row">
 			<label class="due-label">Due:</label>
 			<input type="date" name="dueDate" class="task-due" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
+						<button class="btn-add add-button" type="submit">Add Task</button>
+
 		</div>
 	</form>
 
