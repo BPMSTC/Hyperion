@@ -5,11 +5,18 @@
 		 - Each task in `tasks` is rendered using the existing <app-task-item>
 			 component so the display format matches the task-item component.
 -->
+<div class="demo-buttons-container">
+	<button class="btn-demo" (click)="generateTasksForDemo()">Load Demo Data</button>
+	<button class="btn-demo btn-demo-clear" (click)="clearTasksForDemo()">Clear Demo Data</button>
+</div>
+
 <section class="task-list-wrapper">
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
+
 	<div class="task-list-card">
 		<!-- Header: title + subtitle help orient the user and distinguish the area -->
+		
 		<header class="task-list-header">
 			<h2 class="task-list-title">Your Tasks</h2>
 			<p class="task-list-subtitle">Add, complete, and remove tasks below.</p>
@@ -24,7 +31,6 @@
 			<input id="newTitleInput" name="title" class="task-input" [(ngModel)]="newTitle" placeholder="Task title" required maxlength="50" />
 			<div class="char-counter">{{ (newTitle || '').length }}/50</div>
 			<!-- Add legacy `add-button` class so the button uses original styling -->
-			<button class="btn-add add-button" type="submit">Add</button>
 		</div>
 
 		<div class="form-row">
@@ -36,6 +42,8 @@
 		<div class="form-row">
 			<label class="due-label">Due:</label>
 			<input type="date" name="dueDate" class="task-due" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
+						<button class="btn-add add-button" type="submit">Add Task</button>
+
 		</div>
 	</form>
 
@@ -50,7 +58,9 @@
 			</label>
 
 			<!-- Edit mode: show edit form -->
-			<div *ngIf="isEditing(task)" class="task-item edit-mode">
+			<!-- Edit mode: show edit form -->
+			@if (isEditing(task)) {
+			<div class="task-item edit-mode">
 				<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
 					<div class="form-row">
 						<label class="sr-only" for="editTitleInput">Task title</label>
@@ -72,20 +82,20 @@
 					</div>
 				</form>
 			</div>
+			}
 
 			<!-- Display mode: show task content -->
-			<div *ngIf="!isEditing(task)" class="task-item">
+			@if (!isEditing(task)) {
+			<div class="task-item">
 				<app-task-item [task]="task"></app-task-item>
-				<!-- Show due date (if present). Editing the due date requires entering
-					 edit mode using the pencil button. -->
-				<div class="task-due-row">
-					<span class="task-due-display" *ngIf="task.dueDate">Due: {{ task.dueDate }}</span>
-				</div>
 			</div>
+			}
 
 			<!-- Action buttons (edit, remove) -->
 			<div class="task-actions">
-				<button *ngIf="!isEditing(task)" class="btn-edit" (click)="startEdit(task)">✏️</button>
+				@if (!isEditing(task)) {
+				<button class="btn-edit" (click)="startEdit(task)">✏️</button>
+				}
 				<button class="btn-remove" (click)="remove(task)">×</button>
 			</div>
 		</li>

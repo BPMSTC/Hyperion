@@ -205,4 +205,60 @@ export class TaskList {
   getOverdueRowId(task: Task): string | null {
     return this.isTaskOverdue(task) ? 'overdueTaskRow' : null;
   }
+
+  generateTasksForDemo(): void {
+    const sampleTasks: Task[] = [
+      {
+        id: this.nextId++,
+        title: 'DEMO - Buy groceries',
+        description: 'Milk, Bread, Eggs, Butter',
+        completed: false
+      },
+      {
+        id: this.nextId++,
+        title: 'DEMO - Finish project report',
+        description: 'Complete the final draft of the project report and send it to the manager.',
+        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0], // 2 days ago
+        completed: false
+      }
+    ];
+    
+    // Add sample tasks to the current tasks list
+    this.tasks = [...sampleTasks, ...this.tasks];
+    this.saveTasks();
+
+    // Visual feedback - change button text and style
+    const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
+    if (button) {
+      const originalText = button.textContent;
+      button.textContent = '✓ Demo Data Loaded!';
+      button.classList.add('success');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('success');
+      }, 2000);
+    }
+  }
+
+  clearTasksForDemo(): void {
+    // Define the titles of sample tasks to remove
+    const sampleTaskTitles = ['DEMO - Buy groceries', 'DEMO - Finish project report'];
+    
+    // Filter out only the sample tasks, keeping all other tasks
+    this.tasks = this.tasks.filter(task => !sampleTaskTitles.includes(task.title));
+    this.saveTasks();
+
+    // Visual feedback - change button text and style
+    const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
+    if (button) {
+      const originalText = button.textContent;
+      button.textContent = '✓ Demo Data Cleared!';
+      button.classList.add('success');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('success');
+      }, 2000);
+    }
+  }
+
 }

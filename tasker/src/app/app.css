@@ -37,7 +37,7 @@
     width: 100%;
     min-height: 100vh;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     padding: 2rem;
     box-sizing: border-box;
@@ -60,111 +60,13 @@
     color: var(--gray-900);
     margin: 0;
     text-align: center;
-
-  }
-
-  .add-task-form {
-    width: 100%;
-    /* allow the add form to expand with the wider app content */
-    max-width: 1000px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 0 auto;
-  }
-
-  .task-input {
-    flex: 1;
-    height: 40px;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-  }
-
-  .task-description {
-    min-height: 100px;
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-    resize: vertical;
-  }
-
-  .task-input:focus,
-  .task-description:focus {
-    outline: none;
-  }
-
-  .add-button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: rgb(126, 154, 113);
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 0.5rem;
-  }
-
-  .add-button:hover {
-    background-color: rgb(71, 118, 93);
-  }
-
-  .add-button:disabled {
-  background-color: #555;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-  .task-list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .content {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 700px;
-    margin-bottom: 3rem;
-  }
-
-  .content h1 {
-    margin-top: 1.75rem;
-  }
-
-  .content p {
-    margin-top: 1.5rem;
   }
 
 
-  .form-row {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-  }
 
-  .task-item {
-    background: white;
-    padding: 1rem;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-    /* make task item take full available width and not shrink */
-    box-sizing: border-box;
-    width: 100%;
-    flex: 1 1 auto;
-    min-width: 0; /* prevent long words from forcing overflow */
-    display: block;
-  }
 
-  .task-item:hover {
-    transform: translateY(-2px);
-  }
+
+
+
 
 

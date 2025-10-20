@@ -12,7 +12,7 @@
 	max-width: 1000px;
 	width: 100%;
 	margin: 0 auto;
-	padding: 1rem;
+	position: relative; /* Enable absolute positioning for child elements */
 }
 
 /* Raised card that contains header, form and list */
@@ -41,6 +41,49 @@
 	margin: 0;
 	color: var(--gray-700);
 	font-size: 0.95rem;
+}
+
+/* Demo buttons container - centered */
+.demo-buttons-container {
+	display: flex;
+	gap: 0.5rem; /* Space between buttons */
+	justify-content: center; /* Center the buttons horizontally */
+	margin: 0 auto; /* Center the container itself */
+	margin-bottom: 1rem; /* Add space below the buttons */
+}
+
+/* Demo button styling */
+.btn-demo {
+	padding: 0.5rem 1rem;
+	background: #6c757d;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	transition: background-color 0.2s ease;
+	white-space: nowrap; /* Prevent text wrapping */
+}
+
+.btn-demo:hover {
+	background: #5a6268;
+}
+
+/* Optional: Different styling for clear button */
+.btn-demo-clear {
+	background: #dc3545; /* Red background for clear action */
+}
+
+.btn-demo-clear:hover {
+	background: #c82333;
+}
+
+/* Success state styling for button feedback */
+.btn-demo.success,
+.btn-demo-clear.success {
+	background: #28a745 !important; /* Green for success */
+	transform: scale(1.05); /* Slightly grow */
+	transition: all 0.3s ease;
 }
 
 .task-form {
@@ -109,8 +152,7 @@
 /* Overdue task row styling - Highlights the entire task row in orange */
 .task-row.overdue-row,
 #overdueTaskRow {
-	background-color: #ff8c00 !important; /* Full orange background for entire row */
-	border: 2px solid #cc5500 !important; /* Dark orange border */
+	background-color: #ff8c009b !important; /* Full orange background for entire row */
 	box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4) !important; /* Orange glow effect */
 	padding: 0.75rem !important; /* Extra padding for prominence */
 }
@@ -129,8 +171,8 @@
 
 .task-row.overdue-row .task-due-display,
 #overdueTaskRow .task-due-display {
-	color: #ffffff !important; /* White text for due date */
-	font-weight: 500 !important;
+	color: #000000 !important; /* White text for due date */
+	font-weight: 800 !important;
 }
 
 .task-meta {

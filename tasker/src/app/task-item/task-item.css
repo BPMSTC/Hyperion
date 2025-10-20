@@ -27,6 +27,19 @@
   word-break: break-word; /* prevent overflow on long words */
 }
 
+/* Due date styling */
+.task-due-row {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.task-due-display {
+  font-size: 0.9rem;
+  color: var(--gray-700);
+}
+
 /* Overdue task styling - Orange theme targeting the entire component */
 /* Using :host selector to target the whole component element */
 
@@ -41,15 +54,6 @@
   margin: 0.25rem 0 !important; /* Slight margin for separation */
 }
 
-/* Override text colors within overdue host for visibility on orange background */
-:host(#overdueTask) .task-title {
-  color: #ffffff !important; /* White text on orange background */
-  font-weight: 600 !important; /* Bold for better readability */
-}
-
-:host(#overdueTask) .task-description {
-  color: #fff8f0 !important; /* Light cream text for description */
-}
 
 /* Adjust task-content padding when host is overdue to prevent double padding */
 :host(#overdueTask) .task-content {
