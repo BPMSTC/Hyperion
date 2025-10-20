@@ -58,7 +58,9 @@
 			</label>
 
 			<!-- Edit mode: show edit form -->
-			<div *ngIf="isEditing(task)" class="task-item edit-mode">
+			<!-- Edit mode: show edit form -->
+			@if (isEditing(task)) {
+			<div class="task-item edit-mode">
 				<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
 					<div class="form-row">
 						<label class="sr-only" for="editTitleInput">Task title</label>
@@ -80,15 +82,20 @@
 					</div>
 				</form>
 			</div>
+			}
 
 			<!-- Display mode: show task content -->
-			<div *ngIf="!isEditing(task)" class="task-item">
+			@if (!isEditing(task)) {
+			<div class="task-item">
 				<app-task-item [task]="task"></app-task-item>
 			</div>
+			}
 
 			<!-- Action buttons (edit, remove) -->
 			<div class="task-actions">
-				<button *ngIf="!isEditing(task)" class="btn-edit" (click)="startEdit(task)">✏️</button>
+				@if (!isEditing(task)) {
+				<button class="btn-edit" (click)="startEdit(task)">✏️</button>
+				}
 				<button class="btn-remove" (click)="remove(task)">×</button>
 			</div>
 		</li>
