@@ -22,6 +22,12 @@
 			<p class="task-list-subtitle">Add, complete, and remove tasks below.</p>
 		</header>
 
+		<!-- Compact filter bar (Completed / Overdue) -->
+		<div class="filter-bar compact">
+			<label class="filter-item"><input type="checkbox" [(ngModel)]="filterCompleted" name="filterCompleted" /> Completed tasks</label>
+			<label class="filter-item"><input type="checkbox" [(ngModel)]="filterOverdue" name="filterOverdue" /> Overdue tasks</label>
+		</div>
+
 		<!-- Form: title required, description optional -->
 		<!-- Add legacy class `add-task-form` so global styles target this form -->
 		<form class="task-form add-task-form" (ngSubmit)="addTask()">
@@ -50,54 +56,47 @@
 		<!-- Tasks list -->
 		<!-- Give the list the legacy `.task-list` class so global styles apply -->
 		<ul class="tasks task-list">
-		<li *ngFor="let task of tasks" class="task-row" [class.overdue-row]="isTaskOverdue(task)" [id]="getOverdueRowId(task)">
+		<li *ngFor="let task of filteredTasks" class="task-row" [class.overdue-row]="isTaskOverdue(task)" [id]="getOverdueRowId(task)">
 			<!-- checkbox toggles completed state -->
 			<label class="task-meta">
 				<input type="checkbox" [checked]="task.completed" (change)="toggleComplete(task)" [attr.aria-label]="'Toggle completion for task: ' + task.title" />
 				<span class="sr-only">Mark task as {{ task.completed ? 'incomplete' : 'complete' }}</span>
 			</label>
 
-			<!-- Edit mode: show edit form -->
-			<!-- Edit mode: show edit form -->
-			@if (isEditing(task)) {
-			<div class="task-item edit-mode">
-				<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
-					<div class="form-row">
-						<label class="sr-only" for="editTitleInput">Task title</label>
-						<input id="editTitleInput" name="editTitle" class="task-input" [(ngModel)]="editTitle" placeholder="Task title" required maxlength="50" />
-						<div class="char-counter">{{ (editTitle || '').length }}/50</div>
-					</div>
-					<div class="form-row">
-						<textarea name="editDescription" class="task-textarea" [(ngModel)]="editDescription" placeholder="Task description" maxlength="250"></textarea>
-						<div class="char-counter">{{ (editDescription || '').length }}/250</div>
-					</div>
-					<!-- Allow editing the due date only in edit mode -->
-					<div class="form-row">
-						<label class="due-label">Due:</label>
-						<input type="date" name="editDueDate" class="task-due" [(ngModel)]="editDueDate" aria-label="'Due date for task: ' + editTitle" />
-					</div>
-					<div class="edit-actions">
-						<button class="btn-save" type="submit">Save</button>
-						<button class="btn-cancel" type="button" (click)="cancelEdit()">Cancel</button>
-					</div>
-				</form>
-			</div>
-			}
+				<!-- Edit mode: show edit form -->
+				<div *ngIf="isEditing(task)" class="task-item edit-mode">
+					<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
+						<div class="form-row">
+							<label class="sr-only" for="editTitleInput">Task title</label>
+							<input id="editTitleInput" name="editTitle" class="task-input" [(ngModel)]="editTitle" placeholder="Task title" required maxlength="50" />
+							<div class="char-counter">{{ (editTitle || '').length }}/50</div>
+						</div>
+						<div class="form-row">
+							<textarea name="editDescription" class="task-textarea" [(ngModel)]="editDescription" placeholder="Task description" maxlength="250"></textarea>
+							<div class="char-counter">{{ (editDescription || '').length }}/250</div>
+						</div>
+						<!-- Allow editing the due date only in edit mode -->
+						<div class="form-row">
+							<label class="due-label">Due:</label>
+							<input type="date" name="editDueDate" class="task-due" [(ngModel)]="editDueDate" aria-label="'Due date for task: ' + editTitle" />
+						</div>
+						<div class="edit-actions">
+							<button class="btn-save" type="submit">Save</button>
+							<button class="btn-cancel" type="button" (click)="cancelEdit()">Cancel</button>
+						</div>
+						</form>
+				</div>
 
-			<!-- Display mode: show task content -->
-			@if (!isEditing(task)) {
-			<div class="task-item">
+				<!-- Display mode: show task content -->
+				<div *ngIf="!isEditing(task)" class="task-item">
 				<app-task-item [task]="task"></app-task-item>
-			</div>
-			}
+				</div>
 
-			<!-- Action buttons (edit, remove) -->
-			<div class="task-actions">
-				@if (!isEditing(task)) {
-				<button class="btn-edit" (click)="startEdit(task)">✏️</button>
-				}
-				<button class="btn-remove" (click)="remove(task)">×</button>
-			</div>
+				<!-- Action buttons (edit, remove) -->
+				<div class="task-actions">
+					<button *ngIf="!isEditing(task)" class="btn-edit" (click)="startEdit(task)">✏️</button>
+					<button class="btn-remove" (click)="remove(task)">×</button>
+				</div>
 		</li>
 				</ul>
 			</div>

@@ -48,6 +48,21 @@ export class TaskList {
   // Simple incrementing id for tasks created during this session
   private nextId = 1;
 
+  // Filter toggles
+  filterCompleted = false; // when true, show only completed tasks
+  filterOverdue = false; // when true, show only overdue tasks
+
+  // Computed filtered list: tasks must match all active filters
+  get filteredTasks(): Task[] {
+    return this.tasks.filter(t => {
+      // If filterCompleted is false, hide completed tasks
+      if (!this.filterCompleted && t.completed) return false;
+      // If filterOverdue is true, only show overdue tasks
+      if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
+      return true;
+    });
+  }
+
   /*
    * On init, try to read saved tasks from localStorage and initialize
    * the in-memory list. This preserves tasks between page reloads.
