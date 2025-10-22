@@ -22,15 +22,20 @@
 			<p class="task-list-subtitle">Add, complete, and remove tasks below.</p>
 		</header>
 
-		<!-- Compact filter bar (Completed / Overdue) -->
-		<div class="filter-bar compact">
-			<label class="filter-item"><input type="checkbox" [(ngModel)]="filterCompleted" name="filterCompleted" /> Completed tasks</label>
-			<label class="filter-item"><input type="checkbox" [(ngModel)]="filterOverdue" name="filterOverdue" /> Overdue tasks</label>
-		</div>
+
+		<!-- Filter options are triggered from the form (left side) -->
 
 		<!-- Form: title required, description optional -->
 		<!-- Add legacy class `add-task-form` so global styles target this form -->
 		<form class="task-form add-task-form" (ngSubmit)="addTask()">
+		<!-- Place the filter toggle left above the title input -->
+		<div class="filter-toggle-left">
+			<button type="button" class="filter-toggle-btn" (click)="filterPanelOpen = !filterPanelOpen">Filter</button>
+			<div *ngIf="filterPanelOpen" class="filter-bar compact">
+				<button type="button" class="filter-btn" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
+				<button type="button" class="filter-btn" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
+			</div>
+		</div>
 		<div class="form-row">
 			<!-- name attributes are needed for ngModel inside forms -->
 			<label class="sr-only" for="newTitleInput">Task title</label>

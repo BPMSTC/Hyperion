@@ -51,13 +51,17 @@ export class TaskList {
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
   filterOverdue = false; // when true, show only overdue tasks
+  // Controls whether the filter options panel is visible
+  filterPanelOpen = false;
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
+    // Enforce completion visibility mode:
+    // - filterCompleted === false (default): show only incomplete tasks
+    // - filterCompleted === true: show only completed tasks
+    // If filterOverdue is active, further restrict to overdue tasks (intersection).
     return this.tasks.filter(t => {
-      // If filterCompleted is false, hide completed tasks
-      if (!this.filterCompleted && t.completed) return false;
-      // If filterOverdue is true, only show overdue tasks
+      if (t.completed !== this.filterCompleted) return false;
       if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
       return true;
     });

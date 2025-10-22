@@ -329,6 +329,7 @@
 	color: var(--gray-500, #666);
 	margin-top: 0.25rem;
 	text-align: right;
+}
 
 .char-counter.warning {
 	color: #f57c00;
@@ -338,4 +339,64 @@
 	color: #d32f2f;
 }
 
+/* Filter button styles (used in task-list filter bar) */
+.filter-bar.compact {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 0.75rem;
+}
+
+/* Filter toggle button (blue) */
+.filter-toggle {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 0.5rem;
+}
+
+.filter-toggle-btn {
+	background: #1976d2;
+	color: white;
+	border: none;
+	padding: 0.4rem 0.8rem;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 0.95rem;
+}
+
+.filter-toggle-btn:focus {
+	outline: 3px solid rgba(25,118,210,0.18);
+	outline-offset: 2px;
+}
+
+/* Left-aligned filter toggle inside the form */
+.filter-toggle-left {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-right: 0.5rem;
+}
+
+.filter-toggle-left .filter-bar {
+	margin-top: 0.5rem;
+}
+
+.filter-btn {
+	background: transparent;
+	border: 1px solid rgba(25,118,210,0.15);
+	color: var(--gray-800);
+	padding: 0.35rem 0.6rem;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 0.95rem;
+}
+
+.filter-btn.active {
+	background: #1976d2;
+	color: #fff;
+	border-color: #1976d2;
+}
+
+.filter-btn:focus {
+	outline: 3px solid rgba(25,118,210,0.18);
+	outline-offset: 2px;
 }
