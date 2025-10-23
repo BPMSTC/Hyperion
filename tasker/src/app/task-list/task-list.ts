@@ -51,21 +51,38 @@ export class TaskList {
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
   filterOverdue = false; // when true, show only overdue tasks
+  filterOldTasks = false; // when true, show tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
 
-  // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
     // Enforce completion visibility mode:
     // - filterCompleted === false (default): show only incomplete tasks
     // - filterCompleted === true: show only completed tasks
     // If filterOverdue is active, further restrict to overdue tasks (intersection).
-    return this.tasks.filter(t => {
-      if (t.completed !== this.filterCompleted) return false;
-      if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
-      return true;
+  let result = this.tasks;
+
+    // Computed filtered list: tasks must match all active filters
+  if (this.filterOldTasks) {
+    result = result.filter(t => {
+      if (!t.dueDate) return false;
+      const today = new Date();
+      const dueDate = new Date(t.dueDate);
+      today.setHours(0, 0, 0, 0);
+      dueDate.setHours(0, 0, 0, 0);
+      return dueDate < today;
     });
+  } else {
+    result = result.filter(t => t.completed === this.filterCompleted);
+
+    if (this.filterOverdue) {
+      result = result.filter(t => this.isTaskOverdue(t));
+    }
   }
+
+  return result;
+}
+
 
   /*
    * On init, try to read saved tasks from localStorage and initialize

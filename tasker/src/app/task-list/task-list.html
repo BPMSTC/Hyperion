@@ -34,6 +34,7 @@
 			<div *ngIf="filterPanelOpen" class="filter-bar compact">
 				<button type="button" class="filter-btn" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
 				<button type="button" class="filter-btn" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
+				<button type="button" class="filter-btn" [class.active]="filterOldTasks" (click)="filterOldTasks = !filterOldTasks">Old Tasks</button> <!--New filter for old task -->
 			</div>
 		</div>
 		<div class="form-row">

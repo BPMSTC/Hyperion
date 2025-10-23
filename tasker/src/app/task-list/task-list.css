@@ -339,9 +339,11 @@
 	color: #d32f2f;
 }
 
+
 /* Filter button styles (used in task-list filter bar) */
 .filter-bar.compact {
 	display: flex;
+	flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
 	gap: 0.5rem;
 	margin-bottom: 0.75rem;
 }
