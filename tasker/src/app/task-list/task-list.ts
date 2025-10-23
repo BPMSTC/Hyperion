@@ -51,6 +51,7 @@ export class TaskList {
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
   filterOverdue = false; // when true, show only overdue tasks
+  filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
 
