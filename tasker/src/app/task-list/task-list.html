@@ -14,6 +14,10 @@
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
 
+
+			 		<!-- Weather widget component -->
+		<app-weather-widget></app-weather-widget>
+
 	<div class="task-list-card">
 		<!-- Header: title + subtitle help orient the user and distinguish the area -->
 		
@@ -22,7 +26,7 @@
 			<p class="task-list-subtitle">Add, complete, and remove tasks below.</p>
 		</header>
 
-
+		
 		<!-- Filter options are triggered from the form (left side) -->
 
 		<!-- Form: title required, description optional -->
@@ -34,6 +38,7 @@
 			<div *ngIf="filterPanelOpen" class="filter-bar compact">
 				<button type="button" class="filter-btn" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
 				<button type="button" class="filter-btn" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
+				<button type="button" class="filter-btn" [class.active]="filterOldTasks" (click)="filterOldTasks = !filterOldTasks">Old Tasks</button> <!--New filter for old task -->
 			</div>
 		</div>
 		<div class="form-row">

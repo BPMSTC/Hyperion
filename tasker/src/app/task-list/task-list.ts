@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task } from '../models/task.model';
+import { WeatherWidgetComponent } from '../weather-widget/weather-widget.component';
 
 /*
   TaskList component
@@ -22,7 +23,7 @@ import { Task } from '../models/task.model';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskItemComponent],
+  imports: [CommonModule, FormsModule, TaskItemComponent, WeatherWidgetComponent],
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })
@@ -51,6 +52,7 @@ export class TaskList {
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
   filterOverdue = false; // when true, show only overdue tasks
+  filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
 
