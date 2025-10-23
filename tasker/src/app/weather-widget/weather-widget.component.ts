@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WeatherService, WeatherData } from '../services/weather.service';
+import { WeatherService, WeatherData } from '../services/weather-service';
 
 @Component({
   selector: 'app-weather-widget',
@@ -220,7 +220,7 @@ export class WeatherWidgetComponent implements OnInit {
     this.error = false;
 
     this.weatherService.getWeatherForCurrentLocation().subscribe({
-      next: (data) => {
+      next: (data: WeatherData | null) => {
         this.loading = false;
         if (data) {
           this.weather = data;
@@ -229,7 +229,7 @@ export class WeatherWidgetComponent implements OnInit {
           this.error = true;
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Weather error:', err);
         this.loading = false;
         this.error = true;
