@@ -339,12 +339,6 @@
 	color: #d32f2f;
 }
 
-/*temporary visual cue for debugging flexbox issues*/
-.filter-bar {
-  background: #f4f6f8;
-  border: 1px dashed #ccc;
-  padding: 0.5rem;
-}
 
 /* Filter button styles (used in task-list filter bar) */
 .filter-bar.compact {
