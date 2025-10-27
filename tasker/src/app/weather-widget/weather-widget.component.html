@@ -1,0 +1,45 @@
+<div class="weather-widget" *ngIf="weather">
+  <div class="weather-header">
+    <span class="weather-icon">{{ getWeatherIcon() }}</span>
+    <div class="weather-info">
+      <div class="weather-temp">{{ weather.temperature }}°F</div>
+      <div class="weather-desc">{{ weather.weatherDescription }}</div>
+    </div>
+    <button class="weather-refresh" (click)="refreshWeather()" title="Refresh weather">
+      🔄
+    </button>
+  </div>
+  
+  <div class="weather-details">
+    <span class="weather-detail">💨 {{ weather.windSpeed }} mph</span>
+  </div>
+
+  <div class="task-suggestions" *ngIf="showSuggestions">
+    <div class="suggestions-header">
+      <strong>Suggested tasks for today:</strong>
+      <button class="toggle-suggestions" (click)="showSuggestions = !showSuggestions">
+        ▼
+      </button>
+    </div>
+    <ul class="suggestions-list">
+      <li *ngFor="let suggestion of taskSuggestions">{{ suggestion }}</li>
+    </ul>
+  </div>
+
+  <div class="task-suggestions collapsed" *ngIf="!showSuggestions">
+    <button class="toggle-suggestions-expand" (click)="showSuggestions = true">
+      Suggested tasks ▶
+    </button>
+  </div>
+</div>
+
+<div class="weather-widget loading" *ngIf="loading">
+  <div class="weather-loading">Loading weather...</div>
+</div>
+
+<div class="weather-widget error" *ngIf="error && !loading">
+  <div class="weather-error">
+    Unable to load weather. 
+    <button (click)="refreshWeather()">Retry</button>
+  </div>
+</div>
