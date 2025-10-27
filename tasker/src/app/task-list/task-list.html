@@ -111,6 +111,28 @@
 							<label class="due-label">Due:</label>
 							<input type="date" name="editDueDate" class="task-due" [(ngModel)]="editDueDate" aria-label="'Due date for task: ' + editTitle" />
 						</div>
+						
+						<!-- Allow editing the location in edit mode -->
+						<div class="form-row">
+							<label class="due-label">Location:</label>
+							<div class="location-input-container">
+								<input type="text" 
+									   name="editLocation" 
+									   class="task-input location-input" 
+									   [(ngModel)]="editLocation" 
+									   (input)="onEditLocationInput($event)"
+									   placeholder="Edit location (optional)"
+									   autocomplete="off" />
+								<div class="location-suggestions" *ngIf="editLocationSuggestions.length > 0">
+									<div class="suggestion-item" 
+										 *ngFor="let suggestion of editLocationSuggestions"
+										 (click)="selectEditLocation(suggestion)">
+										{{ formatLocationDisplay(suggestion) }}
+									</div>
+								</div>
+							</div>
+						</div>
+						
 						<div class="edit-actions">
 							<button class="btn-save" type="submit">Save</button>
 							<button class="btn-cancel" type="button" (click)="cancelEdit()">Cancel</button>

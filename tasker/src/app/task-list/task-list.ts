@@ -48,6 +48,8 @@ export class TaskList {
   editTitle = '';
   editDescription = '';
   editDueDate = ''; // bound while editing a task
+  editLocation = ''; // bound while editing a task location
+  editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Simple incrementing id for tasks created during this session
   private nextId = 1;
@@ -61,6 +63,7 @@ export class TaskList {
 
   // Debounce timer for location search
   private locationSearchTimeout: any;
+  private editLocationSearchTimeout: any;
 
   constructor(private placesService: PlacesService) {}
 
@@ -174,7 +177,9 @@ export class TaskList {
     this.editingTaskId = task.id;
     this.editTitle = task.title;
     this.editDescription = task.description || '';
-  this.editDueDate = task.dueDate || '';
+    this.editDueDate = task.dueDate || '';
+    this.editLocation = task.location || '';
+    this.editLocationSuggestions = []; // Clear any existing suggestions
   }
 
   // Save the edited task and exit edit mode
@@ -198,8 +203,10 @@ export class TaskList {
     if (task) {
       task.title = title;
       task.description = description;
-  // Save edited due date (empty string => remove due date)
-  task.dueDate = this.editDueDate ? this.editDueDate : undefined;
+      // Save edited due date (empty string => remove due date)
+      task.dueDate = this.editDueDate ? this.editDueDate : undefined;
+      // Save edited location (empty string => remove location)
+      task.location = this.editLocation ? this.editLocation.trim() : undefined;
       this.saveTasks();
     }
 
@@ -212,7 +219,13 @@ export class TaskList {
     this.editingTaskId = null;
     this.editTitle = '';
     this.editDescription = '';
-  this.editDueDate = '';
+    this.editDueDate = '';
+    this.editLocation = '';
+    this.editLocationSuggestions = [];
+    // Clear any pending timeout for edit location search
+    if (this.editLocationSearchTimeout) {
+      clearTimeout(this.editLocationSearchTimeout);
+    }
   }
 
   // Helper method to check if a task is being edited
@@ -329,6 +342,40 @@ export class TaskList {
 
   formatLocationDisplay(suggestion: AutocompleteResult): string {
     return this.placesService.formatPlaceDisplay(suggestion);
+  }
+
+  // Edit location methods
+  onEditLocationInput(event: any): void {
+    const query = event.target.value;
+    
+    // Clear previous timeout
+    if (this.editLocationSearchTimeout) {
+      clearTimeout(this.editLocationSearchTimeout);
+    }
+
+    // Clear suggestions if query is too short
+    if (!query || query.length < 3) {
+      this.editLocationSuggestions = [];
+      return;
+    }
+
+    // Debounce the search to avoid too many API calls
+    this.editLocationSearchTimeout = setTimeout(() => {
+      this.placesService.getPlaceAutocomplete(query).subscribe({
+        next: (suggestions: AutocompleteResult[]) => {
+          this.editLocationSuggestions = suggestions;
+        },
+        error: (error: any) => {
+          console.error('Error getting edit location suggestions:', error);
+          this.editLocationSuggestions = [];
+        }
+      });
+    }, 300); // 300ms delay
+  }
+
+  selectEditLocation(suggestion: AutocompleteResult): void {
+    this.editLocation = this.placesService.formatPlaceDisplay(suggestion);
+    this.editLocationSuggestions = []; // Hide suggestions
   }
 
 }
