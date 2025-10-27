@@ -58,6 +58,27 @@
 		<div class="form-row">
 			<label class="due-label">Due:</label>
 			<input type="date" name="dueDate" class="task-due" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
+		</div>
+		
+		<!-- New: location input with autocomplete -->
+		<div class="form-row">
+			<label class="due-label">Location:</label>
+			<div class="location-input-container">
+				<input type="text" 
+					   name="location" 
+					   class="task-input location-input" 
+					   [(ngModel)]="newLocation" 
+					   (input)="onLocationInput($event)"
+					   placeholder="Add location (optional)"
+					   autocomplete="off" />
+				<div class="location-suggestions" *ngIf="locationSuggestions.length > 0">
+					<div class="suggestion-item" 
+						 *ngFor="let suggestion of locationSuggestions"
+						 (click)="selectLocation(suggestion)">
+						{{ formatLocationDisplay(suggestion) }}
+					</div>
+				</div>
+			</div>
 						<button class="btn-add add-button" type="submit">Add Task</button>
 
 		</div>

@@ -40,6 +40,34 @@
   color: var(--gray-700);
 }
 
+/* Location styling */
+.task-location-row {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.task-location-display {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+/* Location styling */
+.task-location-row {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.task-location-display {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
 /* Overdue task styling - Orange theme targeting the entire component */
 /* Using :host selector to target the whole component element */
 

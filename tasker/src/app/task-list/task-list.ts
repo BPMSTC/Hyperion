@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task } from '../models/task.model';
 import { WeatherWidgetComponent } from '../weather-widget/weather-widget.component';
+import { PlacesService, AutocompleteResult } from '../services/places.service';
 
 /*
   TaskList component
@@ -39,6 +40,8 @@ export class TaskList {
   newTitle = '';
   newDescription = '';
   newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
+  newLocation = ''; // bound to the location input
+  locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
 
   // Edit mode properties
   editingTaskId: number | null = null;
@@ -55,6 +58,11 @@ export class TaskList {
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
+
+  // Debounce timer for location search
+  private locationSearchTimeout: any;
+
+  constructor(private placesService: PlacesService) {}
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
@@ -124,6 +132,7 @@ export class TaskList {
       title,
       description,
       dueDate: this.newDueDate ? this.newDueDate : undefined,
+      location: this.newLocation ? this.newLocation.trim() : undefined,
       completed: false
     };
 
@@ -136,6 +145,8 @@ export class TaskList {
   // Reset inputs for the next entry
   this.newTitle = '';
   this.newDescription = '';
+  this.newLocation = '';
+  this.locationSuggestions = [];
   }
 
   // Toggle the completed flag for a task; the checkbox in the template calls this.
@@ -280,6 +291,44 @@ export class TaskList {
         button.classList.remove('success');
       }, 2000);
     }
+  }
+
+  // Location-related methods
+  onLocationInput(event: any): void {
+    const query = event.target.value;
+    
+    // Clear previous timeout
+    if (this.locationSearchTimeout) {
+      clearTimeout(this.locationSearchTimeout);
+    }
+
+    // Clear suggestions if query is too short
+    if (!query || query.length < 3) {
+      this.locationSuggestions = [];
+      return;
+    }
+
+    // Debounce the search to avoid too many API calls
+    this.locationSearchTimeout = setTimeout(() => {
+      this.placesService.getPlaceAutocomplete(query).subscribe({
+        next: (suggestions: AutocompleteResult[]) => {
+          this.locationSuggestions = suggestions;
+        },
+        error: (error: any) => {
+          console.error('Error getting location suggestions:', error);
+          this.locationSuggestions = [];
+        }
+      });
+    }, 300); // 300ms delay
+  }
+
+  selectLocation(suggestion: AutocompleteResult): void {
+    this.newLocation = this.placesService.formatPlaceDisplay(suggestion);
+    this.locationSuggestions = []; // Hide suggestions
+  }
+
+  formatLocationDisplay(suggestion: AutocompleteResult): string {
+    return this.placesService.formatPlaceDisplay(suggestion);
   }
 
 }

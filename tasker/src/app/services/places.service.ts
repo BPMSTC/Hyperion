@@ -1,0 +1,151 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+export interface PlaceResult {
+  place_id: string;
+  name: string;
+  formatted_address?: string;
+  geometry?: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
+export interface AutocompleteResult {
+  place_id: string;
+  description: string;
+  structured_formatting?: {
+    main_text: string;
+    secondary_text: string;
+  };
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PlacesService {
+  private readonly rapidApiKey: string = '31b8304331msh0bc2b7ed13f6529p1bb430jsn2ad943e42e82'; // Replace with your RapidAPI key
+  private readonly rapidApiHost = 'google-map-places.p.rapidapi.com';
+  private readonly baseUrl = `https://${this.rapidApiHost}/maps/api/place`;
+
+  constructor(private http: HttpClient) { }
+
+  /**
+   * Get HTTP headers for RapidAPI requests
+   */
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'X-RapidAPI-Key': this.rapidApiKey,
+      'X-RapidAPI-Host': this.rapidApiHost,
+      'Content-Type': 'application/json'
+    });
+  }
+
+  /**
+   * Search for places using the RapidAPI Google Places API
+   * @param query - The search query (e.g., "restaurants near me", "coffee shop")
+   * @returns Observable with places data
+   */
+  searchPlaces(query: string): Observable<PlaceResult[]> {
+    if (!query || query.trim().length === 0) {
+      return of([]);
+    }
+
+    const url = `${this.baseUrl}/textsearch/json`;
+    const params = { query: query.trim() };
+
+    return this.http.get<any>(url, { 
+      headers: this.getHeaders(),
+      params 
+    }).pipe(
+      map(response => response.results || []),
+      catchError(error => {
+        console.error('Error searching places:', error);
+        return of([]);
+      })
+    );
+  }
+
+  /**
+   * Get place autocomplete suggestions using HTTP
+   * @param input - The input text for autocomplete
+   * @returns Observable with autocomplete suggestions
+   */
+  getPlaceAutocomplete(input: string): Observable<AutocompleteResult[]> {
+    if (!input || input.trim().length < 3) {
+      return of([]);
+    }
+
+    const url = `${this.baseUrl}/autocomplete/json`;
+    const params = { input: input.trim() };
+
+    return this.http.get<any>(url, { 
+      headers: this.getHeaders(),
+      params 
+    }).pipe(
+      map(response => response.predictions || []),
+      catchError(error => {
+        console.error('Error getting autocomplete:', error);
+        return of([]);
+      })
+    );
+  }
+
+  /**
+   * Get detailed place information by place ID
+   * @param placeId - The Google Places place ID
+   * @returns Observable with place details
+   */
+  getPlaceDetails(placeId: string): Observable<PlaceResult | null> {
+    if (!placeId) {
+      return of(null);
+    }
+
+    const url = `${this.baseUrl}/details/json`;
+    const params = { 
+      place_id: placeId,
+      fields: 'name,formatted_address,geometry'
+    };
+
+    return this.http.get<any>(url, { 
+      headers: this.getHeaders(),
+      params 
+    }).pipe(
+      map(response => response.result || null),
+      catchError(error => {
+        console.error('Error getting place details:', error);
+        return of(null);
+      })
+    );
+  }
+
+  /**
+   * Format a place result for display
+   * @param place - The place object from API (either PlaceResult or AutocompleteResult)
+   * @returns Formatted place string
+   */
+  formatPlaceDisplay(place: PlaceResult | AutocompleteResult | any): string {
+    if (place.formatted_address) {
+      return place.formatted_address;
+    }
+    if (place.description) {
+      return place.description;
+    }
+    if (place.structured_formatting) {
+      return `${place.structured_formatting.main_text}, ${place.structured_formatting.secondary_text}`;
+    }
+    return place.name || 'Unknown location';
+  }
+
+  /**
+   * Check if the API key is configured
+   * @returns boolean indicating if API key is set
+   */
+  isConfigured(): boolean {
+    return this.rapidApiKey !== 'YOUR_RAPIDAPI_KEY_HERE' && this.rapidApiKey?.length > 0;
+  }
+}
