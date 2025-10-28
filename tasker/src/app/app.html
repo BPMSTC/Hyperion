@@ -3,12 +3,16 @@
     <div class="header-section">
       <h1 class="app-title">Tasker</h1>
     </div>
-    
-    <app-quote-of-the-day></app-quote-of-the-day>
-    <!-- The inline form + list was replaced with the standalone TaskList
-      component. This keeps the App shell minimal and moves task UI logic
-      and persistence into a dedicated component. -->
-    <app-task-list></app-task-list>
+  
+    <div class="row g-3 align-items-stretch">
+      <div class="col-12 col-md-6">
+        <app-task-list></app-task-list>
+      </div>
+      <div class="col-12 col-md-6">
+        <app-weather-widget></app-weather-widget>
+      </div>
+        <app-quote-of-the-day></app-quote-of-the-day>
+    </div>
   </div>
 </main>
 

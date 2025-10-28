@@ -8,13 +8,14 @@ import { Task } from './models/task.model';
 // from the app root instead of the previous inline form/list.
 import { TaskList } from './task-list/task-list';
 import { QuoteOfTheDayComponent } from './quote-of-the-day/quote-of-the-day.component';
+import { WeatherWidgetComponent } from './weather-widget/weather-widget.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
   // Note: TaskList was added to the imports so the App component can render
   // the standalone <app-task-list> component directly in its template.
-  imports: [CommonModule, ReactiveFormsModule, TaskList, QuoteOfTheDayComponent],
+  imports: [CommonModule, ReactiveFormsModule, TaskList, QuoteOfTheDayComponent,WeatherWidgetComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
