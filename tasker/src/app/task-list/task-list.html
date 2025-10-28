@@ -14,9 +14,8 @@
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
 
-
-			 		<!-- Weather widget component -->
-		<app-weather-widget></app-weather-widget>
+	<!-- Weather widget component -->
+	<app-weather-widget></app-weather-widget>
 
 	<div class="task-list-card">
 		<!-- Header: title + subtitle help orient the user and distinguish the area -->
@@ -38,7 +37,7 @@
 			<div *ngIf="filterPanelOpen" class="filter-bar compact">
 				<button type="button" class="filter-btn" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
 				<button type="button" class="filter-btn" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
-				<button type="button" class="filter-btn" [class.active]="filterOldTasks" (click)="filterOldTasks = !filterOldTasks">Old Tasks</button> <!--New filter for old task -->
+				<!-- <button type="button" class="filter-btn" [class.active]="filterOldTasks" (click)="filterOldTasks = !filterOldTasks">Old Tasks</button> New filter for old task -->
 			</div>
 		</div>
 		<div class="form-row">
@@ -58,9 +57,10 @@
 		
 		<!-- New: location input with autocomplete -->
 		<div class="form-row">
-			<label class="sr-only" for="newLocationInput">Location:</label>
+			<label class="sr-only" for="newLocationInput">Location</label>
 			<div class="location-input-container">
 				<input type="text" 
+						id="newLocationInput"
 					   name="location" 
 					   class="task-input location-input" 
 					   [(ngModel)]="newLocation" 
@@ -69,7 +69,7 @@
 					   autocomplete="off" />
 				<div class="location-suggestions" *ngIf="locationSuggestions.length > 0">
 					<div class="suggestion-item" 
-						 *ngFor="let suggestion of locationSuggestions"
+						 *ngFor="let suggestion of locationSuggestions" 
 						 (click)="selectLocation(suggestion)">
 						{{ formatLocationDisplay(suggestion) }}
 					</div>
