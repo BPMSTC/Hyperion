@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task } from '../models/task.model';
-import { WeatherWidgetComponent } from '../weather-widget/weather-widget.component';
 
 /*
   TaskList component
@@ -23,7 +22,7 @@ import { WeatherWidgetComponent } from '../weather-widget/weather-widget.compone
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskItemComponent, WeatherWidgetComponent],
+  imports: [CommonModule, FormsModule, TaskItemComponent],
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })
