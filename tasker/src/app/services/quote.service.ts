@@ -12,10 +12,10 @@ export interface Quote {
   providedIn: 'root'
 })
 export class QuoteService {
-  private apiUrl = 'https://quotes-api12.p.rapidapi.com/dev-jokes?category=all&subcategory=javascript'; // Replace with your actual API endpoint
+  private apiUrl = 'https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info';
   private headers = new HttpHeaders({
-    // Add your API headers here
-    'X-API-Key': '4c2f2c0c75mshd6b704b0055be75p16034ajsn75e2084c72b2'
+    'X-RapidAPI-Key': '4c2f2c0c75mshd6b704b0055be75p16034ajsn75e2084c72b2',
+    'X-RapidAPI-Host': 'quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com',
   });
 
   private quoteSubject = new BehaviorSubject<Quote | null>(null);
@@ -49,28 +49,11 @@ export class QuoteService {
   }
 
   fetchQuote(): Observable<Quote> {
-    // TODO: Replace with actual API call
-    // For now, return a placeholder quote
-    return new Observable<Quote>(observer => {
-      const placeholderQuote: Quote = {
-        text: "The future belongs to those who believe in the beauty of their dreams.",
-        author: "Eleanor Roosevelt",
-      };
-      
-      // Store in localStorage
-      localStorage.setItem('dailyQuote', JSON.stringify(placeholderQuote));
-      this.quoteSubject.next(placeholderQuote);
-      observer.next(placeholderQuote);
-      observer.complete();
-    });
-
-    /* Uncomment and modify this when you have your API details
     return this.http.get(this.apiUrl, { headers: this.headers }).pipe(
       map((response: any) => {
         const quote: Quote = {
-          text: response.quote,
-          author: response.author,
-          fetchDate: new Date()
+          text: response?.text || 'No quote found.',
+          author: response?.author || 'Unknown'
         };
         localStorage.setItem('dailyQuote', JSON.stringify(quote));
         this.quoteSubject.next(quote);
@@ -81,15 +64,5 @@ export class QuoteService {
         throw error;
       })
     );
-    */
-  }
-
-  // Placeholder for API call
-  getQuoteOfTheDay(): Observable<Quote> {
-    // Replace this with actual API call logic
-    return of({
-      text: 'The only way to do great work is to love what you do.',
-      author: 'Steve Jobs'
-    });
   }
 }

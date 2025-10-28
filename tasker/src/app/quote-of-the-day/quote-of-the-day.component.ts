@@ -18,6 +18,6 @@ export class QuoteOfTheDayComponent implements OnInit {
   }
 
   loadQuote() {
-    this.quoteService.getQuoteOfTheDay().subscribe(q => this.quote = q);
+    this.quoteService.fetchQuote().subscribe(q => this.quote = q);
   }
 }
