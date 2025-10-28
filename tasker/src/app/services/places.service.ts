@@ -31,8 +31,44 @@ export class PlacesService {
   private readonly rapidApiKey: string = '31b8304331msh0bc2b7ed13f6529p1bb430jsn2ad943e42e82'; // Replace with your RapidAPI key
   private readonly rapidApiHost = 'google-map-places.p.rapidapi.com';
   private readonly baseUrl = `https://${this.rapidApiHost}/maps/api/place`;
+  private userLocation: { lat: number; lng: number } | null = null;
+  private readonly DEFAULT_LAT = 44.5236; // Same as your weather service
+  private readonly DEFAULT_LON = -89.5746;
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient) { 
+    this.initializeUserLocation();
+  }
+private initializeUserLocation(): void {
+  if (!navigator.geolocation) {
+    console.warn('Geolocation not supported');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      this.userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      console.log('User location obtained:', this.userLocation);
+    },
+    error => {
+      console.warn('Could not get user location:', error.message);
+      // Use default location as fallback
+      this.userLocation = {
+        lat: this.DEFAULT_LAT,
+        lng: this.DEFAULT_LON
+      };
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 600000 // 10 minutes
+    }
+  );
+}
+
 
   /**
    * Get HTTP headers for RapidAPI requests
@@ -81,7 +117,12 @@ export class PlacesService {
     }
 
     const url = `${this.baseUrl}/autocomplete/json`;
-    const params = { input: input.trim() };
+    let params: any = { input: input.trim() };
+
+    if (this.userLocation) {
+      params.location = `${this.userLocation.lat},${this.userLocation.lng}`;
+      params.radius = '50000'; // 50 km radius
+    }
 
     return this.http.get<any>(url, { 
       headers: this.getHeaders(),
@@ -93,6 +134,16 @@ export class PlacesService {
         return of([]);
       })
     );
+  }
+
+    // Add this method to check if location is available
+  getUserLocation(): { lat: number; lng: number } | null {
+    return this.userLocation;
+  }
+
+  // Add this method to check if location is ready
+  isLocationAvailable(): boolean {
+    return this.userLocation !== null;
   }
 
   /**
@@ -146,6 +197,6 @@ export class PlacesService {
    * @returns boolean indicating if API key is set
    */
   isConfigured(): boolean {
-    return this.rapidApiKey !== 'YOUR_RAPIDAPI_KEY_HERE' && this.rapidApiKey?.length > 0;
+    return this.rapidApiKey !== '31b8304331msh0bc2b7ed13f6529p1bb430jsn2ad943e42e82' && this.rapidApiKey?.length > 0;
   }
 }
