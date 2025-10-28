@@ -265,7 +265,14 @@ export class TaskList {
         description: 'Complete the final draft of the project report and send it to the manager.',
         dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0], // 2 days ago
         completed: false
+      },
+      {
+        id: this.nextId++,
+        title: 'DEMO - drop off package',
+        location: 'FedEx Office, Plover WI',
+        completed: false
       }
+
     ];
     
     // Add sample tasks to the current tasks list
