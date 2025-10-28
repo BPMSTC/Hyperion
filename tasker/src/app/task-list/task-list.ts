@@ -39,16 +39,16 @@ export class TaskList {
   // Form-bound properties for new task input
   newTitle = '';
   newDescription = '';
-  newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
   newLocation = ''; // bound to the location input
+  newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
   locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
 
   // Edit mode properties
   editingTaskId: number | null = null;
   editTitle = '';
   editDescription = '';
-  editDueDate = ''; // bound while editing a task
   editLocation = ''; // bound while editing a task location
+  editDueDate = ''; // bound while editing a task
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Simple incrementing id for tasks created during this session
@@ -336,12 +336,12 @@ export class TaskList {
   }
 
   selectLocation(suggestion: AutocompleteResult): void {
-    this.newLocation = this.placesService.formatPlaceDisplay(suggestion);
+    this.newLocation = this.placesService.formatLocationDisplay(suggestion);
     this.locationSuggestions = []; // Hide suggestions
   }
 
   formatLocationDisplay(suggestion: AutocompleteResult): string {
-    return this.placesService.formatPlaceDisplay(suggestion);
+    return this.placesService.formatLocationDisplay(suggestion);
   }
 
   // Edit location methods
@@ -374,7 +374,7 @@ export class TaskList {
   }
 
   selectEditLocation(suggestion: AutocompleteResult): void {
-    this.editLocation = this.placesService.formatPlaceDisplay(suggestion);
+    this.editLocation = this.placesService.formatLocationDisplay(suggestion);
     this.editLocationSuggestions = []; // Hide suggestions
   }
 
