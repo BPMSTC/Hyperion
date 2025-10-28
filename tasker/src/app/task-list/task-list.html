@@ -54,15 +54,11 @@
 			<textarea name="description" class="task-textarea task-description" [(ngModel)]="newDescription" placeholder="Optional description" maxlength="250"></textarea>
 			<div class="char-counter">{{ (newDescription || '').length }}/250</div>
 		</div>
-		<!-- New: due date input for the new task (ISO date) -->
-		<div class="form-row">
-			<label class="due-label">Due:</label>
-			<input type="date" name="dueDate" class="task-due" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
-		</div>
+
 		
 		<!-- New: location input with autocomplete -->
 		<div class="form-row">
-			<label class="due-label">Location:</label>
+			<label class="sr-only" for="newLocationInput">Location:</label>
 			<div class="location-input-container">
 				<input type="text" 
 					   name="location" 
@@ -79,7 +75,14 @@
 					</div>
 				</div>
 			</div>
-						<button class="btn-add add-button" type="submit">Add Task</button>
+
+		</div>
+
+				<!-- New: due date input for the new task (ISO date) -->
+		<div class="form-row">
+			<label class="due-label">Due:</label>
+			<input type="date" name="dueDate" class="task-due" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
+		<button class="btn-add add-button" type="submit">Add Task</button>
 
 		</div>
 	</form>
