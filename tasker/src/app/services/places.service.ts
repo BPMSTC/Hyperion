@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export interface PlaceResult {
@@ -111,19 +111,16 @@ private initializeUserLocation(): void {
    * @param input - The input text for autocomplete
    * @returns Observable with autocomplete suggestions
    */
-  getPlaceAutocomplete(input: string): Observable<AutocompleteResult[]> {
-    if (!input || input.trim().length < 3) {
-      return of([]);
-    }
+getPlaceAutocomplete(input: string): Observable<AutocompleteResult[]> {
+  if (!input || input.trim().length < 3) {
+    return of([]);
+  }
 
-    const url = `${this.baseUrl}/autocomplete/json`;
-    let params: any = { input: input.trim() };
-
-    if (this.userLocation) {
-      params.location = `${this.userLocation.lat},${this.userLocation.lng}`;
-      params.radius = '50000'; // 50 km radius
-    }
-
+  const url = `${this.baseUrl}/autocomplete/json`;
+  
+  if (!this.userLocation) {
+    // No location available, just do a regular search
+    const params = { input: input.trim() };
     return this.http.get<any>(url, { 
       headers: this.getHeaders(),
       params 
@@ -136,6 +133,56 @@ private initializeUserLocation(): void {
     );
   }
 
+  // Make two simultaneous requests
+  const localParams = {
+    input: input.trim(),
+    location: `${this.userLocation.lat},${this.userLocation.lng}`,
+    radius: '25000',
+    strictbounds: 'true',
+    components: 'country:us'
+  };
+
+  const globalParams = {
+    input: input.trim(),
+    components: 'country:us' // Still bias towards US, but no location restriction
+  };
+
+  // Make both requests simultaneously
+  const localResults$ = this.http.get<any>(url, { 
+    headers: this.getHeaders(),
+    params: localParams 
+  }).pipe(
+    map(response => response.predictions || []),
+    catchError(() => of([])) // Return empty array on error
+  );
+
+  const globalResults$ = this.http.get<any>(url, { 
+    headers: this.getHeaders(),
+    params: globalParams 
+  }).pipe(
+    map(response => response.predictions || []),
+    catchError(() => of([]))
+  );
+
+  // Combine both results: local first, then global (excluding duplicates)
+  return forkJoin([localResults$, globalResults$]).pipe(
+    map(([localResults, globalResults]) => {
+      // Get place_ids from local results to avoid duplicates
+      const localPlaceIds = new Set(localResults.map((r: AutocompleteResult) => r.place_id));
+      
+      // Filter out global results that are already in local results
+      const uniqueGlobalResults = globalResults.filter((r: AutocompleteResult) => !localPlaceIds.has(r.place_id));
+      
+      // Combine: local results first, then unique global results
+      return [...localResults, ...uniqueGlobalResults];
+    }),
+    catchError(error => {
+      console.error('Error combining autocomplete results:', error);
+      return of([]);
+    })
+  );
+}
+
     // Add this method to check if location is available
   getUserLocation(): { lat: number; lng: number } | null {
     return this.userLocation;
@@ -145,6 +192,7 @@ private initializeUserLocation(): void {
   isLocationAvailable(): boolean {
     return this.userLocation !== null;
   }
+
 
   /**
    * Get detailed place information by place ID
