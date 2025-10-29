@@ -117,8 +117,6 @@ export class PlacesService {
           radius: '25000',
           strictbounds: 'true',
           components: 'country:us',
-          types: 'address|establishment',  // Include addresses and businesses
-          language: 'en'                   // Ensure English formatting
         };
 
         const globalParams = {
