@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { QuoteService, Quote } from '../services/quote.service';
+import { provideHttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-quote-of-the-day',
