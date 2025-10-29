@@ -116,7 +116,9 @@ export class PlacesService {
           location: `${this.userLocation.lat},${this.userLocation.lng}`,
           radius: '25000',
           strictbounds: 'true',
-          components: 'country:us'
+          components: 'country:us',
+          types: 'address|establishment',  // Include addresses and businesses
+          language: 'en'                   // Ensure English formatting
         };
 
         const globalParams = {
@@ -148,17 +150,18 @@ export class PlacesService {
   }
 
   // Check if location is available
+  // if geolocation succeeded or fallback is used, returns true
   isLocationAvailable(): boolean {
     return this.userLocation !== null;
   }
 
-  /**
-   * Format autocomplete result for display
-   */
+  // Format autocomplete result for display
   formatLocationDisplay(place: AutocompleteResult): string {
     if (place.description) {
       return place.description;
     }
+    // if description is not present, check structured_formatting
+    // manually combines maint text + secondary text
     if (place.structured_formatting) {
       return `${place.structured_formatting.main_text}, ${place.structured_formatting.secondary_text}`;
     }
