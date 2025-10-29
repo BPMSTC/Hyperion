@@ -263,6 +263,7 @@ export class TaskList {
         id: this.nextId++,
         title: 'DEMO - Finish project report',
         description: 'Complete the final draft of the project report and send it to the manager.',
+        // Sets the due date to 2 days ago. "T" takes the string and splits off the time portion.
         dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0], // 2 days ago
         completed: false
       },
