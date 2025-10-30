@@ -43,28 +43,6 @@
 	font-size: 0.95rem;
 }
 
-/* Demo buttons container - centered */
-.demo-buttons-container {
-	display: flex;
-	gap: 0.5rem; /* Space between buttons */
-	justify-content: center; /* Center the buttons horizontally */
-	margin: 0 auto; /* Center the container itself */
-	margin-bottom: 1rem; /* Add space below the buttons */
-}
-
-/* Demo button styling */
-.btn-demo {
-	padding: 0.5rem 1rem;
-	background: #6c757d;
-	color: white;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 0.9rem;
-	transition: background-color 0.2s ease;
-	white-space: nowrap; /* Prevent text wrapping */
-}
-
 .btn-demo:hover {
 	background: #5a6268;
 }
@@ -76,14 +54,6 @@
 
 .btn-demo-clear:hover {
 	background: #c82333;
-}
-
-/* Success state styling for button feedback */
-.btn-demo.success,
-.btn-demo-clear.success {
-	background: #28a745 !important; /* Green for success */
-	transform: scale(1.05); /* Slightly grow */
-	transition: all 0.3s ease;
 }
 
 .task-form {
