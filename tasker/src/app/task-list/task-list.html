@@ -6,7 +6,7 @@
 			 component so the display format matches the task-item component.
 -->
 
-<section class="task-list-wrapper container-fluid px-3">
+<section class="task-list-wrapper container-fluid px-0">
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
 
@@ -18,7 +18,7 @@
 			<p class="task-list-subtitle small mb-0 opacity-75">Add, complete, and remove tasks below.</p>
 		</header>
 
-		<div class="card-body p-2 p-md-3">
+		<div class="card-body">
 		<!-- Filter options are triggered from the form (left side) -->
 
 		<!-- Form: title required, description optional -->
@@ -29,8 +29,8 @@
 			<button type="button" class="filter-toggle-btn btn btn-outline-secondary btn-sm" (click)="filterPanelOpen = !filterPanelOpen">Filter</button>
 			<div *ngIf="filterPanelOpen" class="filter-bar compact mt-2">
 				<div class="btn-group btn-group-sm w-100 w-md-auto" role="group">
-					<button type="button" class="filter-btn btn" [class]="filterCompleted ? 'btn-primary' : 'btn-outline-primary'" (click)="filterCompleted = !filterCompleted">Completed</button>
-					<button type="button" class="filter-btn btn" [class]="filterOverdue ? 'btn-warning' : 'btn-outline-warning'" (click)="filterOverdue = !filterOverdue">Overdue</button>
+					<button type="button" class="filter-btn btn" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
+					<button type="button" class="filter-btn btn" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
 				</div>
 			</div>
 		</div>
@@ -73,28 +73,29 @@
 		</div>
 
 		<!-- New: due date input for the new task (ISO date) -->
-<div class="form-row mb-2 mb-md-3 d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-end">
-    <div class="flex-grow-1">
-        <input type="text" name="dueDate" class="task-due form-control" [(ngModel)]="newDueDate" placeholder="Add Due date (optional)" onfocus="(this.type='date')" aria-label="Due date for new task" />
-    </div>
-    <button class="btn-add add-button btn btn-primary btn-sm w-auto" type="submit">Add Task</button>
-</div>
+		<div class="form-row mb-2 mb-md-3 d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-end">
+			<div class="flex-grow-1">
+				<label class="form-label small">Add Due date (optional)</label>
+				<input type="date" name="dueDate" class="task-due form-control" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
+			</div>
+			<button class="btn-add add-button btn btn-primary w-100 w-sm-auto" type="submit">Add Task</button>
+		</div>
 		</form>
 
 		<!-- Tasks list without scroll - shows all tasks -->
 		<div class="tasks-container">
 			<!-- Give the list the legacy `.task-list` class so global styles apply -->
 			<ul class="tasks task-list list-unstyled mb-0">
-				<li *ngFor="let task of filteredTasks" class="task-row mb-2 p-2 border rounded" [class.bg-danger-subtle]="isTaskOverdue(task)" [class.bg-success-subtle]="task.completed" [id]="getOverdueRowId(task)">
+				<li *ngFor="let task of filteredTasks" class="task-row mb-2 p-2 border rounded min-vh-10" [class.bg-danger-subtle]="isTaskOverdue(task)" [class.bg-success-subtle]="task.completed" [id]="getOverdueRowId(task)" style="min-width: 40vw;">
 					<!-- checkbox toggles completed state -->
-					<div class="d-flex align-items-start gap-2 flex-column flex-sm-row">
+					<div class="d-flex align-items-start gap-2 w-100">
 						<label class="task-meta d-flex align-items-center">
 							<input type="checkbox" class="form-check-input me-2" [checked]="task.completed" (change)="toggleComplete(task)" [attr.aria-label]="'Toggle completion for task: ' + task.title" />
 							<span class="visually-hidden">Mark task as {{ task.completed ? 'incomplete' : 'complete' }}</span>
 						</label>
 
 					<!-- Edit mode: show edit form -->
-						<div *ngIf="isEditing(task)" class="task-item edit-mode flex-grow-1 w-100">
+						<div *ngIf="isEditing(task)" class="task-item edit-mode flex-grow-1">
 							<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
 								<div class="form-row mb-2">
 									<label class="visually-hidden" for="editTitleInput">Task title</label>
@@ -141,16 +142,22 @@
 						</div>
 
 						<!-- Display mode: show task content -->
-						<div *ngIf="!isEditing(task)" class="task-item flex-grow-1 w-100">
+						<div *ngIf="!isEditing(task)" class="task-item flex-grow-1">
 							<app-task-item [task]="task"></app-task-item>
 						</div>
 
-						<!-- Action buttons (edit, remove) -->
-						<div class="task-actions d-flex flex-row flex-sm-column gap-1">
+						<!-- Action buttons for large screens (inline) -->
+						<div class="task-actions d-none d-lg-flex flex-row gap-1 ms-auto">
 							<button *ngIf="!isEditing(task)" class="btn-edit btn btn-outline-primary btn-sm" (click)="startEdit(task)" title="Edit task">✏️</button>
 							<button class="btn-remove btn btn-outline-danger btn-sm" (click)="remove(task)" title="Remove task">×</button>
 						</div>
-					</div>	
+					</div>
+					
+					<!-- Action buttons for mobile (on separate line) -->
+					<div class="d-flex d-lg-none justify-content-end gap-1 mt-2">
+						<button *ngIf="!isEditing(task)" class="btn-edit btn btn-outline-primary btn-sm" (click)="startEdit(task)" title="Edit task">✏️</button>
+						<button class="btn-remove btn btn-outline-danger btn-sm" (click)="remove(task)" title="Remove task">×</button>
+					</div>
 				</li>
 			</ul>
 		</div>

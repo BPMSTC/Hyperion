@@ -10,7 +10,6 @@
 /* Fixed width container for consistent horizontal size */
 .task-list-fixed-width {
 	width: 100% !important;
-	max-width: 800px !important;
 	min-width: 600px !important;
 	
 }
@@ -44,11 +43,6 @@
 	padding: 0 !important;
 }
 
-
-
-.btn-demo:hover {
-	background: #5a6268;
-}
 
 /* Optional: Different styling for clear button */
 .btn-demo-clear {
@@ -321,6 +315,7 @@
 .filter-bar.compact {
 	display: flex;
 	gap: 0.5rem;
+	margin-bottom: 0.75rem;
 }
 
 /* Left-aligned filter toggle inside the form */
@@ -328,27 +323,26 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	margin-right: 0.5rem;
+}
+
+.filter-toggle-left .filter-bar {
+	margin-top: 0.5rem;
 }
 
 .filter-btn {
-	background: transparent;
-	border: 1px solid rgba(25,118,210,0.15);
-	color: var(--gray-800);
 	padding: 0.35rem 0.6rem;
 	border-radius: 6px;
-	cursor: pointer;
 	font-size: 0.95rem;
 }
 
 .filter-btn.active {
 	background: #1976d2;
 	color: #fff;
-	border-color: #1976d2;
 }
 
-.filter-btn:focus {
-	outline: 3px solid rgba(25,118,210,0.18);
-	outline-offset: 2px;
+.filter-btn:hover {
+	background-color: #aeb8f1;
 }
 
 /* Location input and autocomplete styles */
