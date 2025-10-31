@@ -1,49 +1,45 @@
-<div class="weather-widget card shadow-sm my-0" *ngIf="weather">
+<div class="weather-widget card shadow-sm my-0 rounded-3" *ngIf="weather">
   <div class="card-body p-2">
-<div class="weather-header d-flex align-items-center justify-content-between justify-content-md-center mb-3">
-    <span class="weather-icon me-3 fs-1">{{ getWeatherIcon() }}</span>
-    <div class="weather-info">
-      <div class="weather-temp">{{ weather.temperature }}°F</div>
-      <div class="weather-desc">{{ weather.weatherDescription }}</div>
-    </div>
+    <div class="weather-header d-flex align-items-center justify-content-between justify-content-md-center mb-3">
+      <span class="weather-icon me-3 fs-1">{{ getWeatherIcon() }}</span>
+      <div class="weather-info">
+        <div class="weather-temp text-white">{{ weather.temperature }}°F</div>
+        <div class="weather-desc text-white">{{ weather.weatherDescription }}</div>
+      </div>
       <button class="weather-refresh btn btn-outline-secondary btn-sm" (click)="refreshWeather()" title="Refresh weather">
         🔄
       </button>
-  </div>
-  
+    </div>
+    
     <div class="weather-details mb-1">
       <span class="weather-detail badge text-white fs-5">💨 {{ weather.windSpeed }} mph</span>
-  </div>
+    </div>
 
-<div class="task-suggestions p-2" *ngIf="!showSuggestions">
-  <button class="suggestions-header btn btn-link p-0 text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
-          (click)="showSuggestions = true">
-    <strong class="text-white">Today's suggested tasks:</strong>
-    <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">▼</span>
-  </button>
-</div>
-
-<div class="task-suggestions p-2" *ngIf="showSuggestions">
-  <button class="suggestions-header btn btn-link text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
-          (click)="showSuggestions = !showSuggestions">
-    <strong class="text-white">Today's suggested tasks:</strong>
-    <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">▲</span>
-  </button>
-  <ul class="suggestions-list list-unstyled mb-0">
-    <li *ngFor="let suggestion of taskSuggestions" class="mb-1 ">{{ suggestion }}</li>
-  </ul>
-</div>
-
-
-
-<div class="weather-widget loading" *ngIf="loading">
-  <div class="weather-loading">Loading weather...</div>
-</div>
-
-<div class="weather-widget error" *ngIf="error && !loading">
-  <div class="weather-error">
-    Unable to load weather. 
-    <button (click)="refreshWeather()">Retry</button>
+    <div class="task-suggestions p-1">
+      <button class="suggestions-header btn btn-link p-0 text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
+              (click)="showSuggestions = !showSuggestions">
+        <strong class="text-white">Today's suggested tasks:</strong>
+        <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">{{ showSuggestions ? '▲' : '▼' }}</span>
+      </button>
+      
+      <ul class="suggestions-list list-unstyled mb-0" *ngIf="showSuggestions">
+        <li *ngFor="let suggestion of taskSuggestions" class="mb-1">{{ suggestion }}</li>
+      </ul>
+    </div>
   </div>
 </div>
+
+<div class="weather-widget card shadow-sm my-0" *ngIf="loading">
+  <div class="card-body text-center">
+    <div class="weather-loading">Loading weather...</div>
+  </div>
+</div>
+
+<div class="weather-widget card shadow-sm my-0 border-danger" *ngIf="error && !loading">
+  <div class="card-body text-center">
+    <div class="weather-error text-danger">
+      Unable to load weather. 
+      <button class="btn btn-outline-danger btn-sm mt-2" (click)="refreshWeather()">Retry</button>
+    </div>
+  </div>
 </div>

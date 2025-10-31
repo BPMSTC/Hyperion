@@ -7,41 +7,44 @@
 		`.task-title` element inside `task-item.html`.
 */
 
-.task-list-wrapper {
-	/* Increase default wrapper width and ensure it fills the app content */
-	max-width: 1000px;
+/* Fixed width container for consistent horizontal size */
+.task-list-fixed-width {
+	width: 100% !important;
+	max-width: 800px !important;
+	min-width: 600px !important;
+	
+}
+
+/* Tasks container without scroll - shows all tasks */
+.tasks-container {
 	width: 100%;
-	margin: 0 auto;
-	position: relative; /* Enable absolute positioning for child elements */
+	
 }
 
-/* Raised card that contains header, form and list */
-.task-list-card {
-	background: #ffffff;
-	border-radius: 10px;
-	padding: 1rem 1rem 1.25rem 1rem;
-	box-shadow: 0 6px 18px rgba(12, 24, 40, 0.08);
-	border: 1px solid rgba(12,24,40,0.04);
+/* Ensure task rows have consistent width */
+.task-row {
+	width: 100% !important;
+	min-width: 0;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
-.task-list-header {
-	margin-bottom: 0.75rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
+/* Location dropdown z-index */
+.location-dropdown {
+	z-index: 1000;
 }
 
-.task-list-title {
-	margin: 0;
-	font-size: 1.25rem;
-	color: var(--gray-900);
+/* Cursor pointer for clickable elements */
+.cursor-pointer {
+	cursor: pointer;
 }
 
-.task-list-subtitle {
-	margin: 0;
-	color: var(--gray-700);
-	font-size: 0.95rem;
+/* Bootstrap override - remove default padding that conflicts with our layout */
+.task-list-card.card {
+	padding: 0 !important;
 }
+
+
 
 .btn-demo:hover {
 	background: #5a6268;
@@ -61,6 +64,7 @@
 	flex-direction: column;
 	gap: 0.5rem;
 	margin-bottom: 0.75rem;
+	
 }
 
 .form-row {
@@ -121,6 +125,7 @@
 
 /* Overdue task row styling - Highlights the entire task row in orange */
 .task-row.overdue-row,
+
 #overdueTaskRow {
 	background-color: #ff8c009b !important; /* Full orange background for entire row */
 	box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4) !important; /* Orange glow effect */
@@ -170,6 +175,11 @@
 	color: var(--gray-700);
 }
 
+.task-due-display {
+	font-size: 0.9rem;
+	color: var(--gray-700);
+}
+
 .task-due {
 	padding: 0.35rem 0.5rem;
 	border: 1px solid #e6e6e6;
@@ -187,11 +197,6 @@
 	padding: 0.25rem;
 	border-radius: 6px;
 	border: 1px solid #e6e6e6;
-}
-
-.task-due-display {
-	font-size: 0.9rem;
-	color: var(--gray-700);
 }
 
 .btn-remove {
@@ -215,11 +220,14 @@
 	opacity: 0.7;
 }
 
-/* Task item styles */
+/* Task item styles with consistent width */
 .task-item {
 	flex: 1;
 	min-width: 0; /* allows flex item to shrink below its content size */
 	overflow: hidden; /* prevents content from overflowing container */
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	max-width: 100%;
 }
 
 /* Edit mode styles */
@@ -313,29 +321,6 @@
 .filter-bar.compact {
 	display: flex;
 	gap: 0.5rem;
-	margin-bottom: 0.75rem;
-}
-
-/* Filter toggle button (blue) */
-.filter-toggle {
-	display: flex;
-	justify-content: flex-end;
-	margin-bottom: 0.5rem;
-}
-
-.filter-toggle-btn {
-	background: #1976d2;
-	color: white;
-	border: none;
-	padding: 0.4rem 0.8rem;
-	border-radius: 8px;
-	cursor: pointer;
-	font-size: 0.95rem;
-}
-
-.filter-toggle-btn:focus {
-	outline: 3px solid rgba(25,118,210,0.18);
-	outline-offset: 2px;
 }
 
 /* Left-aligned filter toggle inside the form */
@@ -343,11 +328,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	margin-right: 0.5rem;
-}
-
-.filter-toggle-left .filter-bar {
-	margin-top: 0.5rem;
 }
 
 .filter-btn {
