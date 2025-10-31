@@ -7,20 +7,13 @@
 		`.task-title` element inside `task-item.html`.
 */
 
-/* Fixed width container for consistent horizontal size */
-.task-list-fixed-width {
-	width: 100% !important;
-	min-width: 600px !important;
-	
-}
 
 /* Tasks container without scroll - shows all tasks */
 .tasks-container {
 	width: 100%;
-	
+	overflow: hidden; /* Prevent tasks from overflowing container */
 }
 
-/* Ensure task rows have consistent width */
 .task-row {
 	width: 100% !important;
 	min-width: 0;
@@ -41,24 +34,14 @@
 /* Bootstrap override - remove default padding that conflicts with our layout */
 .task-list-card.card {
 	padding: 0 !important;
-}
-
-
-/* Optional: Different styling for clear button */
-.btn-demo-clear {
-	background: #dc3545; /* Red background for clear action */
-}
-
-.btn-demo-clear:hover {
-	background: #c82333;
+	width: 100%;
+	max-width: 100%;
 }
 
 .task-form {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
-	margin-bottom: 0.75rem;
-	
 }
 
 .form-row {
@@ -104,24 +87,19 @@
 }
 
 .task-row {
-	display: flex;
-	align-items: flex-start; /* changed from center to flex-start */
-	gap: 0.75rem;
 	padding: 0.5rem;
 	border-radius: 8px;
 	background: #fafafa;
 	border: 1px solid #f2f2f2;
-	/* allow children to grow; prevent row from shrinking to content */
-	width: 100%;
-	max-width: 100%; /* ensure row doesn't expand beyond container */
 	box-sizing: border-box;
+	width: 100%; /* Ensure all task rows take full container width */
 }
 
 /* Overdue task row styling - Highlights the entire task row in orange */
 .task-row.overdue-row,
 
 #overdueTaskRow {
-	background-color: #ff8c009b !important; /* Full orange background for entire row */
+	background-color: #ff8c0045 !important; /* Full orange background for entire row */
 	box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4) !important; /* Orange glow effect */
 	padding: 0.75rem !important; /* Extra padding for prominence */
 }
@@ -389,4 +367,27 @@
 
 .suggestion-item:last-child {
 	border-bottom: none;
+}
+
+
+/* Set minimum width for task rows on larger screens */
+@media (min-width: 768px) {
+	.task-row {
+		min-width: 400px;
+	}
+	
+	.task-list-card.card {
+		min-width: 400px;
+	}
+}
+
+/* Set minimum width for task rows on larger screens */
+@media (min-width: 1024px) {
+	.task-row {
+		min-width: 600px;
+	}
+	
+	.task-list-card.card {
+		min-width: 600px;
+	}
 }
