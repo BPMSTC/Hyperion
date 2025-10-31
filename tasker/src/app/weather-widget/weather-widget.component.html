@@ -15,24 +15,26 @@
       <span class="weather-detail badge text-white fs-5">💨 {{ weather.windSpeed }} mph</span>
   </div>
 
-<div class="task-suggestions" *ngIf="showSuggestions">
-  <button class="suggestions-header btn btn-link text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center" 
+<div class="task-suggestions p-2" *ngIf="!showSuggestions">
+  <button class="suggestions-header btn btn-link p-0 text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
+          (click)="showSuggestions = true">
+    <strong class="text-white">Today's suggested tasks:</strong>
+    <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">▼</span>
+  </button>
+</div>
+
+<div class="task-suggestions p-2" *ngIf="showSuggestions">
+  <button class="suggestions-header btn btn-link text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
           (click)="showSuggestions = !showSuggestions">
-    <strong class="text-white">Suggested tasks for today:</strong>
+    <strong class="text-white">Today's suggested tasks:</strong>
     <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">▲</span>
   </button>
-  <ul class="suggestions-list list-unstyled">
+  <ul class="suggestions-list list-unstyled mb-0">
     <li *ngFor="let suggestion of taskSuggestions" class="mb-1 ">{{ suggestion }}</li>
   </ul>
 </div>
 
-<div class="task-suggestions" *ngIf="!showSuggestions">
-  <button class="suggestions-header btn btn-link p-0 text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
-          (click)="showSuggestions = true">
-    <strong class="text-white">Suggested tasks for today:</strong>
-    <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">▼</span>
-  </button>
-</div>
+
 
 <div class="weather-widget loading" *ngIf="loading">
   <div class="weather-loading">Loading weather...</div>
