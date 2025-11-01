@@ -1,6 +1,6 @@
-<div class="weather-widget card shadow-sm my-0 rounded-3" *ngIf="weather">
-  <div class="card-body p-2">
-    <div class="weather-header d-flex align-items-center justify-content-between justify-content-md-center mb-3">
+<div class="weather-widget card shadow-sm my-0 rounded-3 mb-3" *ngIf="weather">
+  <div class="card-body p-">
+    <div class="weather-header d-flex align-items-center justify-content-between justify-content-md-center gap-3 mb-3">
       <span class="weather-icon me-3 fs-1">{{ getWeatherIcon() }}</span>
       <div class="weather-info">
         <div class="weather-temp text-white">{{ weather.temperature }}°F</div>
@@ -15,7 +15,7 @@
       <span class="weather-detail badge text-white fs-5">💨 {{ weather.windSpeed }} mph</span>
     </div>
 
-    <div class="task-suggestions p-1">
+    <div class="task-suggestions p-3">
       <button class="suggestions-header btn btn-link p-0 text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
               (click)="showSuggestions = !showSuggestions">
         <strong class="text-white">Today's suggested tasks:</strong>
