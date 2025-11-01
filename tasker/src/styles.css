@@ -1,0 +1,12 @@
+
+ /* Bootstrap theme customization */
+:root {
+  --bs-primary: #667eea;
+  --bs-primary-rgb: 102, 126, 234;
+  --bs-primary-hover: #6d28d9;
+  
+  --bs-secondary: #764ba2;
+  --bs-secondary-rgb: 118, 75, 162;
+  --bs-secondary-hover: #5b2e91;
+
+}

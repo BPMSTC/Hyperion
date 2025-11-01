@@ -1,11 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Task } from './models/task.model';
-// TaskItemComponent is used by the TaskList; TaskList is imported below so the
-// standalone component can be referenced in this App component's `imports`.
-// These imports were added so the new `app-task-list` UI can be rendered
-// from the app root instead of the previous inline form/list.
 import { TaskList } from './task-list/task-list';
 import { QuoteOfTheDayComponent } from './quote-of-the-day/quote-of-the-day.component';
 import { WeatherWidgetComponent } from './weather-widget/weather-widget.component'
@@ -13,20 +9,23 @@ import { WeatherWidgetComponent } from './weather-widget/weather-widget.componen
 @Component({
   selector: 'app-root',
   standalone: true,
-  // Note: TaskList was added to the imports so the App component can render
-  // the standalone <app-task-list> component directly in its template.
   imports: [CommonModule, ReactiveFormsModule, TaskList, QuoteOfTheDayComponent,WeatherWidgetComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App implements OnInit {
+  @ViewChild(TaskList) taskListComponent!: TaskList;  // Add this line
   tasks: Task[] = [];
   taskForm!: FormGroup;
+  private nextId = 1;
 
   constructor(private fb: FormBuilder) {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
       this.tasks = JSON.parse(savedTasks);
+       // Set nextId based on existing tasks
+      const maxId = this.tasks.reduce((m, t) => Math.max(m, t.id || 0), 0);
+      this.nextId = maxId + 1;
     }
   }
 
@@ -55,6 +54,66 @@ export class App implements OnInit {
 
       // Reset the form
       this.taskForm.reset();
+    }
+  }
+   generateTasksForDemo(): void {
+    const sampleTasks: Task[] = [
+      {
+        id: this.nextId++,
+        title: 'DEMO - Buy groceries',
+        description: 'Milk, Bread, Eggs, Butter',
+        completed: false
+      },
+      {
+        id: this.nextId++,
+        title: 'DEMO - Finish project report',
+        description: 'Complete the final draft of the project report and send it to the manager.',
+        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
+        completed: false
+      },
+      {
+        id: this.nextId++,
+        title: 'DEMO - drop off package',
+        location: 'FedEx Office, Plover WI',
+        completed: false
+      }
+    ];
+    
+    // Update both the app's tasks and the task list component's tasks
+    this.tasks = [...sampleTasks, ...this.tasks];
+    this.taskListComponent.tasks = [...this.tasks];
+    this.taskListComponent.saveTasks();
+    
+    // Visual feedback
+    const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
+    if (button) {
+      const originalText = button.textContent;
+      button.textContent = '✓ Demo Data Loaded!';
+      button.classList.add('success');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('success');
+      }, 2000);
+    }
+  }
+
+  clearTasksForDemo(): void {
+    const sampleTaskTitles = ['DEMO - Buy groceries', 'DEMO - Finish project report', 'DEMO - drop off package'];
+    
+    this.tasks = this.tasks.filter(task => !sampleTaskTitles.includes(task.title));
+    this.taskListComponent.tasks = [...this.tasks];
+    this.taskListComponent.saveTasks();
+
+    // Visual feedback
+    const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
+    if (button) {
+      const originalText = button.textContent;
+      button.textContent = '✓ Demo Data Cleared!';
+      button.classList.add('success');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('success');
+      }, 2000);
     }
   }
 }
