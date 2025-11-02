@@ -1,26 +1,6 @@
 .weather-widget {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  padding: 20px;
   color: white;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.weather-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-
-.weather-icon {
-  font-size: 48px;
-}
-
-.weather-info {
-  flex: 1;
 }
 
 .weather-temp {
@@ -62,8 +42,7 @@
 }
 
 .task-suggestions {
-  margin-top: 15px;
-  padding: 15px;
+  padding: 2px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
