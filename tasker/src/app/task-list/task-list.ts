@@ -28,6 +28,11 @@ import { PlacesService, AutocompleteResult } from '../services/places.service';
   styleUrls: ['./task-list.css']
 })
 export class TaskList {
+  // Alert state variables
+  showCompleteAlert = false;
+  completeMessage = '';
+  isFading = false;
+
   // Character limit constants
   readonly TITLE_MAX_LENGTH = 50;
   readonly DESCRIPTION_MAX_LENGTH = 250;
@@ -154,8 +159,24 @@ export class TaskList {
   // Toggle the completed flag for a task; the checkbox in the template calls this.
   toggleComplete(task: Task): void {
     task.completed = !task.completed;
-  // Save change to persistence
-  this.saveTasks();
+    // Save change to persistence
+    this.saveTasks();
+
+  // Shows the alert if the task is marked as complete.
+    if (task.completed) { // If the task is marked as complete.
+      this.completeMessage = 'Task marked as complete!'; // Set the alert message to 'Task marked as complete!'.
+      this.showCompleteAlert = true; // Set the property for showCompleteAlert to true.
+      this.isFading = false;
+
+      // Remove the alert after two seconds
+      setTimeout(() => { // Function named setTimeout
+        this.isFading = true;
+        setTimeout(() => {
+          this.showCompleteAlert = false; // Set the alert shoeCompleteAlert value to false, eliminating the banner.
+          this.isFading = false;
+        }, 2000); // Fades out after 2 seconds. (2000 ms).
+      }, 2000); // Fades out for 2 seconds (2000 ms).
+    }
   }
 
   // Remove a task by id; used by the remove button in the template.

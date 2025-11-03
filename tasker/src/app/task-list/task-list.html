@@ -10,6 +10,12 @@
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
 
+	<!-- Shows alert for when task is marked as complete -->
+<div *ngIf="showCompleteAlert" class="alert alert-success alert-dismissible fade" [class.show]="!isFading" role="alert"> <!-- If a task is marked as complete add bootstrap css to the alert. -->
+  {{ completeMessage }} <!-- Show the alert message. -->
+  <button type="button" class="btn-close" (click)="showCompleteAlert = false"></button> <!-- Puts a close message button on the alert. -->
+</div>
+
 <div class="task-list-card card shadow-sm mx-auto rounded-3">
 			<!-- Header: title + subtitle help orient the user and distinguish the area -->
 		
