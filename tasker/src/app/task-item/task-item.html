@@ -4,6 +4,9 @@
   <div class="task-due-row" *ngIf="task.dueDate">
     <span class="task-due-display">Due: {{ task.dueDate | date:'MM/dd/yyyy' }}</span>
   </div>
+  <div class="task-location-row" *ngIf="task.location">
+    <span class="task-location-display">📍 {{ task.location }}</span>
+  </div>
   <div class="overdue-indicator" *ngIf="isOverdue">
     <span class="overdue-icon">⚠️</span>
     <span class="overdue-text">Overdue</span>

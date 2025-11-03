@@ -5,28 +5,20 @@
 		 - Each task in `tasks` is rendered using the existing <app-task-item>
 			 component so the display format matches the task-item component.
 -->
-<div class="demo-buttons-container">
-	<button class="btn-demo" (click)="generateTasksForDemo()">Load Demo Data</button>
-	<button class="btn-demo btn-demo-clear" (click)="clearTasksForDemo()">Clear Demo Data</button>
-</div>
 
-<section class="task-list-wrapper">
+<section class="task-list-wrapper container-fluid px-0">
 	<!-- task-list-card: visually separates the TaskList from surrounding page
 			 content for emphasis (shadow, rounded corners). -->
 
-
-			 		<!-- Weather widget component -->
-		<app-weather-widget></app-weather-widget>
-
-	<div class="task-list-card">
-		<!-- Header: title + subtitle help orient the user and distinguish the area -->
+<div class="task-list-card card shadow-sm mx-auto rounded-3">
+			<!-- Header: title + subtitle help orient the user and distinguish the area -->
 		
-		<header class="task-list-header">
-			<h2 class="task-list-title">Your Tasks</h2>
-			<p class="task-list-subtitle">Add, complete, and remove tasks below.</p>
+		<header class="task-list-header card-header text-grey p-3">
+			<h2 class="task-list-title h mb-1">Your Tasks</h2>
+			<p class="task-list-subtitle small mb-0 opacity-75">Add, complete, and remove tasks below.</p>
 		</header>
 
-		
+		<div class="card-body">
 		<!-- Filter options are triggered from the form (left side) -->
 
 		<!-- Form: title required, description optional -->
@@ -34,80 +26,145 @@
 		<form class="task-form add-task-form" (ngSubmit)="addTask()">
 		<!-- Place the filter toggle left above the title input -->
 		<div class="filter-toggle-left">
-			<button type="button" class="filter-toggle-btn" (click)="filterPanelOpen = !filterPanelOpen">Filter</button>
-			<div *ngIf="filterPanelOpen" class="filter-bar compact">
-				<button type="button" class="filter-btn" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
-				<button type="button" class="filter-btn" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
-				<button type="button" class="filter-btn" [class.active]="filterOldTasks" (click)="filterOldTasks = !filterOldTasks">Old Tasks</button> <!--New filter for old task -->
+			<button type="button" class="filter-toggle-btn btn btn-outline-primary btn-sm mb-2" (click)="filterPanelOpen = !filterPanelOpen">Filter</button>
+			<div *ngIf="filterPanelOpen" class="filter-bar compact mt-2">
+				<div class="btn-group btn-group-sm w-100 w-md-auto" role="group">
+					<button type="button" class="filter-btn btn btn-outline-primary" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
+					<button type="button" class="filter-btn btn btn-outline-primary" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
+				</div>
 			</div>
 		</div>
-		<div class="form-row">
+		<div class="mb-2">
 			<!-- name attributes are needed for ngModel inside forms -->
-			<label class="sr-only" for="newTitleInput">Task title</label>
-			<input id="newTitleInput" name="title" class="task-input" [(ngModel)]="newTitle" placeholder="Task title" required maxlength="50" />
-			<div class="char-counter">{{ (newTitle || '').length }}/50</div>
+			<div class="d-flex align-items-center gap-2">
+				<label class="visually-hidden" for="newTitleInput">Task title</label>
+				<input id="newTitleInput" name="title" class="task-input form-control flex-grow-1" [(ngModel)]="newTitle" placeholder="Task title" required maxlength="50" />
+				<div class="char-counter small text-muted text-nowrap">{{ (newTitle || '').length }}/50</div>
+			</div>
 			<!-- Add legacy `add-button` class so the button uses original styling -->
 		</div>
 
-		<div class="form-row">
+		<div class="mb-2">
 			<!-- Give textarea the legacy `.task-description` class as well -->
-			<textarea name="description" class="task-textarea task-description" [(ngModel)]="newDescription" placeholder="Optional description" maxlength="250"></textarea>
-			<div class="char-counter">{{ (newDescription || '').length }}/250</div>
-		</div>
-		<!-- New: due date input for the new task (ISO date) -->
-		<div class="form-row">
-			<label class="due-label">Due:</label>
-			<input type="date" name="dueDate" class="task-due" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
-						<button class="btn-add add-button" type="submit">Add Task</button>
-
-		</div>
-	</form>
-
-		<!-- Tasks list -->
-		<!-- Give the list the legacy `.task-list` class so global styles apply -->
-		<ul class="tasks task-list">
-		<li *ngFor="let task of filteredTasks" class="task-row" [class.overdue-row]="isTaskOverdue(task)" [id]="getOverdueRowId(task)">
-			<!-- checkbox toggles completed state -->
-			<label class="task-meta">
-				<input type="checkbox" [checked]="task.completed" (change)="toggleComplete(task)" [attr.aria-label]="'Toggle completion for task: ' + task.title" />
-				<span class="sr-only">Mark task as {{ task.completed ? 'incomplete' : 'complete' }}</span>
-			</label>
-
-				<!-- Edit mode: show edit form -->
-				<div *ngIf="isEditing(task)" class="task-item edit-mode">
-					<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
-						<div class="form-row">
-							<label class="sr-only" for="editTitleInput">Task title</label>
-							<input id="editTitleInput" name="editTitle" class="task-input" [(ngModel)]="editTitle" placeholder="Task title" required maxlength="50" />
-							<div class="char-counter">{{ (editTitle || '').length }}/50</div>
-						</div>
-						<div class="form-row">
-							<textarea name="editDescription" class="task-textarea" [(ngModel)]="editDescription" placeholder="Task description" maxlength="250"></textarea>
-							<div class="char-counter">{{ (editDescription || '').length }}/250</div>
-						</div>
-						<!-- Allow editing the due date only in edit mode -->
-						<div class="form-row">
-							<label class="due-label">Due:</label>
-							<input type="date" name="editDueDate" class="task-due" [(ngModel)]="editDueDate" aria-label="'Due date for task: ' + editTitle" />
-						</div>
-						<div class="edit-actions">
-							<button class="btn-save" type="submit">Save</button>
-							<button class="btn-cancel" type="button" (click)="cancelEdit()">Cancel</button>
-						</div>
-						</form>
-				</div>
-
-				<!-- Display mode: show task content -->
-				<div *ngIf="!isEditing(task)" class="task-item">
-				<app-task-item [task]="task"></app-task-item>
-				</div>
-
-				<!-- Action buttons (edit, remove) -->
-				<div class="task-actions">
-					<button *ngIf="!isEditing(task)" class="btn-edit" (click)="startEdit(task)">✏️</button>
-					<button class="btn-remove" (click)="remove(task)">×</button>
-				</div>
-		</li>
-				</ul>
+			<div class="d-flex align-items-start gap-2">
+				<textarea name="description" class="task-textarea task-description form-control flex-grow-1" [(ngModel)]="newDescription" placeholder="Add description (optional)" maxlength="250" rows="2"></textarea>
+				<div class="char-counter small text-muted text-nowrap">{{ (newDescription || '').length }}/250</div>
 			</div>
-		</section>
+		</div>
+
+		
+		<!-- New: location input with autocomplete -->
+		<div class="mb-2">
+			<label class="visually-hidden" for="newLocationInput">Location</label>
+			<div class="location-input-container position-relative">
+				<input type="text" 
+						id="newLocationInput"
+					   name="location" 
+					   class="task-input location-input form-control" 
+					   [(ngModel)]="newLocation" 
+					   (input)="onLocationInput($event)"
+					   placeholder="Add location (optional)"
+					   autocomplete="off" />
+				<div class="location-suggestions position-absolute w-100 bg-white border rounded shadow-sm mt-1 location-dropdown" *ngIf="locationSuggestions.length > 0">
+					<div class="suggestion-item px-3 py-2 border-bottom cursor-pointer" 
+						 *ngFor="let suggestion of locationSuggestions; let last = last"
+						 [class.border-bottom-0]="last"
+						 (click)="selectLocation(suggestion)">
+						{{ formatLocationDisplay(suggestion) }}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- New: due date input for the new task (ISO date) -->
+		<div class="mb-2 mb-md-3 d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-end">
+			<div class="flex-grow-1">
+				<label class="form-label small">Add Due date (optional)</label>
+				<input type="date" name="dueDate" class="task-due form-control" [(ngModel)]="newDueDate" aria-label="'Due date for new task: ' + newTitle" />
+			</div>
+			<button class="btn-add add-button btn btn-primary w-100 w-sm-auto" type="submit">Add Task</button>
+		</div>
+		</form>
+
+		<!-- Tasks list without scroll - shows all tasks -->
+		<div class="tasks-container">
+			<!-- Give the list the legacy `.task-list` class so global styles apply -->
+			<ul class="tasks task-list list-unstyled mb-0">
+				<li *ngFor="let task of filteredTasks" class="task-row mb-2 p-2 border rounded d-flex flex-column"[id]="getOverdueRowId(task)">
+					<!-- checkbox toggles completed state -->
+					<div class="d-flex align-items-start gap-2 w-100">
+						<label class="task-meta d-flex align-items-center">
+							<input type="checkbox" class="form-check-input me-2" [checked]="task.completed" (change)="toggleComplete(task)" [attr.aria-label]="'Toggle completion for task: ' + task.title" />
+							<span class="visually-hidden">Mark task as {{ task.completed ? 'incomplete' : 'complete' }}</span>
+						</label>
+
+					<!-- Edit mode: show edit form -->
+						<div *ngIf="isEditing(task)" class="task-item edit-mode flex-grow-1">
+							<form class="task-form edit-task-form" (ngSubmit)="saveEdit()">
+								<div class="form-row mb-2">
+									<label class="visually-hidden" for="editTitleInput">Task title</label>
+									<input id="editTitleInput" name="editTitle" class="task-input form-control form-control-sm" [(ngModel)]="editTitle" placeholder="Task title" required maxlength="50" />
+									<div class="char-counter small text-muted mt-1">{{ (editTitle || '').length }}/50</div>
+								</div>
+								<div class="form-row mb-2">
+									<textarea name="editDescription" class="task-textarea form-control form-control-sm" [(ngModel)]="editDescription" placeholder="Task description" maxlength="250" rows="2"></textarea>
+									<div class="char-counter small text-muted mt-1">{{ (editDescription || '').length }}/250</div>
+								</div>
+		
+								
+								<!-- Allow editing the location in edit mode -->
+								<div class="form-row mb-2">
+									<div class="location-input-container position-relative">
+										<input type="text" 
+											name="editLocation" 
+											class="task-input location-input form-control form-control-sm" 
+											[(ngModel)]="editLocation" 
+											(input)="onEditLocationInput($event)"
+											placeholder="Edit location (optional)"
+											autocomplete="off" />
+										<div class="location-suggestions position-absolute w-100 bg-white border rounded shadow-sm mt-1 location-dropdown" *ngIf="editLocationSuggestions.length > 0">
+											<div class="suggestion-item px-2 py-1 border-bottom cursor-pointer small" 
+												*ngFor="let suggestion of editLocationSuggestions; let last = last"
+												[class.border-bottom-0]="last"
+												(click)="selectEditLocation(suggestion)">
+												{{ formatLocationDisplay(suggestion) }}
+											</div>
+										</div>
+									</div>
+								</div>
+
+														<!-- Allow editing the due date only in edit mode -->
+								<div class="form-row mb-2">
+									<input type="date" name="editDueDate" class="task-due form-control form-control-sm" [(ngModel)]="editDueDate" aria-label="'Due date for task: ' + editTitle" />
+								</div>
+								
+								<div class="edit-actions d-flex flex-column flex-sm-row gap-2">
+									<button class="btn-save btn btn-success btn-sm w-100 w-sm-auto" type="submit">Save</button>
+									<button class="btn-cancel btn btn-danger btn-sm w-100 w-sm-auto" type="button" (click)="cancelEdit()">Cancel</button>
+								</div>
+							</form>
+						</div>
+
+						<!-- Display mode: show task content -->
+						<div *ngIf="!isEditing(task)" class="task-item flex-grow-1">
+							<app-task-item [task]="task"></app-task-item>
+						</div>
+
+						<!-- Action buttons for large screens (inline) -->
+						<div class="task-actions d-none d-lg-flex flex-row gap-1 ms-auto">
+							<button *ngIf="!isEditing(task)" class="btn-edit btn btn-outline-primary btn-sm" (click)="startEdit(task)" title="Edit task">✏️</button>
+							<button *ngIf="!isEditing(task)" class="btn-remove btn btn-outline-danger btn-sm" (click)="remove(task)" title="Remove task">×</button>
+						</div>
+					</div>
+					
+					<!-- Action buttons for mobile (on separate line) -->
+					<div class="d-flex d-lg-none justify-content-end mt-auto pt-2" style="margin-right: -0.5rem;">
+						<button *ngIf="!isEditing(task)" class="btn-edit btn btn-outline-primary btn-sm me-1" (click)="startEdit(task)" title="Edit task">✏️</button>
+						<button *ngIf="!isEditing(task)" class="btn-remove btn btn-outline-danger btn-sm" (click)="remove(task)" title="Remove task">×</button>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	</div>
+</section>

@@ -5,5 +5,6 @@ export interface Task { //This defines a TypeScript interface named Task, and ma
   id: number;  
   description?: string;  // optional
   dueDate?: string; // optional ISO date string, e.g. '2025-10-06'
+  location?: string; // optional location string
   completed: boolean;
 }

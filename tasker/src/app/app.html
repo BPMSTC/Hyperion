@@ -1,13 +1,24 @@
 <main class="app-container">
   <div class="app-content">
     <div class="header-section">
+      <div class="demo-buttons-container d-flex gap-2 mb-3">
+ <button class="btn-demo btn btn-outline-primary btn-sm" (click)="generateTasksForDemo()">Load Demo Data</button>
+        <button class="btn-demo btn-demo-clear btn btn-outline-danger btn-sm" (click)="clearTasksForDemo()">Clear Demo Data</button>
+</div>
       <h1 class="app-title">Tasker</h1>
     </div>
-    
-    <!-- The inline form + list was replaced with the standalone TaskList
-      component. This keeps the App shell minimal and moves task UI logic
-      and persistence into a dedicated component. -->
-    <app-task-list></app-task-list>
+  
+    <div class="row g-3 align-items-start">
+      <div class="col-12 col-md-8">
+        <app-task-list></app-task-list>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="d-flex flex-column gap-1">
+          <app-weather-widget></app-weather-widget>
+          <app-quote-of-the-day></app-quote-of-the-day>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 

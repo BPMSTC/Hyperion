@@ -40,24 +40,10 @@
   color: var(--gray-700);
 }
 
-/* Overdue task styling - Orange theme targeting the entire component */
-/* Using :host selector to target the whole component element */
-
-/* Target the entire component when it has the overdueTask ID */
-:host(#overdueTask) {
-  display: block !important; /* Ensure proper display */
-  background-color: #ff8c00 !important; /* Full orange background for whole task */
-  border: 2px solid #cc5500 !important; /* Dark orange border */
-  border-radius: 8px !important; /* Rounded corners for visibility */
-  padding: 0.75rem !important; /* Extra padding for prominence */
-  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3) !important; /* Orange glow effect */
-  margin: 0.25rem 0 !important; /* Slight margin for separation */
-}
-
-
-/* Adjust task-content padding when host is overdue to prevent double padding */
-:host(#overdueTask) .task-content {
-  padding: 0 !important; /* Remove inner padding since host has padding */
+.task-location-display {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  font-style: italic;
 }
 
 .overdue-indicator {

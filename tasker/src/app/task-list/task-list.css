@@ -7,154 +7,52 @@
 		`.task-title` element inside `task-item.html`.
 */
 
-.task-list-wrapper {
-	/* Increase default wrapper width and ensure it fills the app content */
-	max-width: 1000px;
+
+/* Tasks container without scroll - shows all tasks */
+.tasks-container {
 	width: 100%;
-	margin: 0 auto;
-	position: relative; /* Enable absolute positioning for child elements */
 }
 
-/* Raised card that contains header, form and list */
-.task-list-card {
-	background: #ffffff;
-	border-radius: 10px;
-	padding: 1rem 1rem 1.25rem 1rem;
-	box-shadow: 0 6px 18px rgba(12, 24, 40, 0.08);
-	border: 1px solid rgba(12,24,40,0.04);
+.task-row {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
-.task-list-header {
-	margin-bottom: 0.75rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
+/* Location dropdown z-index */
+.location-dropdown {
+	z-index: 1000;
 }
 
-.task-list-title {
-	margin: 0;
-	font-size: 1.25rem;
-	color: var(--gray-900);
-}
-
-.task-list-subtitle {
-	margin: 0;
-	color: var(--gray-700);
-	font-size: 0.95rem;
-}
-
-/* Demo buttons container - centered */
-.demo-buttons-container {
-	display: flex;
-	gap: 0.5rem; /* Space between buttons */
-	justify-content: center; /* Center the buttons horizontally */
-	margin: 0 auto; /* Center the container itself */
-	margin-bottom: 1rem; /* Add space below the buttons */
-}
-
-/* Demo button styling */
-.btn-demo {
-	padding: 0.5rem 1rem;
-	background: #6c757d;
-	color: white;
-	border: none;
-	border-radius: 6px;
+/* Cursor pointer for clickable elements */
+.cursor-pointer {
 	cursor: pointer;
-	font-size: 0.9rem;
-	transition: background-color 0.2s ease;
-	white-space: nowrap; /* Prevent text wrapping */
 }
 
-.btn-demo:hover {
-	background: #5a6268;
-}
-
-/* Optional: Different styling for clear button */
-.btn-demo-clear {
-	background: #dc3545; /* Red background for clear action */
-}
-
-.btn-demo-clear:hover {
-	background: #c82333;
-}
-
-/* Success state styling for button feedback */
-.btn-demo.success,
-.btn-demo-clear.success {
-	background: #28a745 !important; /* Green for success */
-	transform: scale(1.05); /* Slightly grow */
-	transition: all 0.3s ease;
-}
-
-.task-form {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	margin-bottom: 0.75rem;
-}
-
-.form-row {
-	display: flex;
-	gap: 0.5rem;
+/* Bootstrap override - remove default padding that conflicts with our layout */
+.task-list-card.card {
+	padding: 0 !important;
 	width: 100%;
+	max-width: 100%;
 }
 
-.task-input {
-	/* ensure input expands to available width */
-	flex: 1 1 auto;
-	min-width: 0;
-	padding: 0.5rem;
-	border: 1px solid #e6e6e6;
-	border-radius: 6px;
-}
 
 .task-textarea {
 	width: 100%;
 	min-height: 48px;
 	padding: 0.5rem;
-	border: 1px solid #f0f0f0;
-	border-radius: 6px;
-	box-sizing: border-box;
 }
 
-.btn-add {
-	padding: 0.45rem 0.75rem;
-	background: #1976d2;
-	color: #fff;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-}
-
-.tasks {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-}
 
 .task-row {
-	display: flex;
-	align-items: flex-start; /* changed from center to flex-start */
-	gap: 0.75rem;
-	padding: 0.5rem;
-	border-radius: 8px;
 	background: #fafafa;
 	border: 1px solid #f2f2f2;
-	/* allow children to grow; prevent row from shrinking to content */
-	width: 100%;
-	max-width: 100%; /* ensure row doesn't expand beyond container */
-	box-sizing: border-box;
 }
 
 /* Overdue task row styling - Highlights the entire task row in orange */
 .task-row.overdue-row,
+
 #overdueTaskRow {
-	background-color: #ff8c009b !important; /* Full orange background for entire row */
-	box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4) !important; /* Orange glow effect */
-	padding: 0.75rem !important; /* Extra padding for prominence */
+	background-color: #ff8c0045; 
 }
 
 /* Override text colors within overdue rows for visibility */
@@ -176,8 +74,6 @@
 }
 
 .task-meta {
-	display: flex;
-	align-items: flex-start;
 	padding-top: 0.25rem; /* slight offset to align with text */
 }
 
@@ -187,41 +83,7 @@
 }
 
 .task-actions {
-	margin-left: auto;
-	display: flex;
-	align-items: flex-start;
 	padding-top: 0.25rem; /* align with checkbox */
-}
-
-/* Due date styles (form + per-item) */
-.due-label {
-	align-self: center;
-	margin-right: 0.5rem;
-	color: var(--gray-700);
-}
-
-.task-due {
-	padding: 0.35rem 0.5rem;
-	border: 1px solid #e6e6e6;
-	border-radius: 6px;
-}
-
-.task-due-row {
-	margin-top: 0.5rem;
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
-}
-
-.task-due-input {
-	padding: 0.25rem;
-	border-radius: 6px;
-	border: 1px solid #e6e6e6;
-}
-
-.task-due-display {
-	font-size: 0.9rem;
-	color: var(--gray-700);
 }
 
 .btn-remove {
@@ -229,7 +91,7 @@
 	border: none;
 	font-size: 1.2rem;
 	color: #b00020;
-	cursor: pointer;
+	margin-right: 0.5rem;
 }
 
 .btn-edit {
@@ -237,7 +99,6 @@
 	border: none;
 	font-size: 1rem;
 	color: #1976d2;
-	cursor: pointer;
 	margin-right: 0.5rem;
 }
 
@@ -245,70 +106,7 @@
 	opacity: 0.7;
 }
 
-/* Task item styles */
-.task-item {
-	flex: 1;
-	min-width: 0; /* allows flex item to shrink below its content size */
-	overflow: hidden; /* prevents content from overflowing container */
-}
 
-/* Edit mode styles */
-.edit-mode {
-	flex: 1;
-	min-width: 0; /* same as regular .task-item */
-	overflow: hidden; /* same as regular .task-item */
-}
-
-.edit-task-form {
-	width: 100%;
-	margin-bottom: 0;
-	max-width: 100%; /* prevent form from expanding beyond container */
-	box-sizing: border-box;
-}
-
-.edit-actions {
-	display: flex;
-	gap: 0.5rem;
-	margin-top: 0.5rem;
-}
-
-.btn-save {
-	padding: 0.4rem 0.8rem;
-	background: #4caf50;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 0.9rem;
-}
-
-.btn-save:hover {
-	background: #45a049;
-}
-
-.btn-cancel {
-	padding: 0.4rem 0.8rem;
-	background: #f44336;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 0.9rem;
-}
-
-.btn-cancel:hover {
-	background: #da190b;
-}
-
-/* Example completed-state rule:
-	 If you add `class="completed"` to the .task-title inside task-item.html
-	 (e.g. <h3 class="task-title" [class.completed]="task.completed">), this
-	 rule will visually mark completed items.
-*/
-.task-title.completed {
-	text-decoration: line-through;
-	color: #9aa0a6;
-}
 
 /* Screen reader only text - visually hidden but accessible to screen readers */
 .sr-only {
@@ -341,31 +139,7 @@
 
 /* Filter button styles (used in task-list filter bar) */
 .filter-bar.compact {
-	display: flex;
-	gap: 0.5rem;
 	margin-bottom: 0.75rem;
-}
-
-/* Filter toggle button (blue) */
-.filter-toggle {
-	display: flex;
-	justify-content: flex-end;
-	margin-bottom: 0.5rem;
-}
-
-.filter-toggle-btn {
-	background: #1976d2;
-	color: white;
-	border: none;
-	padding: 0.4rem 0.8rem;
-	border-radius: 8px;
-	cursor: pointer;
-	font-size: 0.95rem;
-}
-
-.filter-toggle-btn:focus {
-	outline: 3px solid rgba(25,118,210,0.18);
-	outline-offset: 2px;
 }
 
 /* Left-aligned filter toggle inside the form */
@@ -381,22 +155,71 @@
 }
 
 .filter-btn {
-	background: transparent;
-	border: 1px solid rgba(25,118,210,0.15);
-	color: var(--gray-800);
-	padding: 0.35rem 0.6rem;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 0.95rem;
+  padding: 0.30rem 0.4rem;
+  font-size:0.75rem;
 }
 
 .filter-btn.active {
 	background: #1976d2;
 	color: #fff;
-	border-color: #1976d2;
 }
 
-.filter-btn:focus {
-	outline: 3px solid rgba(25,118,210,0.18);
-	outline-offset: 2px;
+.filter-btn:hover {
+	background-color: #aeb8f1;
+}
+
+.location-suggestions {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: white;
+	border: 1px solid #e6e6e6;
+	border-top: none;
+	border-radius: 0 0 6px 6px;
+	max-height: 200px;
+	overflow-y: auto;
+	z-index: 1000;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+	padding: 0.75rem;
+	cursor: pointer;
+	border-bottom: 1px solid #f0f0f0;
+	font-size: 0.9rem;
+	color: #333;
+	transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+	background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+	border-bottom: none;
+}
+
+
+
+/* Set minimum width for task rows on larger screens */
+@media (min-width: 768px) {
+	.task-row {
+		min-width: 400px;
+	}
+	
+	.task-list-card.card {
+		min-width: 400px;
+	}
+}
+
+/* Set minimum width for task rows on larger screens */
+@media (min-width: 1024px) {
+	.task-row {
+		min-width: 600px;
+	}
+	
+	.task-list-card.card {
+		min-width: 600px;
+	}
 }

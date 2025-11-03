@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task } from '../models/task.model';
-import { WeatherWidgetComponent } from '../weather-widget/weather-widget.component';
+import { PlacesService, AutocompleteResult } from '../services/places.service';
 
 /*
   TaskList component
@@ -23,7 +23,7 @@ import { WeatherWidgetComponent } from '../weather-widget/weather-widget.compone
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskItemComponent, WeatherWidgetComponent],
+  imports: [CommonModule, FormsModule, TaskItemComponent],
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })
@@ -38,13 +38,17 @@ export class TaskList {
   // Form-bound properties for new task input
   newTitle = '';
   newDescription = '';
+  newLocation = ''; // bound to the location input
   newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
+  locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
 
   // Edit mode properties
   editingTaskId: number | null = null;
   editTitle = '';
   editDescription = '';
+  editLocation = ''; // bound while editing a task location
   editDueDate = ''; // bound while editing a task
+  editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Simple incrementing id for tasks created during this session
   private nextId = 1;
@@ -55,6 +59,12 @@ export class TaskList {
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
+
+  // Debounce timer for location search
+  private locationSearchTimeout: any;
+  private editLocationSearchTimeout: any;
+
+  constructor(private placesService: PlacesService) {}
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
@@ -93,7 +103,7 @@ export class TaskList {
   }
 
   /* Save current tasks array to localStorage. Kept in one helper for reuse. */
-  private saveTasks(): void {
+  public saveTasks(): void {
     try {
       localStorage.setItem('tasks', JSON.stringify(this.tasks));
     } catch (e) {
@@ -124,6 +134,7 @@ export class TaskList {
       title,
       description,
       dueDate: this.newDueDate ? this.newDueDate : undefined,
+      location: this.newLocation ? this.newLocation.trim() : undefined,
       completed: false
     };
 
@@ -136,6 +147,8 @@ export class TaskList {
   // Reset inputs for the next entry
   this.newTitle = '';
   this.newDescription = '';
+  this.newLocation = '';
+  this.locationSuggestions = [];
   }
 
   // Toggle the completed flag for a task; the checkbox in the template calls this.
@@ -163,7 +176,9 @@ export class TaskList {
     this.editingTaskId = task.id;
     this.editTitle = task.title;
     this.editDescription = task.description || '';
-  this.editDueDate = task.dueDate || '';
+    this.editDueDate = task.dueDate || '';
+    this.editLocation = task.location || '';
+    this.editLocationSuggestions = []; // Clear any existing suggestions
   }
 
   // Save the edited task and exit edit mode
@@ -187,8 +202,10 @@ export class TaskList {
     if (task) {
       task.title = title;
       task.description = description;
-  // Save edited due date (empty string => remove due date)
-  task.dueDate = this.editDueDate ? this.editDueDate : undefined;
+      // Save edited due date (empty string => remove due date)
+      task.dueDate = this.editDueDate ? this.editDueDate : undefined;
+      // Save edited location (empty string => remove location)
+      task.location = this.editLocation ? this.editLocation.trim() : undefined;
       this.saveTasks();
     }
 
@@ -201,7 +218,13 @@ export class TaskList {
     this.editingTaskId = null;
     this.editTitle = '';
     this.editDescription = '';
-  this.editDueDate = '';
+    this.editDueDate = '';
+    this.editLocation = '';
+    this.editLocationSuggestions = [];
+    // Clear any pending timeout for edit location search
+    if (this.editLocationSearchTimeout) {
+      clearTimeout(this.editLocationSearchTimeout);
+    }
   }
 
   // Helper method to check if a task is being edited
@@ -227,59 +250,79 @@ export class TaskList {
     return this.isTaskOverdue(task) ? 'overdueTaskRow' : null;
   }
 
-  generateTasksForDemo(): void {
-    const sampleTasks: Task[] = [
-      {
-        id: this.nextId++,
-        title: 'DEMO - Buy groceries',
-        description: 'Milk, Bread, Eggs, Butter',
-        completed: false
-      },
-      {
-        id: this.nextId++,
-        title: 'DEMO - Finish project report',
-        description: 'Complete the final draft of the project report and send it to the manager.',
-        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0], // 2 days ago
-        completed: false
-      }
-    ];
-    
-    // Add sample tasks to the current tasks list
-    this.tasks = [...sampleTasks, ...this.tasks];
-    this.saveTasks();
+ 
 
-    // Visual feedback - change button text and style
-    const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
-    if (button) {
-      const originalText = button.textContent;
-      button.textContent = '✓ Demo Data Loaded!';
-      button.classList.add('success');
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.classList.remove('success');
-      }, 2000);
+  // Location-related methods
+  onLocationInput(event: any): void {
+    const query = event.target.value;
+    
+    // Clear previous timeout
+    if (this.locationSearchTimeout) {
+      clearTimeout(this.locationSearchTimeout);
     }
+
+    // Clear suggestions if query is too short
+    if (!query || query.length < 3) {
+      this.locationSuggestions = [];
+      return;
+    }
+
+    // Debounce the search to avoid too many API calls
+    this.locationSearchTimeout = setTimeout(() => {
+      this.placesService.getPlaceAutocomplete(query).subscribe({
+        next: (suggestions: AutocompleteResult[]) => {
+          this.locationSuggestions = suggestions;
+        },
+        error: (error: any) => {
+          console.error('Error getting location suggestions:', error);
+          this.locationSuggestions = [];
+        }
+      });
+    }, 300); // 300ms delay
   }
 
-  clearTasksForDemo(): void {
-    // Define the titles of sample tasks to remove
-    const sampleTaskTitles = ['DEMO - Buy groceries', 'DEMO - Finish project report'];
-    
-    // Filter out only the sample tasks, keeping all other tasks
-    this.tasks = this.tasks.filter(task => !sampleTaskTitles.includes(task.title));
-    this.saveTasks();
-
-    // Visual feedback - change button text and style
-    const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
-    if (button) {
-      const originalText = button.textContent;
-      button.textContent = '✓ Demo Data Cleared!';
-      button.classList.add('success');
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.classList.remove('success');
-      }, 2000);
-    }
+  selectLocation(suggestion: AutocompleteResult): void {
+    this.newLocation = this.placesService.formatLocationDisplay(suggestion);
+    this.locationSuggestions = []; // Hide suggestions
   }
+
+  formatLocationDisplay(suggestion: AutocompleteResult): string {
+    return this.placesService.formatLocationDisplay(suggestion);
+  }
+
+  // Edit location methods
+  onEditLocationInput(event: any): void {
+    const query = event.target.value;
+    
+    // Clear previous timeout
+    if (this.editLocationSearchTimeout) {
+      clearTimeout(this.editLocationSearchTimeout);
+    }
+
+    // Clear suggestions if query is too short
+    if (!query || query.length < 3) {
+      this.editLocationSuggestions = [];
+      return;
+    }
+
+    // Debounce the search to avoid too many API calls
+    this.editLocationSearchTimeout = setTimeout(() => {
+      this.placesService.getPlaceAutocomplete(query).subscribe({
+        next: (suggestions: AutocompleteResult[]) => {
+          this.editLocationSuggestions = suggestions;
+        },
+        error: (error: any) => {
+          console.error('Error getting edit location suggestions:', error);
+          this.editLocationSuggestions = [];
+        }
+      });
+    }, 300); // 300ms delay
+  }
+
+  selectEditLocation(suggestion: AutocompleteResult): void {
+    this.editLocation = this.placesService.formatLocationDisplay(suggestion);
+    this.editLocationSuggestions = []; // Hide suggestions
+  }
+
 
 }
