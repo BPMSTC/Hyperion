@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
-import { Task } from '../models/task.model';
+import { Task, TaskCategory } from '../models/task.model';
 import { PlacesService, AutocompleteResult } from '../services/places.service';
 
 /*
@@ -32,6 +32,9 @@ export class TaskList {
   readonly TITLE_MAX_LENGTH = 50;
   readonly DESCRIPTION_MAX_LENGTH = 250;
 
+  // available categoeries
+  readonly CATEGORIES: TaskCategory[] = ['School', 'Work', 'Personal'];
+
   // The in-memory array of tasks displayed in the template
   tasks: Task[] = [];
 
@@ -48,6 +51,7 @@ export class TaskList {
   editDescription = '';
   editLocation = ''; // bound while editing a task location
   editDueDate = ''; // bound while editing a task
+  editCategory: TaskCategory | '' = ''; // bound while editing a task category
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Simple incrementing id for tasks created during this session
@@ -56,6 +60,7 @@ export class TaskList {
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
   filterOverdue = false; // when true, show only overdue tasks
+  filterCategory: TaskCategory | '' = ''; // when set, show only tasks of this category
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
