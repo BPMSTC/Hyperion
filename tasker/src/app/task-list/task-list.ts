@@ -73,13 +73,15 @@ export class TaskList {
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
-    // Enforce completion visibility mode:
-    // - filterCompleted === false (default): show only incomplete tasks
-    // - filterCompleted === true: show only completed tasks
-    // If filterOverdue is active, further restrict to overdue tasks (intersection).
     return this.tasks.filter(t => {
+      //filter by completion status
       if (t.completed !== this.filterCompleted) return false;
-      if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
+      
+      // Filter by overdue status
+      if (this.filterOverdue && !this.isTaskOverdue(t)) return false:
+
+      //Filter by category
+      if (this.filterCategory && t.category !== this.filterCategory) return false:
       return true;
     });
   }
@@ -140,6 +142,7 @@ export class TaskList {
       description,
       dueDate: this.newDueDate ? this.newDueDate : undefined,
       location: this.newLocation ? this.newLocation.trim() : undefined,
+      category: this.newCategory || undefined,
       completed: false
     };
 
@@ -153,6 +156,8 @@ export class TaskList {
   this.newTitle = '';
   this.newDescription = '';
   this.newLocation = '';
+  this.newDueDate = '';
+  this.newCategory = '';
   this.locationSuggestions = [];
   }
 
@@ -183,6 +188,7 @@ export class TaskList {
     this.editDescription = task.description || '';
     this.editDueDate = task.dueDate || '';
     this.editLocation = task.location || '';
+    this.editCategory = task.category || '';
     this.editLocationSuggestions = []; // Clear any existing suggestions
   }
 
@@ -211,6 +217,8 @@ export class TaskList {
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
       // Save edited location (empty string => remove location)
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
+      // Save edited category (empty string => remove category)
+      task.category = this.editCategory || undefined;
       this.saveTasks();
     }
 
@@ -225,6 +233,7 @@ export class TaskList {
     this.editDescription = '';
     this.editDueDate = '';
     this.editLocation = '';
+    this.editCategory = '';
     this.editLocationSuggestions = [];
     // Clear any pending timeout for edit location search
     if (this.editLocationSearchTimeout) {
@@ -329,5 +338,20 @@ export class TaskList {
     this.editLocationSuggestions = []; // Hide suggestions
   }
 
+  // Category helper method
+  getCategoryBadgeClass (category?: TaskCategory): string { 
+    if (!category) return '';
+
+    switch (category){
+      case 'School':
+        return 'badge-school';
+      case 'Work':
+        return 'badge-work';
+      case 'Personal':
+        return 'badge-personal';
+      default: 
+        return '';
+    }
+  }
 
 }

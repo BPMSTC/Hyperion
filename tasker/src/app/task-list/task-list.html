@@ -1,6 +1,6 @@
 <!-- TaskList template
-		 - Top form collects a title (required) and optional description.
-		 - Uses ngModel for two-way binding to `newTitle` and `newDescription`.
+		 - Top form collects a title (required) and optional description, location, due date, and category.
+		 - Uses ngModel for two-way binding.
 		 - The form's (ngSubmit) calls addTask() defined in the component.
 		 - Each task in `tasks` is rendered using the existing <app-task-item>
 			 component so the display format matches the task-item component.
@@ -28,9 +28,18 @@
 		<div class="filter-toggle-left">
 			<button type="button" class="filter-toggle-btn btn btn-outline-primary btn-sm mb-2" (click)="filterPanelOpen = !filterPanelOpen">Filter</button>
 			<div *ngIf="filterPanelOpen" class="filter-bar compact mt-2">
-				<div class="btn-group btn-group-sm w-100 w-md-auto" role="group">
+				<div class="btn-group btn-group-sm w-100 w-md-auto mb-2" role="group">
 					<button type="button" class="filter-btn btn btn-outline-primary" [class.active]="filterCompleted" (click)="filterCompleted = !filterCompleted">Completed</button>
 					<button type="button" class="filter-btn btn btn-outline-primary" [class.active]="filterOverdue" (click)="filterOverdue = !filterOverdue">Overdue</button>
+				</div>
+				
+				<!-- Category filter dropdown -->
+				<div class="mb-2">
+					<label class="form-label small mb-1">Filter by Category:</label>
+					<select name="filterCategory" class="form-select form-select-sm" [(ngModel)]="filterCategory">
+						<option value="">All Categories</option>
+						<option *ngFor="let category of CATEGORIES" [value]="category">{{ category }}</option>
+					</select>
 				</div>
 			</div>
 		</div>
@@ -74,6 +83,15 @@
 					</div>
 				</div>
 			</div>
+		</div>
+
+		<!-- Category dropdown for new task -->
+		<div class="mb-2">
+			<label class="visually-hidden" for="newCategorySelect">Category</label>
+			<select id="newCategorySelect" name="category" class="form-select" [(ngModel)]="newCategory">
+				<option value="">Select category (optional)</option>
+				<option *ngFor="let category of CATEGORIES" [value]="category">{{ category }}</option>
+			</select>
 		</div>
 
 		<!-- New: due date input for the new task (ISO date) -->
@@ -133,7 +151,15 @@
 									</div>
 								</div>
 
-														<!-- Allow editing the due date only in edit mode -->
+								<!-- Category dropdown for editing -->
+								<div class="form-row mb-2">
+									<select name="editCategory" class="form-select form-select-sm" [(ngModel)]="editCategory">
+										<option value="">Select category (optional)</option>
+										<option *ngFor="let category of CATEGORIES" [value]="category">{{ category }}</option>
+									</select>
+								</div>
+
+								<!-- Allow editing the due date only in edit mode -->
 								<div class="form-row mb-2">
 									<input type="date" name="editDueDate" class="task-due form-control form-control-sm" [(ngModel)]="editDueDate" aria-label="'Due date for task: ' + editTitle" />
 								</div>
