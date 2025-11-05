@@ -1,6 +1,25 @@
 .weather-widget {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
   color: white;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weather-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.weather-icon {
+  font-size: 48px;
+}
+
+.weather-info {
+  flex: 1;
 }
 
 .weather-temp {
@@ -13,7 +32,19 @@
   opacity: 0.9;
 }
 
-.weather-refresh {
+.weather-location {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+.weather-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.weather-refresh,
+.weather-location-btn {
   background: rgba(255, 255, 255, 0.2);
   border: none;
   border-radius: 50%;
@@ -24,9 +55,66 @@
   transition: all 0.3s;
 }
 
-.weather-refresh:hover {
+.weather-refresh:hover,
+.weather-location-btn:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+.weather-refresh:hover {
   transform: rotate(180deg);
+}
+
+.location-input-panel {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.location-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.location-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.location-search-btn,
+.location-auto-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.location-search-btn:hover:not(:disabled),
+.location-auto-btn:hover:not(:disabled) {
+  background: white;
+  transform: translateY(-1px);
+}
+
+.location-search-btn:disabled,
+.location-auto-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.location-error {
+  color: #ffcccc;
+  font-size: 13px;
+  margin-top: 8px;
 }
 
 .weather-details {
@@ -42,7 +130,8 @@
 }
 
 .task-suggestions {
-  padding: 2px;
+  margin-top: 15px;
+  padding: 15px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
@@ -59,7 +148,8 @@
   margin-bottom: 10px;
 }
 
-.toggle-suggestions, .toggle-suggestions-expand {
+.toggle-suggestions, 
+.toggle-suggestions-expand {
   background: none;
   border: none;
   color: white;

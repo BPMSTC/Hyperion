@@ -212,4 +212,30 @@ export class WeatherService {
     // Clear or partly cloudy, reasonable temperature
     return code <= 3 && temp >= 50 && temp <= 90;
   }
+
+   /**
+   * Search for a location by city name or ZIP code
+   * Uses Open-Meteo's geocoding API
+   */
+  searchLocation(query: string): Observable<any> {
+    const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
+    
+    return this.http.get<any>(geocodingUrl).pipe(
+      map(response => {
+        if (response.results && response.results.length > 0) {
+          const location = response.results[0];
+          return {
+            name: `${location.name}${location.admin1 ? ', ' + location.admin1 : ''}${location.country ? ', ' + location.country : ''}`,
+            lat: location.latitude,
+            lon: location.longitude
+          };
+        }
+        return null;
+      }),
+      catchError(error => {
+        console.error('Error searching location:', error);
+        return of(null);
+      })
+    );
+  }
 }

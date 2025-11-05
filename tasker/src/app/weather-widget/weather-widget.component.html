@@ -1,45 +1,74 @@
-<div class="weather-widget card shadow-sm my-0 rounded-3 mb-3" *ngIf="weather">
-  <div class="card-body p-">
-    <div class="weather-header d-flex align-items-center justify-content-between justify-content-md-center gap-3 mb-3">
-      <span class="weather-icon me-3 fs-1">{{ getWeatherIcon() }}</span>
-      <div class="weather-info">
-        <div class="weather-temp text-white">{{ weather.temperature }}°F</div>
-        <div class="weather-desc text-white">{{ weather.weatherDescription }}</div>
-      </div>
-      <button class="weather-refresh btn btn-outline-secondary btn-sm" (click)="refreshWeather()" title="Refresh weather">
+<div class="weather-widget" *ngIf="weather">
+  <div class="weather-header">
+    <span class="weather-icon">{{ getWeatherIcon() }}</span>
+    <div class="weather-info">
+      <div class="weather-temp">{{ weather.temperature }}°F</div>
+      <div class="weather-desc">{{ weather.weatherDescription }}</div>
+      <div class="weather-location" *ngIf="currentLocation">📍 {{ currentLocation }}</div>
+    </div>
+    <div class="weather-controls">
+      <button class="weather-refresh" (click)="refreshWeather()" title="Refresh weather">
         🔄
       </button>
-    </div>
-    
-    <div class="weather-details mb-1">
-      <span class="weather-detail badge text-white fs-5">💨 {{ weather.windSpeed }} mph</span>
-    </div>
-
-    <div class="task-suggestions p-3">
-      <button class="suggestions-header btn btn-link p-0 text-decoration-none w-100 d-flex flex-row flex-md-column align-items-center justify-content-between justify-content-md-center mb-2" 
-              (click)="showSuggestions = !showSuggestions">
-        <strong class="text-white">Today's suggested tasks:</strong>
-        <span class="text-white fs-6 ms-2 ms-md-0 mt-md-1">{{ showSuggestions ? '▲' : '▼' }}</span>
+      <button class="weather-location-btn" (click)="toggleLocationInput()" title="Change location">
+        📍
       </button>
-      
-      <ul class="suggestions-list list-unstyled mb-0" *ngIf="showSuggestions">
-        <li *ngFor="let suggestion of taskSuggestions" class="mb-1">{{ suggestion }}</li>
-      </ul>
     </div>
+  </div>
+
+  <!-- Location input panel -->
+  <div class="location-input-panel" *ngIf="showLocationInput">
+    <form (ngSubmit)="searchLocation()" class="location-form">
+      <input 
+        type="text" 
+        [(ngModel)]="locationQuery"
+        name="location"
+        placeholder="Enter city name or ZIP code"
+        class="location-input"
+        [disabled]="searching"
+      />
+      <button type="submit" class="location-search-btn" [disabled]="searching || !locationQuery.trim()">
+        {{ searching ? '🔍...' : '🔍 Search' }}
+      </button>
+      <button type="button" class="location-auto-btn" (click)="useAutoLocation()" [disabled]="searching">
+        📍 Use My Location
+      </button>
+    </form>
+    <div class="location-error" *ngIf="locationError">
+      {{ locationError }}
+    </div>
+  </div>
+  
+  <div class="weather-details">
+    <span class="weather-detail">💨 {{ weather.windSpeed }} mph</span>
+  </div>
+
+  <div class="task-suggestions" *ngIf="showSuggestions">
+    <div class="suggestions-header">
+      <strong>Suggested tasks for today:</strong>
+      <button class="toggle-suggestions" (click)="showSuggestions = !showSuggestions">
+        ▼
+      </button>
+    </div>
+    <ul class="suggestions-list">
+      <li *ngFor="let suggestion of taskSuggestions">{{ suggestion }}</li>
+    </ul>
+  </div>
+
+  <div class="task-suggestions collapsed" *ngIf="!showSuggestions">
+    <button class="toggle-suggestions-expand" (click)="showSuggestions = true">
+      Suggested tasks ▶
+    </button>
   </div>
 </div>
 
-<div class="weather-widget card shadow-sm my-0" *ngIf="loading">
-  <div class="card-body text-center">
-    <div class="weather-loading">Loading weather...</div>
-  </div>
+<div class="weather-widget loading" *ngIf="loading">
+  <div class="weather-loading">Loading weather...</div>
 </div>
 
-<div class="weather-widget card shadow-sm my-0 border-danger" *ngIf="error && !loading">
-  <div class="card-body text-center">
-    <div class="weather-error text-danger">
-      Unable to load weather. 
-      <button class="btn btn-outline-danger btn-sm mt-2" (click)="refreshWeather()">Retry</button>
-    </div>
+<div class="weather-widget error" *ngIf="error && !loading">
+  <div class="weather-error">
+    Unable to load weather. 
+    <button (click)="refreshWeather()">Retry</button>
   </div>
 </div>
