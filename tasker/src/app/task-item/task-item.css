@@ -68,3 +68,28 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
+/* Category badge styles */
+.category-badge {
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 0.25rem 0.5rem;
+	border-radius: 0.25rem;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+.badge-school {
+	background-color: #2196F3 !important;
+	color: white !important;
+}
+
+.badge-work {
+	background-color: #4CAF50 !important;
+	color: white !important;
+}
+
+.badge-personal {
+	background-color: #9C27B0 !important;
+	color: white !important;
+}radialGradient
