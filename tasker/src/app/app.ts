@@ -138,10 +138,8 @@ export class App implements OnInit {
     }
   }
 
-  clearTasksForDemo(): void {
-    const sampleTaskTitles = ['DEMO - Buy groceries', 'DEMO - Finish project report', 'DEMO - drop off package'];
-    
-    this.tasks = this.tasks.filter(task => !sampleTaskTitles.includes(task.title));
+    clearTasksForDemo(): void {
+    this.tasks = this.tasks.filter(task => !task.title?.startsWith('DEMO -'));
     this.taskListComponent.tasks = [...this.tasks];
     this.taskListComponent.saveTasks();
 
