@@ -58,22 +58,63 @@ export class App implements OnInit {
   }
    generateTasksForDemo(): void {
     const sampleTasks: Task[] = [
+      // Personal tasks
       {
         id: this.nextId++,
         title: 'DEMO - Buy groceries',
         description: 'Milk, Bread, Eggs, Butter',
+        category: 'Personal',
         completed: false
       },
+      {
+        id: this.nextId++,
+        title: 'DEMO - Gym workout',
+        description: 'Upper body strength training and cardio',
+        location: 'Fitness Center Downtown',
+        dueDate: this.getFutureDate(2),
+        category: 'Personal',
+        completed: false
+      },
+      // Work tasks
       {
         id: this.nextId++,
         title: 'DEMO - Finish project report',
         description: 'Complete the final draft of the project report and send it to the manager.',
         dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
+        category: 'Work',
         completed: false
       },
       {
         id: this.nextId++,
-        title: 'DEMO - drop off package',
+        title: 'DEMO - Team meeting prep',
+        description: 'Prepare agenda and review project milestones',
+        location: 'Conference Room B',
+        dueDate: this.getFutureDate(3),
+        category: 'Work',
+        completed: false
+      },
+      // School tasks
+      {
+        id: this.nextId++,
+        title: 'DEMO - Complete Math homework',
+        description: 'Finish chapters 5-7 exercises',
+        location: 'Publicc Library, Stevens Point WI',
+        dueDate: this.getFutureDate(5),
+        category: 'School',
+        completed: false
+      },
+      {
+        id: this.nextId++,
+        title: 'DEMO - Study for Biology exam',
+        description: 'Review cell biology and genetics chapters',
+        dueDate: this.getFutureDate(7),
+        category: 'School',
+        completed: false
+      },
+      // Task without category
+      {
+        id: this.nextId++,
+        title: 'DEMO - Drop off package',
         location: 'FedEx Office, Plover WI',
         completed: false
       }
@@ -115,5 +156,12 @@ export class App implements OnInit {
         button.classList.remove('success');
       }, 2000);
     }
+  }
+
+  // Helper to get a date N days in the future as an ISO string
+  private getFutureDate(daysAhead: number): string {
+    const date = new Date();
+    date.setDate(date.getDate() + daysAhead);
+    return date.toISOString().split('T')[0];
   }
 }
