@@ -1,14 +1,43 @@
-<div class="task-content">
-  <h3 class="task-title">{{task.title}}</h3>
-  <p class="task-description">{{ task.description }}</p>
-  <div class="task-due-row" *ngIf="task.dueDate">
-    <span class="task-due-display">Due: {{ task.dueDate | date:'MM/dd/yyyy' }}</span>
-  </div>
-  <div class="task-location-row" *ngIf="task.location">
-    <span class="task-location-display">📍 {{ task.location }}</span>
-  </div>
-  <div class="overdue-indicator" *ngIf="isOverdue">
-    <span class="overdue-icon">⚠️</span>
-    <span class="overdue-text">Overdue</span>
-  </div>
+<!-- task-item.html
+	 - Renders a single task's title, optional description, due date, location, and category.
+	 - The completed state styles are applied when task.completed === true.
+-->
+<div class="task-content" [id]="getTaskId()">
+	<div class="d-flex align-items-start justify-content-between gap-2 mb-1">
+		<h3 class="task-title mb-0" [class.completed]="task.completed">
+			{{ task.title }}
+		</h3>
+		<!-- Category badge -->
+		<span *ngIf="task.category" 
+			  class="badge category-badge"
+			  [ngClass]="{
+				'badge-school': task.category === 'School',
+				'badge-work': task.category === 'Work',
+				'badge-personal': task.category === 'Personal'
+			  }">
+			{{ task.category }}
+		</span>
+	</div>
+	
+	<p *ngIf="task.description" class="task-description mb-2" [class.completed]="task.completed">
+		{{ task.description }}
+	</p>
+	
+	<!-- Display location if it exists -->
+	<div *ngIf="task.location" class="task-location-display mb-1">
+		<small class="text-muted">
+			<span class="location-icon">📍</span>
+			{{ task.location }}
+		</small>
+	</div>
+	
+	<!-- Display due date if it exists -->
+	<div *ngIf="task.dueDate" class="task-due-display">
+		<small [class.text-danger]="isOverdue && !task.completed" 
+			   [class.text-muted]="!isOverdue || task.completed">
+			<span *ngIf="isOverdue && !task.completed">⚠️ Overdue: </span>
+			<span *ngIf="!isOverdue || task.completed">Due: </span>
+			{{ task.dueDate }}
+		</small>
+	</div>
 </div>

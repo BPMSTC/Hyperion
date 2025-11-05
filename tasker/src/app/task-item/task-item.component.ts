@@ -2,6 +2,7 @@ import { Component, Input, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../models/task.model';
 
+
 @Component({
   selector: 'app-task-item',
   standalone: true, //This component does not need to be declared in a module; it manages its own dependencies.

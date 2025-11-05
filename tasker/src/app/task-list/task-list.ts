@@ -43,6 +43,7 @@ export class TaskList {
   newDescription = '';
   newLocation = ''; // bound to the location input
   newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
+  newCategory: TaskCategory | '' = ''; // bound to the category dropdown
   locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
 
   // Edit mode properties
@@ -78,10 +79,10 @@ export class TaskList {
       if (t.completed !== this.filterCompleted) return false;
       
       // Filter by overdue status
-      if (this.filterOverdue && !this.isTaskOverdue(t)) return false:
+      if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
 
       //Filter by category
-      if (this.filterCategory && t.category !== this.filterCategory) return false:
+      if (this.filterCategory && t.category !== this.filterCategory) return false;
       return true;
     });
   }
@@ -188,7 +189,7 @@ export class TaskList {
     this.editDescription = task.description || '';
     this.editDueDate = task.dueDate || '';
     this.editLocation = task.location || '';
-    this.editCategory = task.category || '';
+    this.editCategory = (task.category as TaskCategory) || '';
     this.editLocationSuggestions = []; // Clear any existing suggestions
   }
 
