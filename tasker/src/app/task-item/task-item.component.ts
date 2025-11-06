@@ -2,6 +2,7 @@ import { Component, Input, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../models/task.model';
 
+
 @Component({
   selector: 'app-task-item',
   standalone: true, //This component does not need to be declared in a module; it manages its own dependencies.
@@ -31,5 +32,14 @@ export class TaskItemComponent {
   // Function that returns the appropriate ID for overdue tasks (kept for compatibility)
   getTaskId(): string | null {
     return this.isOverdue ? 'overdueTask' : null;
+  }
+
+  // Format date as MM-DD-YYYY
+  formatDate(isoDate: string): string {
+    const date = new Date(isoDate);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}-${day}-${year}`;
   }
 }

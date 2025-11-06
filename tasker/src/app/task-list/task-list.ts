@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
-import { Task } from '../models/task.model';
+import { Task, TaskCategory } from '../models/task.model';
 import { PlacesService, AutocompleteResult } from '../services/places.service';
 
 /*
@@ -37,6 +37,9 @@ export class TaskList {
   readonly TITLE_MAX_LENGTH = 50;
   readonly DESCRIPTION_MAX_LENGTH = 250;
 
+  // available categoeries
+  readonly CATEGORIES: TaskCategory[] = ['School', 'Work', 'Personal'];
+
   // The in-memory array of tasks displayed in the template
   tasks: Task[] = [];
 
@@ -45,6 +48,7 @@ export class TaskList {
   newDescription = '';
   newLocation = ''; // bound to the location input
   newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
+  newCategory: TaskCategory | '' = ''; // bound to the category dropdown
   locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
 
   // Edit mode properties
@@ -53,6 +57,7 @@ export class TaskList {
   editDescription = '';
   editLocation = ''; // bound while editing a task location
   editDueDate = ''; // bound while editing a task
+  editCategory: TaskCategory | '' = ''; // bound while editing a task category
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Simple incrementing id for tasks created during this session
@@ -61,6 +66,7 @@ export class TaskList {
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
   filterOverdue = false; // when true, show only overdue tasks
+  filterCategory: TaskCategory | '' = ''; // when set, show only tasks of this category
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
@@ -73,13 +79,15 @@ export class TaskList {
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
-    // Enforce completion visibility mode:
-    // - filterCompleted === false (default): show only incomplete tasks
-    // - filterCompleted === true: show only completed tasks
-    // If filterOverdue is active, further restrict to overdue tasks (intersection).
     return this.tasks.filter(t => {
+      //filter by completion status
       if (t.completed !== this.filterCompleted) return false;
+      
+      // Filter by overdue status
       if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
+
+      //Filter by category
+      if (this.filterCategory && t.category !== this.filterCategory) return false;
       return true;
     });
   }
@@ -140,6 +148,7 @@ export class TaskList {
       description,
       dueDate: this.newDueDate ? this.newDueDate : undefined,
       location: this.newLocation ? this.newLocation.trim() : undefined,
+      category: this.newCategory || undefined,
       completed: false
     };
 
@@ -153,31 +162,33 @@ export class TaskList {
   this.newTitle = '';
   this.newDescription = '';
   this.newLocation = '';
+  this.newDueDate = '';
+  this.newCategory = '';
   this.locationSuggestions = [];
   }
 
-  // Toggle the completed flag for a task; the checkbox in the template calls this.
-  toggleComplete(task: Task): void {
-    task.completed = !task.completed;
-    // Save change to persistence
-    this.saveTasks();
-
-  // Shows the alert if the task is marked as complete.
-    if (task.completed) { // If the task is marked as complete.
-      this.completeMessage = 'Task marked as complete!'; // Set the alert message to 'Task marked as complete!'.
-      this.showCompleteAlert = true; // Set the property for showCompleteAlert to true.
-      this.isFading = false;
-
-      // Remove the alert after two seconds
-      setTimeout(() => { // Function named setTimeout
-        this.isFading = true;
-        setTimeout(() => {
-          this.showCompleteAlert = false; // Set the alert shoeCompleteAlert value to false, eliminating the banner.
-          this.isFading = false;
-        }, 2000); // Fades out after 2 seconds. (2000 ms).
-      }, 2000); // Fades out for 2 seconds (2000 ms).
-    }
+ // Toggle the completed flag for a task; the checkbox in the template calls this.
+toggleComplete(task: Task): void {
+  task.completed = !task.completed;
+  
+  // Show completion alert if task was just completed
+  if (task.completed) {
+    this.completeMessage = `✓ Task "${task.title}" marked as complete!`;
+    this.showCompleteAlert = true;
+    this.isFading = false;
+    
+    // Auto-hide alert after 3 seconds
+    setTimeout(() => {
+      this.isFading = true;
+      setTimeout(() => {
+        this.showCompleteAlert = false;
+      }, 2000); // Match the CSS transition duration
+    }, 3000);
   }
+  
+  // Save change to persistence
+  this.saveTasks();
+}
 
   // Remove a task by id; used by the remove button in the template.
   remove(task: Task): void {
@@ -199,6 +210,7 @@ export class TaskList {
     this.editDescription = task.description || '';
     this.editDueDate = task.dueDate || '';
     this.editLocation = task.location || '';
+    this.editCategory = (task.category as TaskCategory) || '';
     this.editLocationSuggestions = []; // Clear any existing suggestions
   }
 
@@ -227,6 +239,8 @@ export class TaskList {
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
       // Save edited location (empty string => remove location)
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
+      // Save edited category (empty string => remove category)
+      task.category = this.editCategory || undefined;
       this.saveTasks();
     }
 
@@ -241,6 +255,7 @@ export class TaskList {
     this.editDescription = '';
     this.editDueDate = '';
     this.editLocation = '';
+    this.editCategory = '';
     this.editLocationSuggestions = [];
     // Clear any pending timeout for edit location search
     if (this.editLocationSearchTimeout) {
@@ -345,5 +360,20 @@ export class TaskList {
     this.editLocationSuggestions = []; // Hide suggestions
   }
 
+  // Category helper method
+  getCategoryBadgeClass (category?: TaskCategory): string { 
+    if (!category) return '';
+
+    switch (category){
+      case 'School':
+        return 'badge-school';
+      case 'Work':
+        return 'badge-work';
+      case 'Personal':
+        return 'badge-personal';
+      default: 
+        return '';
+    }
+  }
 
 }
