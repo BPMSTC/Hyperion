@@ -28,7 +28,7 @@ import { PlacesService, AutocompleteResult } from '../services/places.service';
   styleUrls: ['./task-list.css']
 })
 export class TaskList {
-    // Alert state variables
+  // Alert state variables
   showCompleteAlert = false;
   completeMessage = '';
   isFading = false;

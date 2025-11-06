@@ -11,7 +11,8 @@ describe('TaskList - Character Limits and Validation', () => {
   beforeEach(async () => {
     // Step 1: Configure TestBed with the component
     await TestBed.configureTestingModule({
-      imports: [TaskList]
+      imports: [TaskList], 
+      providers: [provideHttpClient()]
     }).compileComponents();
 
     // Step 2: Create the component instance
