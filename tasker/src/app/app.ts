@@ -17,15 +17,11 @@ export class App implements OnInit {
   @ViewChild(TaskList) taskListComponent!: TaskList;  // Add this line
   tasks: Task[] = [];
   taskForm!: FormGroup;
-  private nextId = 1;
 
   constructor(private fb: FormBuilder) {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
       this.tasks = JSON.parse(savedTasks);
-       // Set nextId based on existing tasks
-      const maxId = this.tasks.reduce((m, t) => Math.max(m, t.id || 0), 0);
-      this.nextId = maxId + 1;
     }
   }
 
@@ -39,20 +35,12 @@ export class App implements OnInit {
   addTask() {
     if (this.taskForm.valid) {
       const formValue = this.taskForm.value;
-      const newTask: Task = {
-        id: Date.now(),
-        title: formValue.title.trim(),
-        description: formValue.description?.trim() || '',
-        completed: false
-      };
-
-      // Add the new task to the tasks array
-      this.tasks.push(newTask);
-
-      // Save to localStorage
-      localStorage.setItem('tasks', JSON.stringify(this.tasks));
-
-      // Reset the form
+      // Delegate to TaskList's addTask method, which uses TaskService and MongoDB
+      if (this.taskListComponent) {
+        this.taskListComponent.newTitle = formValue.title.trim();
+        this.taskListComponent.newDescription = formValue.description?.trim() || '';
+        this.taskListComponent.addTask();
+      }
       this.taskForm.reset();
     }
   }
@@ -60,14 +48,12 @@ export class App implements OnInit {
     const sampleTasks: Task[] = [
       // Personal tasks
       {
-        id: this.nextId++,
         title: 'DEMO - Buy groceries',
         description: 'Milk, Bread, Eggs, Butter',
         category: 'Personal',
         completed: false
       },
       {
-        id: this.nextId++,
         title: 'DEMO - Gym workout',
         description: 'Upper body strength training and cardio',
         location: 'Fitness Center Downtown',
@@ -77,7 +63,6 @@ export class App implements OnInit {
       },
       // Work tasks
       {
-        id: this.nextId++,
         title: 'DEMO - Finish project report',
         description: 'Complete the final draft of the project report and send it to the manager.',
         dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
@@ -85,7 +70,6 @@ export class App implements OnInit {
         completed: false
       },
       {
-        id: this.nextId++,
         title: 'DEMO - Team meeting prep',
         description: 'Prepare agenda and review project milestones',
         location: 'Conference Room B',
@@ -95,7 +79,6 @@ export class App implements OnInit {
       },
       // School tasks
       {
-        id: this.nextId++,
         title: 'DEMO - Complete Math homework',
         description: 'Finish chapters 5-7 exercises',
         location: 'Publicc Library, Stevens Point WI',
@@ -104,7 +87,6 @@ export class App implements OnInit {
         completed: false
       },
       {
-        id: this.nextId++,
         title: 'DEMO - Study for Biology exam',
         description: 'Review cell biology and genetics chapters',
         dueDate: this.getFutureDate(7),
@@ -113,7 +95,6 @@ export class App implements OnInit {
       },
       // Task without category
       {
-        id: this.nextId++,
         title: 'DEMO - Drop off package',
         location: 'FedEx Office, Plover WI',
         completed: false

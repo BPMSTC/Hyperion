@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task, TaskCategory } from '../models/task.model';
 import { PlacesService, AutocompleteResult } from '../services/places.service';
+import { TaskService } from '../services/task.service';
 
 /*
   TaskList component
@@ -27,7 +28,7 @@ import { PlacesService, AutocompleteResult } from '../services/places.service';
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })
-export class TaskList {
+export class TaskList implements OnInit {
   // Alert state variables
   showCompleteAlert = false;
   completeMessage = '';
@@ -52,7 +53,7 @@ export class TaskList {
   locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
 
   // Edit mode properties
-  editingTaskId: number | null = null;
+  editingTaskId: string | null = null;
   editTitle = '';
   editDescription = '';
   editLocation = ''; // bound while editing a task location
@@ -60,8 +61,6 @@ export class TaskList {
   editCategory: TaskCategory | '' = ''; // bound while editing a task category
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
-  // Simple incrementing id for tasks created during this session
-  private nextId = 1;
 
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
@@ -75,7 +74,7 @@ export class TaskList {
   private locationSearchTimeout: any;
   private editLocationSearchTimeout: any;
 
-  constructor(private placesService: PlacesService) {}
+  constructor(private taskService: TaskService, private placesService: PlacesService) {}
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
@@ -97,53 +96,25 @@ export class TaskList {
    * the in-memory list. This preserves tasks between page reloads.
    */
   ngOnInit(): void {
-    try {
-      const raw = localStorage.getItem('tasks');
-      if (raw) {
-        const parsed: Task[] = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          this.tasks = parsed;
-          // set nextId to one higher than the current max id to avoid collisions
-          const maxId = this.tasks.reduce((m, t) => Math.max(m, t.id || 0), 0);
-          this.nextId = maxId + 1;
-        }
-      }
-    } catch (e) {
-      // If parse fails, ignore and start fresh — avoid breaking the UI
-      console.warn('Failed to read saved tasks from localStorage', e);
-      this.tasks = [];
-    }
+    this.taskService.getTasks().subscribe(tasks => {
+      this.tasks = tasks;
+    });
   }
 
   /* Save current tasks array to localStorage. Kept in one helper for reuse. */
   public saveTasks(): void {
-    try {
-      localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    } catch (e) {
-      console.warn('Failed to save tasks to localStorage', e);
-    }
+    // No-op: persistence is handled by backend
   }
 
   // addTask() is wired to the form's ngSubmit. It validates input, creates
   // a Task object, prepends it to the tasks list, and clears the form fields.
   addTask(): void {
     const title = this.newTitle?.trim();
-    if (!title) return; // don't add empty tasks
-
-    // Validate character limits
-    if (title.length > this.TITLE_MAX_LENGTH) {
-      console.warn(`Title exceeds maximum length of ${this.TITLE_MAX_LENGTH} characters`);
-      return;
-    }
-
+    if (!title) return;
+    if (title.length > this.TITLE_MAX_LENGTH) return;
     const description = this.newDescription?.trim() || '';
-    if (description.length > this.DESCRIPTION_MAX_LENGTH) {
-      console.warn(`Description exceeds maximum length of ${this.DESCRIPTION_MAX_LENGTH} characters`);
-      return;
-    }
-
+    if (description.length > this.DESCRIPTION_MAX_LENGTH) return;
     const task: Task = {
-      id: this.nextId++,
       title,
       description,
       dueDate: this.newDueDate ? this.newDueDate : undefined,
@@ -151,100 +122,79 @@ export class TaskList {
       category: this.newCategory || undefined,
       completed: false
     };
-
-  // Prepend so newest items appear at the top
-  this.tasks = [task, ...this.tasks];
-
-  // Persist the updated list immediately
-  this.saveTasks();
-
-  // Reset inputs for the next entry
-  this.newTitle = '';
-  this.newDescription = '';
-  this.newLocation = '';
-  this.newDueDate = '';
-  this.newCategory = '';
-  this.locationSuggestions = [];
+    this.taskService.addTask(task).subscribe(newTask => {
+      this.tasks = [newTask, ...this.tasks];
+      this.newTitle = '';
+      this.newDescription = '';
+      this.newLocation = '';
+      this.newDueDate = '';
+      this.newCategory = '';
+      this.locationSuggestions = [];
+    });
   }
 
  // Toggle the completed flag for a task; the checkbox in the template calls this.
 toggleComplete(task: Task): void {
   task.completed = !task.completed;
   
-  // Show completion alert if task was just completed
-  if (task.completed) {
-    this.completeMessage = `✓ Task "${task.title}" marked as complete!`;
-    this.showCompleteAlert = true;
-    this.isFading = false;
-    
-    // Auto-hide alert after 3 seconds
-    setTimeout(() => {
-      this.isFading = true;
-      setTimeout(() => {
-        this.showCompleteAlert = false;
-      }, 2000); // Match the CSS transition duration
-    }, 3000);
-  }
-  
-  // Save change to persistence
-  this.saveTasks();
+  this.taskService.updateTask(task).subscribe(updatedTask => {
+      if (task.completed) {
+        this.completeMessage = `✓ Task "${task.title}" marked as complete!`;
+        this.showCompleteAlert = true;
+        this.isFading = false;
+        
+        // Auto-hide alert after 3 seconds
+        setTimeout(() => {
+          this.isFading = true;
+          setTimeout(() => {
+            this.showCompleteAlert = false;
+          }, 2000); // Match the CSS transition duration
+        }, 3000);
+      }
+    });
 }
 
   // Remove a task by id; used by the remove button in the template.
   remove(task: Task): void {
-    this.tasks = this.tasks.filter(t => t.id !== task.id);
-  // Persist removal
-  this.saveTasks();
+    if (!task._id) return;
+    this.taskService.deleteTask(task._id).subscribe(() => {
+      this.tasks = this.tasks.filter(t => t._id !== task._id);
+    });
   }
 
   // Update the due date for an existing task and persist the change
   updateDueDate(task: Task, isoDate: string | null): void {
     task.dueDate = isoDate || undefined;
-    this.saveTasks();
+    this.taskService.updateTask(task).subscribe();
   }
 
   // Start editing a task by setting edit mode and populating edit fields
   startEdit(task: Task): void {
-    this.editingTaskId = task.id;
+    this.editingTaskId = task._id ?? null;
     this.editTitle = task.title;
     this.editDescription = task.description || '';
     this.editDueDate = task.dueDate || '';
     this.editLocation = task.location || '';
     this.editCategory = (task.category as TaskCategory) || '';
-    this.editLocationSuggestions = []; // Clear any existing suggestions
+    this.editLocationSuggestions = [];
   }
 
   // Save the edited task and exit edit mode
   saveEdit(): void {
     const title = this.editTitle?.trim();
-    if (!title || this.editingTaskId === null) return; // don't save empty titles
-
-    // Validate character limits for editing
-    if (title.length > this.TITLE_MAX_LENGTH) {
-      console.warn(`Title exceeds maximum length of ${this.TITLE_MAX_LENGTH} characters`);
-      return;
-    }
-
+    if (!title || this.editingTaskId === null) return;
+    if (title.length > this.TITLE_MAX_LENGTH) return;
     const description = this.editDescription?.trim() || '';
-    if (description.length > this.DESCRIPTION_MAX_LENGTH) {
-      console.warn(`Description exceeds maximum length of ${this.DESCRIPTION_MAX_LENGTH} characters`);
-      return;
-    }
-
-    const task = this.tasks.find(t => t.id === this.editingTaskId);
+    if (description.length > this.DESCRIPTION_MAX_LENGTH) return;
+    const task = this.tasks.find(t => t._id === this.editingTaskId);
     if (task) {
       task.title = title;
       task.description = description;
-      // Save edited due date (empty string => remove due date)
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
-      // Save edited location (empty string => remove location)
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
-      // Save edited category (empty string => remove category)
       task.category = this.editCategory || undefined;
-      this.saveTasks();
+      this.taskService.updateTask(task).subscribe();
     }
-
-    // Exit edit mode
     this.cancelEdit();
   }
 
@@ -265,7 +215,7 @@ toggleComplete(task: Task): void {
 
   // Helper method to check if a task is being edited
   isEditing(task: Task): boolean {
-    return this.editingTaskId === task.id;
+    return this.editingTaskId === task._id;
   }
 
   // Method to check if a task is overdue
