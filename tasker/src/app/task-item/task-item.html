@@ -37,7 +37,7 @@
 			   [class.text-muted]="!isOverdue || task.completed">
 			<span *ngIf="isOverdue && !task.completed">⚠️ Overdue: </span>
 			<span *ngIf="!isOverdue || task.completed">Due: </span>
-			{{ task.dueDate }}
+			{{ task.dueDate | date:'MM/dd/yyyy'}}
 		</small>
 	</div>
 </div>
