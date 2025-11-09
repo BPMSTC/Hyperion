@@ -41,8 +41,8 @@ export class App implements OnInit {
       this.taskForm.reset();
     }
   }
-   generateTasksForDemo(): void {
-    const sampleTasks: Task[] = [
+   loadDemoTasks(): void {
+    const demoTasks: Task[] = [
       // Personal tasks
       {
         title: 'DEMO - Buy groceries',
@@ -98,11 +98,11 @@ export class App implements OnInit {
       }
     ];
 
-  const addTaskObservables = sampleTasks.map(task => 
+  const addDemoTasksObservables = demoTasks.map(task => 
     this.taskListComponent.addTaskFromService(task)  // Now this returns Observable<Task>
   );
 
-  forkJoin(addTaskObservables).subscribe({
+  forkJoin(addDemoTasksObservables).subscribe({
     next: (savedTasks) => {
       this.taskListComponent.ngOnInit();
     },
@@ -124,14 +124,14 @@ export class App implements OnInit {
     }
   }
 
-clearTasksForDemo(): void {
+clearDemoTasks(): void {
   // Find all demo tasks
   const demoTasks = this.taskListComponent.tasks.filter(task => 
     task.title?.startsWith('DEMO -')
   );
 
   // Delete each demo task from MongoDB using the public method
-  const deleteObservables = demoTasks.map(task => {
+  const deleteDemoTaskObservables = demoTasks.map(task => {
     if (task._id) {
       return this.taskListComponent.removeTask(task._id);  // Use removeTask instead
     }
@@ -139,7 +139,7 @@ clearTasksForDemo(): void {
   });
 
   // Wait for all deletions to complete
-  forkJoin(deleteObservables).subscribe({
+  forkJoin(deleteDemoTaskObservables).subscribe({
     next: () => {
       // Refresh the task list from database
       this.taskListComponent.ngOnInit();
