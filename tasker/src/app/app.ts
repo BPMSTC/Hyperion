@@ -160,18 +160,6 @@ clearTasksForDemo(): void {
       console.error('Error clearing demo tasks:', error);
     }
   });
-
-    // Visual feedback
-    const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
-    if (button) {
-      const originalText = button.textContent;
-      button.textContent = '✓ Demo Data Cleared!';
-      button.classList.add('success');
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.classList.remove('success');
-      }, 2000);
-    }
   }
 
   // Helper to get a date N days in the future as an ISO string
