@@ -18,12 +18,8 @@ export class App implements OnInit {
   tasks: Task[] = [];
   taskForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      this.tasks = JSON.parse(savedTasks);
-    }
-  }
+  constructor(private fb: FormBuilder) { }
+
 
   ngOnInit() {
     this.taskForm = this.fb.group({
@@ -100,11 +96,16 @@ export class App implements OnInit {
         completed: false
       }
     ];
-    
-    // Update both the app's tasks and the task list component's tasks
-    this.tasks = [...sampleTasks, ...this.tasks];
-    this.taskListComponent.tasks = [...this.tasks];
-    this.taskListComponent.saveTasks();
+
+  // Add tasks through the public method
+  sampleTasks.forEach(task => {
+    this.taskListComponent.addTaskFromService(task);
+  });
+
+    // Refresh after all tasks are added
+  setTimeout(() => {
+    this.taskListComponent.ngOnInit();
+  }, 1000);
     
     // Visual feedback
     const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
@@ -122,7 +123,6 @@ export class App implements OnInit {
     clearTasksForDemo(): void {
     this.tasks = this.tasks.filter(task => !task.title?.startsWith('DEMO -'));
     this.taskListComponent.tasks = [...this.tasks];
-    this.taskListComponent.saveTasks();
 
     // Visual feedback
     const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;

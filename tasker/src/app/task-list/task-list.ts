@@ -14,13 +14,10 @@ import { TaskService } from '../services/task.service';
     TaskItemComponent so the visual format matches the standalone item.
 
   Persistence:
-  - Loads tasks from localStorage on initialization and persists changes on
-    add/remove/complete. This preserves the user's tasks between page reloads.
-
-  Notes:
-  - nextId is computed from existing saved tasks to avoid id collisions when
-    migrating or restoring saved data.
+  - Tasks are stored in MongoDB via the TaskService.
+  - Changes are automatically persisted to the database on add/edit/delete/complete.
 */
+
 @Component({
   selector: 'app-task-list',
   standalone: true,
@@ -45,9 +42,6 @@ export class TaskList implements OnInit {
 
   // The in-memory array of tasks displayed in the template
   tasks: Task[] = [];
-
-
-
 
   // Form-bound properties for new task input
   newTitle = '';
@@ -84,6 +78,17 @@ export class TaskList implements OnInit {
     this.todayDate = today.toISOString().split('T')[0];
   }
 
+   public addTaskFromService(task: Task): void {
+    this.taskService.addTask(task).subscribe({
+      next: (savedTask) => {
+        this.tasks.push(savedTask);
+      },
+      error: (error) => {
+        console.error('Error adding task:', error);
+      }
+    });
+  }
+
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
     return this.tasks.filter(t => {
@@ -107,11 +112,6 @@ export class TaskList implements OnInit {
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;
     });
-  }
-
-  /* Save current tasks array to localStorage. Kept in one helper for reuse. */
-  public saveTasks(): void {
-    // No-op: persistence is handled by backend
   }
 
   // addTask() is wired to the form's ngSubmit. It validates input, creates
@@ -333,5 +333,4 @@ toggleComplete(task: Task): void {
         return '';
     }
   }
-
 }
