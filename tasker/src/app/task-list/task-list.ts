@@ -41,8 +41,13 @@ export class TaskList implements OnInit {
   // available categoeries
   readonly CATEGORIES: TaskCategory[] = ['School', 'Work', 'Personal'];
 
+  todayDate: string; // bound to the date input's min attribute
+
   // The in-memory array of tasks displayed in the template
   tasks: Task[] = [];
+
+
+
 
   // Form-bound properties for new task input
   newTitle = '';
@@ -74,7 +79,10 @@ export class TaskList implements OnInit {
   private locationSearchTimeout: any;
   private editLocationSearchTimeout: any;
 
-  constructor(private taskService: TaskService, private placesService: PlacesService) {}
+  constructor(private taskService: TaskService, private placesService: PlacesService) {
+    const today = new Date();
+    this.todayDate = today.toISOString().split('T')[0];
+  }
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
