@@ -5,6 +5,7 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task, TaskCategory } from '../models/task.model';
 import { PlacesService, AutocompleteResult } from '../services/places.service';
 import { TaskService } from '../services/task.service';
+import { Observable } from 'rxjs';
 
 /*
   TaskList component
@@ -78,15 +79,12 @@ export class TaskList implements OnInit {
     this.todayDate = today.toISOString().split('T')[0];
   }
 
-   public addTaskFromService(task: Task): void {
-    this.taskService.addTask(task).subscribe({
-      next: (savedTask) => {
-        this.tasks.push(savedTask);
-      },
-      error: (error) => {
-        console.error('Error adding task:', error);
-      }
-    });
+  public addTaskFromService(task: Task): Observable<Task> {
+  return this.taskService.addTask(task);
+  }
+
+  public removeTask(taskId: string): Observable<void> {
+    return this.taskService.deleteTask(taskId);
   }
 
   // Computed filtered list: tasks must match all active filters
@@ -104,10 +102,6 @@ export class TaskList implements OnInit {
     });
   }
 
-  /*
-   * On init, try to read saved tasks from localStorage and initialize
-   * the in-memory list. This preserves tasks between page reloads.
-   */
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;

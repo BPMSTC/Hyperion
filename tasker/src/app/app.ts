@@ -5,6 +5,7 @@ import { Task } from './models/task.model';
 import { TaskList } from './task-list/task-list';
 import { QuoteOfTheDayComponent } from './quote-of-the-day/quote-of-the-day.component';
 import { WeatherWidgetComponent } from './weather-widget/weather-widget.component'
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -97,15 +98,18 @@ export class App implements OnInit {
       }
     ];
 
-  // Add tasks through the public method
-  sampleTasks.forEach(task => {
-    this.taskListComponent.addTaskFromService(task);
-  });
+  const addTaskObservables = sampleTasks.map(task => 
+    this.taskListComponent.addTaskFromService(task)  // Now this returns Observable<Task>
+  );
 
-    // Refresh after all tasks are added
-  setTimeout(() => {
-    this.taskListComponent.ngOnInit();
-  }, 1000);
+  forkJoin(addTaskObservables).subscribe({
+    next: (savedTasks) => {
+      this.taskListComponent.ngOnInit();
+    },
+    error: (error) => {
+      console.error('Error adding demo tasks:', error);
+    }
+  });
     
     // Visual feedback
     const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
@@ -120,9 +124,42 @@ export class App implements OnInit {
     }
   }
 
-    clearTasksForDemo(): void {
-    this.tasks = this.tasks.filter(task => !task.title?.startsWith('DEMO -'));
-    this.taskListComponent.tasks = [...this.tasks];
+clearTasksForDemo(): void {
+  // Find all demo tasks
+  const demoTasks = this.taskListComponent.tasks.filter(task => 
+    task.title?.startsWith('DEMO -')
+  );
+
+  // Delete each demo task from MongoDB using the public method
+  const deleteObservables = demoTasks.map(task => {
+    if (task._id) {
+      return this.taskListComponent.removeTask(task._id);  // Use removeTask instead
+    }
+    return new Observable(observer => observer.complete());
+  });
+
+  // Wait for all deletions to complete
+  forkJoin(deleteObservables).subscribe({
+    next: () => {
+      // Refresh the task list from database
+      this.taskListComponent.ngOnInit();
+      
+      // Visual feedback
+      const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
+      if (button) {
+        const originalText = button.textContent;
+        button.textContent = '✓ Demo Data Cleared!';
+        button.classList.add('success');
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('success');
+        }, 2000);
+      }
+    },
+    error: (error) => {
+      console.error('Error clearing demo tasks:', error);
+    }
+  });
 
     // Visual feedback
     const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
