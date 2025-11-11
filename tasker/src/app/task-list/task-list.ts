@@ -5,6 +5,7 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 import { Task, TaskCategory } from '../models/task.model';
 import { PlacesService, AutocompleteResult } from '../services/places.service';
 import { TaskService } from '../services/task.service';
+import confetti from 'canvas-confetti';
 
 /*
   TaskList component
@@ -139,6 +140,13 @@ toggleComplete(task: Task): void {
   
   this.taskService.updateTask(task).subscribe(updatedTask => {
       if (task.completed) {
+        // Trigger confetti animation
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
         this.completeMessage = `✓ Task "${task.title}" marked as complete!`;
         this.showCompleteAlert = true;
         this.isFading = false;
