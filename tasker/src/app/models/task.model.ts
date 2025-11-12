@@ -3,7 +3,7 @@
 export type TaskCategory = 'School' | 'Work' | 'Personal';
 
 export interface Task {
-  _id?: string; // MongoDB document ID
+  _id?: string; // MongoDB document ID (from MongoDB)
   title: string;
   description?: string;
   dueDate?: string;

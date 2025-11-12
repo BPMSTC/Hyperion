@@ -15,8 +15,8 @@ import { Observable } from 'rxjs';
     TaskItemComponent so the visual format matches the standalone item.
 
   Persistence:
-  - Tasks are stored in MongoDB via the TaskService.
-  - Changes are automatically persisted to the database on add/edit/delete/complete.
+  - Tasks are stored in MongoDB via the TaskService (see services/task.service.ts).
+  - All add/edit/delete/complete actions go to the database.
 */
 
 @Component({
