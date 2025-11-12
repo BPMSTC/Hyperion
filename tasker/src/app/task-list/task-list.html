@@ -175,6 +175,7 @@
               name="dueDate"
               class="task-due form-control"
               [(ngModel)]="newDueDate"
+              [min]="todayDate"
               aria-label="'Due date for new task: ' + newTitle"
             />
           </div>
@@ -289,6 +290,7 @@
                       name="editDueDate"
                       class="task-due form-control form-control-sm"
                       [(ngModel)]="editDueDate"
+                      [min]="todayDate"
                       aria-label="'Due date for task: ' + editTitle"
                     />
                   </div>
