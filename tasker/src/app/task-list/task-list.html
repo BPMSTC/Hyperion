@@ -188,12 +188,15 @@
       <!-- Tasks list without scroll - shows all tasks -->
       <div class="tasks-container">
         <!-- Give the list the legacy `.task-list` class so global styles apply -->
-        <ul class="tasks task-list list-unstyled mb-0">
+        <ul class="tasks task-list list-unstyled mb-0" cdkDropList (cdkDropListDropped)="onTaskDrop($event)">
           <li
             *ngFor="let task of filteredTasks"
+            cdkDrag
             class="task-row mb-2 p-2 border rounded d-flex flex-column"
             [id]="getOverdueRowId(task)"
           >
+            <div cdkDragHandle class="drag-handle me-2" title="Drag to reorder"> ⋮⋮ </div>
+
             <!-- checkbox toggles completed state -->
             <div class="d-flex align-items-start gap-2 w-100">
               <label class="task-meta d-flex align-items-center">

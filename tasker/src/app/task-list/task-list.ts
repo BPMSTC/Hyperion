@@ -6,6 +6,8 @@ import { Task, TaskCategory } from '../models/task.model';
 import { PlacesService, AutocompleteResult } from '../services/places.service';
 import { TaskService } from '../services/task.service';
 import { Observable } from 'rxjs';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 /*
   TaskList component
@@ -22,7 +24,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskItemComponent],
+  imports: [CommonModule, FormsModule, TaskItemComponent, DragDropModule],
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })
@@ -104,7 +106,12 @@ export class TaskList implements OnInit {
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(tasks => {
-      this.tasks = tasks;
+    // Sort by order if it exists, otherwise maintain current order
+    this.tasks = tasks.sort((a, b) => {
+      const orderA = a.order ?? 999999;
+      const orderB = b.order ?? 999999;
+      return orderA - orderB;
+    });
     });
   }
 
@@ -122,9 +129,11 @@ export class TaskList implements OnInit {
       dueDate: this.newDueDate ? this.newDueDate : undefined,
       location: this.newLocation ? this.newLocation.trim() : undefined,
       category: this.newCategory || undefined,
-      completed: false
+      completed: false,
+      order: 0
     };
     this.taskService.addTask(task).subscribe(newTask => {
+      this.tasks.forEach(t => t.order = (t.order ?? 0) + 1);
       this.tasks = [newTask, ...this.tasks];
       this.newTitle = '';
       this.newDescription = '';
@@ -326,5 +335,23 @@ toggleComplete(task: Task): void {
       default: 
         return '';
     }
+  }
+
+  // Drag and drop handler
+  onTaskDrop(event: CdkDragDrop<Task[]>) {
+  moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+
+    // update task order in backend
+    this.updateTaskOrder();
+  }
+
+  updateTaskOrder()
+  {
+    this.tasks.forEach((task, index) => {
+      task.order = index;
+      this.taskService.updateTask(task).subscribe();
+      // this.taskService.updateTask(task).subscribe();
+
+    });
   }
 }

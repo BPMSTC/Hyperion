@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@angular/cdk": "^20.2.13",
     "bootstrap": "^5.3.8"
   }
 }

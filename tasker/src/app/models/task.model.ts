@@ -1,6 +1,5 @@
 // src/app/models/task.model.ts
 //this defines a TypeScript interface that represents the shape of a task object in your Angular app.
-export type TaskCategory = 'School' | 'Work' | 'Personal';
 
 export interface Task {
   _id?: string; // MongoDB document ID (from MongoDB)
@@ -10,4 +9,7 @@ export interface Task {
   location?: string;
   category?: TaskCategory;
   completed: boolean;
+  order?: number; // New field to manage task order
 }
+
+export type TaskCategory = 'School' | 'Work' | 'Personal';

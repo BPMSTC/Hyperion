@@ -31,7 +31,8 @@ const taskSchema = new mongoose.Schema({
   dueDate: String,
   location: String,
   category: String,
-  completed: Boolean
+  completed: Boolean,
+  order: Number
 });
 
 // This model lets us interact with the tasks collection in MongoDB
