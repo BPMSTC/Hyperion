@@ -237,7 +237,6 @@
 }
 
 
-
 /* Set minimum width for task rows on larger screens */
 @media (min-width: 768px) {
 	.task-row {

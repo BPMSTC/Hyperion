@@ -7,6 +7,7 @@ import { PlacesService, AutocompleteResult } from '../services/places.service';
 import { TaskService } from '../services/task.service';
 import { Observable } from 'rxjs';
 
+
 /*
   TaskList component
   ------------------
@@ -311,6 +312,8 @@ toggleComplete(task: Task): void {
     this.editLocation = this.placesService.formatLocationDisplay(suggestion);
     this.editLocationSuggestions = []; // Hide suggestions
   }
+
+
 
   // Category helper method
   getCategoryBadgeClass (category?: TaskCategory): string { 
