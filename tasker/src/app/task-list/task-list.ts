@@ -75,6 +75,10 @@ export class TaskList implements OnInit {
   private locationSearchTimeout: any;
   private editLocationSearchTimeout: any;
 
+  // Drag and drop state
+  draggedTask: Task | null = null;
+  draggedIndex: number = -1;
+
   constructor(private taskService: TaskService, private placesService: PlacesService) {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
@@ -329,5 +333,86 @@ toggleComplete(task: Task): void {
       default: 
         return '';
     }
+  }
+
+  // Drag and drop methods
+  onDragStart(event: DragEvent, task: Task, index: number): void {
+    this.draggedTask = task;
+    this.draggedIndex = index;
+    
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/html', event.currentTarget?.toString() || '');
+    }
+    
+    // Add dragging class to the element
+    (event.target as HTMLElement).classList.add('dragging');
+  }
+
+  onDragEnd(event: DragEvent): void {
+    // Remove dragging class
+    (event.target as HTMLElement).classList.remove('dragging');
+    this.draggedTask = null;
+    this.draggedIndex = -1;
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  onDragEnter(event: DragEvent, index: number): void {
+    event.preventDefault();
+    const target = event.currentTarget as HTMLElement;
+    
+    // Don't add hover class to the dragged element itself
+    if (index !== this.draggedIndex) {
+      target.classList.add('drag-over');
+    }
+  }
+
+  onDragLeave(event: DragEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('drag-over');
+  }
+
+  onDrop(event: DragEvent, dropIndex: number): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('drag-over');
+
+    if (this.draggedTask && this.draggedIndex !== dropIndex) {
+      // Remove the dragged task from its original position
+      const draggedTask = this.filteredTasks[this.draggedIndex];
+      
+      // Create a new array with the updated order
+      const newTasks = [...this.filteredTasks];
+      newTasks.splice(this.draggedIndex, 1);
+      newTasks.splice(dropIndex, 0, draggedTask);
+      
+      // Update the tasks array to reflect the new order
+      // Note: This updates the filtered view. For full persistence,
+      // you would need to update the order in MongoDB
+      this.tasks = newTasks;
+      
+      // Optional: Update task order in database
+      this.updateTaskOrder(newTasks);
+    }
+  }
+
+  private updateTaskOrder(tasks: Task[]): void {
+    // Update each task's position in the database
+    // This is a simple approach - for production, you might want to add
+    // an 'order' field to your Task model
+    tasks.forEach((task, index) => {
+      if (task._id) {
+        // You can add an order field to persist the sort order
+        this.taskService.updateTask(task).subscribe();
+      }
+    });
   }
 }
