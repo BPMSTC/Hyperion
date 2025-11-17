@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { TaskList } from './task-list';
 // Use the HTTP testing backend instead of the real client
 import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http';
 
 
 describe('TaskList - Character Limits and Validation', () => {
