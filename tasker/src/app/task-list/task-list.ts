@@ -15,13 +15,10 @@ import confetti from 'canvas-confetti';
     TaskItemComponent so the visual format matches the standalone item.
 
   Persistence:
-  - Loads tasks from localStorage on initialization and persists changes on
-    add/remove/complete. This preserves the user's tasks between page reloads.
-
-  Notes:
-  - nextId is computed from existing saved tasks to avoid id collisions when
-    migrating or restoring saved data.
+  - Tasks are stored in MongoDB via the TaskService (see services/task.service.ts).
+  - All add/edit/delete/complete actions go to the database.
 */
+
 @Component({
   selector: 'app-task-list',
   standalone: true,
@@ -41,6 +38,8 @@ export class TaskList implements OnInit {
 
   // available categoeries
   readonly CATEGORIES: TaskCategory[] = ['School', 'Work', 'Personal'];
+
+  todayDate: string; // bound to the date input's min attribute
 
   // The in-memory array of tasks displayed in the template
   tasks: Task[] = [];
@@ -75,7 +74,18 @@ export class TaskList implements OnInit {
   private locationSearchTimeout: any;
   private editLocationSearchTimeout: any;
 
-  constructor(private taskService: TaskService, private placesService: PlacesService) {}
+  constructor(private taskService: TaskService, private placesService: PlacesService) {
+    const today = new Date();
+    this.todayDate = today.toISOString().split('T')[0];
+  }
+
+  public addTaskFromService(task: Task): Observable<Task> {
+  return this.taskService.addTask(task);
+  }
+
+  public removeTask(taskId: string): Observable<void> {
+    return this.taskService.deleteTask(taskId);
+  }
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
@@ -92,19 +102,10 @@ export class TaskList implements OnInit {
     });
   }
 
-  /*
-   * On init, try to read saved tasks from localStorage and initialize
-   * the in-memory list. This preserves tasks between page reloads.
-   */
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;
     });
-  }
-
-  /* Save current tasks array to localStorage. Kept in one helper for reuse. */
-  public saveTasks(): void {
-    // No-op: persistence is handled by backend
   }
 
   // addTask() is wired to the form's ngSubmit. It validates input, creates
@@ -333,5 +334,4 @@ toggleComplete(task: Task): void {
         return '';
     }
   }
-
 }

@@ -5,6 +5,7 @@ import { Task } from './models/task.model';
 import { TaskList } from './task-list/task-list';
 import { QuoteOfTheDayComponent } from './quote-of-the-day/quote-of-the-day.component';
 import { WeatherWidgetComponent } from './weather-widget/weather-widget.component'
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -18,12 +19,8 @@ export class App implements OnInit {
   tasks: Task[] = [];
   taskForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      this.tasks = JSON.parse(savedTasks);
-    }
-  }
+  constructor(private fb: FormBuilder) { }
+
 
   ngOnInit() {
     this.taskForm = this.fb.group({
@@ -44,8 +41,8 @@ export class App implements OnInit {
       this.taskForm.reset();
     }
   }
-   generateTasksForDemo(): void {
-    const sampleTasks: Task[] = [
+   loadDemoTasks(): void {
+    const demoTasks: Task[] = [
       // Personal tasks
       {
         title: 'DEMO - Buy groceries',
@@ -100,11 +97,19 @@ export class App implements OnInit {
         completed: false
       }
     ];
-    
-    // Update both the app's tasks and the task list component's tasks
-    this.tasks = [...sampleTasks, ...this.tasks];
-    this.taskListComponent.tasks = [...this.tasks];
-    this.taskListComponent.saveTasks();
+
+  const addDemoTasksObservables = demoTasks.map(task => 
+    this.taskListComponent.addTaskFromService(task)  // Now this returns Observable<Task>
+  );
+
+  forkJoin(addDemoTasksObservables).subscribe({
+    next: (savedTasks) => {
+      this.taskListComponent.ngOnInit();
+    },
+    error: (error) => {
+      console.error('Error adding demo tasks:', error);
+    }
+  });
     
     // Visual feedback
     const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
@@ -119,22 +124,42 @@ export class App implements OnInit {
     }
   }
 
-    clearTasksForDemo(): void {
-    this.tasks = this.tasks.filter(task => !task.title?.startsWith('DEMO -'));
-    this.taskListComponent.tasks = [...this.tasks];
-    this.taskListComponent.saveTasks();
+clearDemoTasks(): void {
+  // Find all demo tasks
+  const demoTasks = this.taskListComponent.tasks.filter(task => 
+    task.title?.startsWith('DEMO -')
+  );
 
-    // Visual feedback
-    const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
-    if (button) {
-      const originalText = button.textContent;
-      button.textContent = '✓ Demo Data Cleared!';
-      button.classList.add('success');
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.classList.remove('success');
-      }, 2000);
+  // Delete each demo task from MongoDB using the public method
+  const deleteDemoTaskObservables = demoTasks.map(task => {
+    if (task._id) {
+      return this.taskListComponent.removeTask(task._id);  // Use removeTask instead
     }
+    return new Observable(observer => observer.complete());
+  });
+
+  // Wait for all deletions to complete
+  forkJoin(deleteDemoTaskObservables).subscribe({
+    next: () => {
+      // Refresh the task list from database
+      this.taskListComponent.ngOnInit();
+      
+      // Visual feedback
+      const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
+      if (button) {
+        const originalText = button.textContent;
+        button.textContent = '✓ Demo Data Cleared!';
+        button.classList.add('success');
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('success');
+        }, 2000);
+      }
+    },
+    error: (error) => {
+      console.error('Error clearing demo tasks:', error);
+    }
+  });
   }
 
   // Helper to get a date N days in the future as an ISO string
