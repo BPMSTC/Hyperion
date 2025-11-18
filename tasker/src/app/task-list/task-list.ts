@@ -336,101 +336,151 @@ toggleComplete(task: Task): void {
   }
 
   // Drag and drop methods
+  
+  /**
+   * Handles the start of a drag operation
+   * - Stores which task is being dragged and its current position
+   * - Creates a custom drag image showing only the dragged task (not the whole list)
+   * - Adds visual feedback by applying the 'dragging' CSS class
+   */
   onDragStart(event: DragEvent, task: Task, index: number): void {
+    // Store the task being dragged and its index in the filtered list
     this.draggedTask = task;
     this.draggedIndex = index;
     
     if (event.dataTransfer) {
+      // Tell browser this is a move operation (not copy or link)
       event.dataTransfer.effectAllowed = 'move';
+      // Required for Firefox compatibility
       event.dataTransfer.setData('text/html', event.currentTarget?.toString() || '');
       
-      // Set custom drag image to only show the dragged task
+      // Create a custom drag preview to avoid showing the entire scrollable list
       const dragElement = event.currentTarget as HTMLElement;
+      // Clone the task row element so we can style it independently
       const clone = dragElement.cloneNode(true) as HTMLElement;
       
       // Style the clone for the drag preview
       clone.style.position = 'absolute';
-      clone.style.top = '-9999px';
-      clone.style.width = dragElement.offsetWidth + 'px';
-      clone.style.opacity = '0.8';
-      clone.style.pointerEvents = 'none';
+      clone.style.top = '-9999px'; // Move off-screen so it's not visible
+      clone.style.width = dragElement.offsetWidth + 'px'; // Match original width
+      clone.style.opacity = '0.8'; // Semi-transparent to indicate it's being dragged
+      clone.style.pointerEvents = 'none'; // Don't interfere with mouse events
       
+      // Temporarily add clone to DOM (required for setDragImage to work)
       document.body.appendChild(clone);
       
-      // Set the clone as the drag image
+      // Set the clone as the drag image (what user sees while dragging)
+      // Second and third params are x,y offset from cursor
       event.dataTransfer.setDragImage(clone, 0, 0);
       
-      // Remove the clone after a short delay
+      // Clean up: remove the clone after drag image is captured
       setTimeout(() => {
         document.body.removeChild(clone);
       }, 0);
     }
     
-    // Add dragging class to the element
+    // Add CSS class to original element for visual feedback (semi-transparent)
     (event.target as HTMLElement).classList.add('dragging');
   }
 
+  /**
+   * Handles the end of a drag operation (when user releases mouse)
+   * - Removes visual feedback
+   * - Clears drag state
+   */
   onDragEnd(event: DragEvent): void {
-    // Remove dragging class
+    // Remove the dragging visual effect from the element
     (event.target as HTMLElement).classList.remove('dragging');
+    // Clear drag state
     this.draggedTask = null;
     this.draggedIndex = -1;
   }
 
+  /**
+   * Handles drag over event (fires continuously while hovering)
+   * - Prevents default behavior to allow dropping
+   * - Changes cursor to indicate move operation
+   */
   onDragOver(event: DragEvent): void {
+    // Prevent default to allow drop (default is to reject drops)
     event.preventDefault();
     if (event.dataTransfer) {
+      // Show move cursor to user
       event.dataTransfer.dropEffect = 'move';
     }
   }
 
+  /**
+   * Handles drag enter event (when dragged item enters a drop zone)
+   * - Adds visual highlight to show this is a valid drop target
+   * - Skips adding highlight to the element being dragged itself
+   */
   onDragEnter(event: DragEvent, index: number): void {
     event.preventDefault();
     const target = event.currentTarget as HTMLElement;
     
-    // Don't add hover class to the dragged element itself
+    // Don't highlight the task that's currently being dragged
     if (index !== this.draggedIndex) {
+      // Add CSS class to show this is a valid drop target
       target.classList.add('drag-over');
     }
   }
 
+  /**
+   * Handles drag leave event (when dragged item exits a drop zone)
+   * - Removes visual highlight when no longer hovering
+   */
   onDragLeave(event: DragEvent): void {
     const target = event.currentTarget as HTMLElement;
+    // Remove the highlight CSS class
     target.classList.remove('drag-over');
   }
 
+  /**
+   * Handles drop event (when user releases mouse over a drop zone)
+   * - Reorders the tasks array by moving dragged task to new position
+   * - Updates task order in the database
+   * - Cleans up visual feedback
+   */
   onDrop(event: DragEvent, dropIndex: number): void {
+    // Prevent default and stop event bubbling
     event.preventDefault();
     event.stopPropagation();
     
     const target = event.currentTarget as HTMLElement;
+    // Remove highlight from drop target
     target.classList.remove('drag-over');
 
+    // Only reorder if we're dropping in a different position
     if (this.draggedTask && this.draggedIndex !== dropIndex) {
-      // Remove the dragged task from its original position
+      // Get reference to the task being dragged
       const draggedTask = this.filteredTasks[this.draggedIndex];
       
-      // Create a new array with the updated order
+      // Create new array to trigger change detection
       const newTasks = [...this.filteredTasks];
+      // Remove task from old position
       newTasks.splice(this.draggedIndex, 1);
+      // Insert task at new position
       newTasks.splice(dropIndex, 0, draggedTask);
       
-      // Update the tasks array to reflect the new order
-      // Note: This updates the filtered view. For full persistence,
-      // you would need to update the order in MongoDB
+      // Update the main tasks array with new order
       this.tasks = newTasks;
       
-      // Update task order in database
+      // Persist the new order to MongoDB
       this.updateTaskOrder(newTasks);
     }
   }
 
+  /**
+   * Persists the new task order to the database
+   * Note: Currently just updates each task. In production, you might want to
+   * add an 'order' or 'position' field to the Task model for explicit ordering
+   */
   private updateTaskOrder(tasks: Task[]): void {
-    // Update each task's position in the database
-
+    // Update each task in the database
     tasks.forEach((task, index) => {
       if (task._id) {
-        // You can add an order field to persist the sort order
+        // Update the task (currently no order field, but structure is here for future)
         this.taskService.updateTask(task).subscribe();
       }
     });
