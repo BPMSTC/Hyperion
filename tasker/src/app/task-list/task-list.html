@@ -103,6 +103,14 @@
           <!-- Add legacy `add-button` class so the button uses original styling -->
         </div>
 
+        <!-- Search Bar Template -->
+        <input
+          type="text"
+          class="form-control w-100 mb-3"
+          placeholder="Search tasks..."
+          [(ngModel)]="searchTerm"
+        />
+
         <div class="mb-2">
           <!-- Give textarea the legacy `.task-description` class as well -->
           <div class="d-flex align-items-start gap-2">
@@ -190,7 +198,7 @@
         <!-- Give the list the legacy `.task-list` class so global styles apply -->
         <ul class="tasks task-list list-unstyled mb-0">
           <li
-            *ngFor="let task of filteredTasks"
+            *ngFor="let task of visibleTasks"
             class="task-row mb-2 p-2 border rounded d-flex flex-column"
             [id]="getOverdueRowId(task)"
           >
@@ -360,6 +368,9 @@
             </div>
           </li>
         </ul>
+              <div *ngIf="visibleTasks.length === 0" class="text-center text-muted py-4">
+                No results found.
+              </div>
       </div>
     </div>
   </div>
