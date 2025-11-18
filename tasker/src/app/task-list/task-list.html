@@ -83,6 +83,20 @@
             </div>
           </div>
         </div>
+
+        <!-- Search Bar Template -->
+        <input
+          type="text"
+          name="searchTerm"
+          class="form-control w-100 mb-3"
+          placeholder="Search tasks..."
+          [(ngModel)]="searchTerm"
+        />
+
+        <div class="mb-1">
+          Add a New Task
+        </div>
+
         <div class="mb-2">
           <!-- name attributes are needed for ngModel inside forms -->
           <div class="d-flex align-items-center gap-2">
@@ -102,14 +116,6 @@
           </div>
           <!-- Add legacy `add-button` class so the button uses original styling -->
         </div>
-
-        <!-- Search Bar Template -->
-        <input
-          type="text"
-          class="form-control w-100 mb-3"
-          placeholder="Search tasks..."
-          [(ngModel)]="searchTerm"
-        />
 
         <div class="mb-2">
           <!-- Give textarea the legacy `.task-description` class as well -->

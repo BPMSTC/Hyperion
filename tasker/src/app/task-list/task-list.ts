@@ -70,9 +70,8 @@ export class TaskList implements OnInit {
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
 
-  // Search Bar Properties
+  // Search Bar Property
   searchTerm: string = '';
-  searchedTasks: Task[] = [];
 
   // Debounce timer for location search
   private locationSearchTimeout: any;
@@ -107,22 +106,33 @@ export class TaskList implements OnInit {
   }
 
   get visibleTasks(): Task[] {
-    // Start with tasks filtered by category/completion/etc.
-    let filtered = this.filteredTasks; // Using the already defined filteredTasks property.
-    // Then apply search filter
-    const term = this.searchTerm.trim().toLowerCase(); // Make searched input case-sensitive
+    // 1. Start with tasks filtered by completion, overdue, and category filters
+    let filtered = this.filteredTasks;
+
+    // 2. Prepare the search term (case-insensitive, trimmed)
+    const term = this.searchTerm.trim().toLowerCase();
+
+    // 3. If a search term is entered, filter further by matching title, description, or category
     if (term) {
       filtered = filtered.filter(task =>
-        (task.title + ' ' + (task.description || '')).toLowerCase().includes(term) // Checks if the search term (also lowercase) is found anywhere in the combined string.
+        // Combine title, description, and category into one string for searching
+        (
+          task.title +
+          ' ' +
+          (task.description || '') +
+          ' ' +
+          (task.category || '')
+        ).toLowerCase().includes(term)
       );
     }
+
+    // 4. Return the final filtered and searched array
     return filtered;
   }
 
   ngOnInit(): void {
   this.taskService.getTasks().subscribe(tasks => {
     this.tasks = tasks;
-    this.searchedTasks = tasks; // Loads searchedTasks
   });
 }
 
@@ -345,17 +355,4 @@ toggleComplete(task: Task): void {
         return '';
     }
   }
-
-  // Updates search bar when search bar changes
-  onSearchChange(): void {
-  const term = this.searchTerm.trim().toLowerCase(); // Makes case sensitive
-  if (!term) { // If there is no input in the search bar
-    this.searchedTasks = this.tasks; // Show all tasks
-  } else { // If there is something in the search bar
-    this.searchedTasks = this.tasks.filter(task => // Call the filter method
-      (task.title + ' ' + (task.description || '')).toLowerCase().includes(term) // Checks list for searched task and adds it
-    );
-  }
-}
-
 }
