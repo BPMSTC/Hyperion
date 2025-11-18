@@ -343,6 +343,27 @@ toggleComplete(task: Task): void {
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/html', event.currentTarget?.toString() || '');
+      
+      // Set custom drag image to only show the dragged task
+      const dragElement = event.currentTarget as HTMLElement;
+      const clone = dragElement.cloneNode(true) as HTMLElement;
+      
+      // Style the clone for the drag preview
+      clone.style.position = 'absolute';
+      clone.style.top = '-9999px';
+      clone.style.width = dragElement.offsetWidth + 'px';
+      clone.style.opacity = '0.8';
+      clone.style.pointerEvents = 'none';
+      
+      document.body.appendChild(clone);
+      
+      // Set the clone as the drag image
+      event.dataTransfer.setDragImage(clone, 0, 0);
+      
+      // Remove the clone after a short delay
+      setTimeout(() => {
+        document.body.removeChild(clone);
+      }, 0);
     }
     
     // Add dragging class to the element
@@ -399,15 +420,14 @@ toggleComplete(task: Task): void {
       // you would need to update the order in MongoDB
       this.tasks = newTasks;
       
-      // Optional: Update task order in database
+      // Update task order in database
       this.updateTaskOrder(newTasks);
     }
   }
 
   private updateTaskOrder(tasks: Task[]): void {
     // Update each task's position in the database
-    // This is a simple approach - for production, you might want to add
-    // an 'order' field to your Task model
+
     tasks.forEach((task, index) => {
       if (task._id) {
         // You can add an order field to persist the sort order
