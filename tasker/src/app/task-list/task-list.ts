@@ -70,6 +70,9 @@ export class TaskList implements OnInit {
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
 
+  // Search Bar Property
+  searchTerm: string = '';
+
   // Debounce timer for location search
   private locationSearchTimeout: any;
   private editLocationSearchTimeout: any;
@@ -102,11 +105,36 @@ export class TaskList implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.taskService.getTasks().subscribe(tasks => {
-      this.tasks = tasks;
-    });
+  get visibleTasks(): Task[] {
+    // 1. Start with tasks filtered by completion, overdue, and category filters
+    let filtered = this.filteredTasks;
+
+    // 2. Prepare the search term (case-insensitive, trimmed)
+    const term = this.searchTerm.trim().toLowerCase();
+
+    // 3. If a search term is entered, filter further by matching title, description, or category
+    if (term) {
+      filtered = filtered.filter(task =>
+        // Combine title, description, and category into one string for searching
+        (
+          task.title +
+          ' ' +
+          (task.description || '') +
+          ' ' +
+          (task.category || '')
+        ).toLowerCase().includes(term)
+      );
+    }
+
+    // 4. Return the final filtered and searched array
+    return filtered;
   }
+
+  ngOnInit(): void {
+  this.taskService.getTasks().subscribe(tasks => {
+    this.tasks = tasks;
+  });
+}
 
   // addTask() is wired to the form's ngSubmit. It validates input, creates
   // a Task object, prepends it to the tasks list, and clears the form fields.
