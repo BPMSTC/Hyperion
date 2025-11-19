@@ -204,7 +204,7 @@
         <!-- Give the list the legacy `.task-list` class so global styles apply -->
         <ul class="tasks task-list list-unstyled mb-0">
           <li
-            *ngFor="let task of filteredTasks; let i = index"
+            *ngFor="let task of visibleTasks; let i = index"
             class="task-row mb-2 p-2 border rounded d-flex flex-column"
             [id]="getOverdueRowId(task)"
             draggable="true"
