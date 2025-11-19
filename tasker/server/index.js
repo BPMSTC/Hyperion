@@ -2,17 +2,62 @@ import express from 'express';
 import mongoose from 'mongoose'; // using mongoose to connect to MongoDB
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Get current directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load configuration
+let config;
+try {
+  const configPath = join(__dirname, 'config.json');
+  config = JSON.parse(readFileSync(configPath, 'utf8'));
+} catch (error) {
+  console.error('Error loading config.json:', error.message);
+  console.error('Using default configuration');
+  config = {
+    database: {
+      type: 'local',
+      local: {
+        uri: 'mongodb://localhost:27017/tasker'
+      }
+    },
+    server: {
+      port: 3000
+    }
+  };
+}
+
+// Determine database type from environment variable or config file
+const dbType = process.env.DB_TYPE || config.database.type || 'local';
+
+// Get MongoDB URI based on database type
+let mongoURI;
+if (dbType === 'atlas') {
+  mongoURI = process.env.ATLAS_MONGODB_URI || config.database.atlas.uri;
+  console.log('Using MongoDB Atlas');
+} else {
+  mongoURI = process.env.LOCAL_MONGODB_URI || config.database.local.uri;
+  console.log('Using local MongoDB');
+}
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || config.server.port || 3000;
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-// This connects our app to the local MongoDB database called 'tasker'
-mongoose.connect('mongodb://localhost:27017/tasker', {
+// This connects our app to MongoDB (either local or Atlas based on configuration)
+mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -20,7 +65,7 @@ mongoose.connect('mongodb://localhost:27017/tasker', {
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
-  console.log('Connected to MongoDB');
+  console.log(`Connected to MongoDB (${dbType})`);
 });
 
 // Task model
