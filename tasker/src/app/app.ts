@@ -7,10 +7,11 @@ import { QuoteOfTheDayComponent } from './quote-of-the-day/quote-of-the-day.comp
 import { WeatherWidgetComponent } from './weather-widget/weather-widget.component'
 import { forkJoin, Observable } from 'rxjs';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TaskList, QuoteOfTheDayComponent,WeatherWidgetComponent],
+  imports: [CommonModule, ReactiveFormsModule, TaskList, QuoteOfTheDayComponent, WeatherWidgetComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })

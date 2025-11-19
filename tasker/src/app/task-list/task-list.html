@@ -204,9 +204,16 @@
         <!-- Give the list the legacy `.task-list` class so global styles apply -->
         <ul class="tasks task-list list-unstyled mb-0">
           <li
-            *ngFor="let task of visibleTasks"
+            *ngFor="let task of visibleTasks; let i = index"
             class="task-row mb-2 p-2 border rounded d-flex flex-column"
             [id]="getOverdueRowId(task)"
+            draggable="true"
+            (dragstart)="onDragStart($event, task, i)"
+            (dragend)="onDragEnd($event)"
+            (dragover)="onDragOver($event)"
+            (dragenter)="onDragEnter($event, i)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event, i)"
           >
             <!-- checkbox toggles completed state -->
             <div class="d-flex align-items-start gap-2 w-100">

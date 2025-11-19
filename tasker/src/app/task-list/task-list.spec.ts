@@ -1,18 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TaskList } from './task-list';
-import { provideHttpClient } from '@angular/common/http';
+// Use the HTTP testing backend instead of the real client
+import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+
 
 describe('TaskList - Character Limits and Validation', () => {
   let component: TaskList;
   let fixture: ComponentFixture<TaskList>;
+  let httpMock: HttpTestingController;
+
+  // handy matcher so we do not couple tests to the exact base URL
+  const isTasksUrl = (req: any) => req.url.endsWith('/tasks');
+
 
   // ========== SETUP ==========
   // This runs before EACH test to set up a fresh component
   beforeEach(async () => {
     // Step 1: Configure TestBed with the component
     await TestBed.configureTestingModule({
-      imports: [TaskList], 
-      providers: [provideHttpClient()]
+      imports: [TaskList, HttpClientTestingModule], 
     }).compileComponents();
 
     // Step 2: Create the component instance
@@ -22,8 +28,21 @@ describe('TaskList - Character Limits and Validation', () => {
     // Step 3: Tell Angular to render the template
     fixture.detectChanges();
 
-    // Step 4: Clear localStorage before each test so tests don't interfere
+    httpMock = TestBed.inject(HttpTestingController);
+    
+    // If TaskList loads tasks on init, satisfy that GET so the component is stable.
+    // If it does not, this line is harmless: expectNone is the alternative.
+    const maybeInitGet = httpMock.match(isTasksUrl).find(r => r.request.method === 'GET');
+    if (maybeInitGet) {
+      maybeInitGet.flush([]);
+    }
+
     localStorage.clear();
+  });
+
+    afterEach(() => {
+    // Ensures you did not forget to flush any requests in a test
+    httpMock.verify();
   });
 
   // ========== TEST 1: Component Creation ==========
@@ -42,7 +61,8 @@ describe('TaskList - Character Limits and Validation', () => {
     // Act: Call addTask (which would normally be called by form submit)
     component.addTask();
 
-    // Assert: Verify no task was added
+    // No network call should be made
+    httpMock.expectNone(isTasksUrl);
     expect(component.tasks.length).toBe(initialTaskCount);
   });
 
@@ -58,6 +78,7 @@ describe('TaskList - Character Limits and Validation', () => {
     component.addTask();
 
     // Assert
+    httpMock.expectNone(isTasksUrl);
     expect(component.tasks.length).toBe(initialTaskCount);
   });
 
@@ -72,7 +93,18 @@ describe('TaskList - Character Limits and Validation', () => {
     // Act
     component.addTask();
 
-    // Assert
+    // Intercept the POST and assert the payload
+    const post = httpMock.expectOne(isTasksUrl);
+    expect(post.request.method).toBe('POST');
+
+    const body = post.request.body as any;
+    expect(body.title).toBe('Buy groceries');
+    expect(body.description).toBe('Milk, eggs, bread');
+
+    // Respond so the component can update its state
+    post.flush({ id: 1, ...body });
+
+    // Now the component has the new task
     expect(component.tasks.length).toBe(initialTaskCount + 1);
     expect(component.tasks[0].title).toBe('Buy groceries');
     expect(component.tasks[0].description).toBe('Milk, eggs, bread');
@@ -88,7 +120,9 @@ describe('TaskList - Character Limits and Validation', () => {
     // Act
     component.addTask();
 
-    // Assert
+    const post = httpMock.expectOne(isTasksUrl);
+    post.flush({ id: 1, ...post.request.body });
+
     expect(component.newTitle).toBe('');
     expect(component.newDescription).toBe('');
   });
@@ -122,6 +156,12 @@ describe('TaskList - Character Limits and Validation', () => {
     component.addTask();
 
     // Assert
+    const post = httpMock.expectOne(isTasksUrl);
+    // The important assertion: the outgoing payload is trimmed
+    expect((post.request.body as any).title).toBe('Buy groceries');
+    post.flush({ id: 1, ...post.request.body });
+
+    // Optional: confirm the stored task is trimmed too
     expect(component.tasks[0].title).toBe('Buy groceries');
   });
 
@@ -135,6 +175,10 @@ describe('TaskList - Character Limits and Validation', () => {
     component.addTask();
 
     // Assert
+    const post = httpMock.expectOne(isTasksUrl);
+    expect((post.request.body as any).description).toBe('Description text');
+    post.flush({ id: 1, ...post.request.body });
+
     expect(component.tasks[0].description).toBe('Description text');
   });
 
@@ -149,6 +193,10 @@ describe('TaskList - Character Limits and Validation', () => {
     component.addTask();
 
     // Assert
+    const post = httpMock.expectOne(isTasksUrl);
+    expect((post.request.body as any).description).toBe('');
+    post.flush({ id: 1, ...post.request.body });
+
     expect(component.tasks[0].description).toBe('');
   });
 });

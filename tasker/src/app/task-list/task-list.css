@@ -236,7 +236,47 @@
 	border-bottom: none;
 }
 
+/* Drag and drop styles */
+.task-row[draggable="true"] {
+	cursor: move;
+	transition: all 0.2s ease;
+}
 
+.task-row.dragging {
+	opacity: 0.5;
+	background-color: #e3f2fd;
+	border: 2px dashed #667eea;
+	transform: scale(0.98);
+}
+
+.task-row.drag-over {
+	border-top: 3px solid #667eea;
+	background-color: #f0f4ff;
+	transform: translateY(2px);
+}
+
+/* Add a drag handle indicator */
+.task-row[draggable="true"]:hover {
+	box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+	border-color: #667eea;
+}
+
+/* Indicate draggable items with a subtle icon */
+.task-row[draggable="true"]::before {
+	content: '⋮⋮';
+	position: absolute;
+	left: -8px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #ccc;
+	font-size: 12px;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.task-row[draggable="true"]:hover::before {
+	opacity: 1;
+}
 
 /* Set minimum width for task rows on larger screens */
 @media (min-width: 768px) {
