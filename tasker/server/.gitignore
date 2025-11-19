@@ -1,0 +1,5 @@
+# Environment variables
+.env
+
+# Configuration file with sensitive data
+# Keep config.json tracked for default values, but users can override with their own
