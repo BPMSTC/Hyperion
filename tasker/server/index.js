@@ -31,7 +31,7 @@ const taskSchema = new mongoose.Schema({
   dueDate: String,
   location: String,
   category: String,
-  completed: Boolean
+  completed: Boolean,
   importance: { type: String, enum: ['High', 'Medium', 'Low'], default: 'Medium' }
 });
 
