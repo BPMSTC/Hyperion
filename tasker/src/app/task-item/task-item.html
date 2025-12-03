@@ -32,13 +32,9 @@
 	</div>
 
 	<!-- Display Importance level if it exists -->
-	<div *ngIf="task.importance" class="task-importance-display mb-1">
-		<small class="text-muted">
-			<span>
-				Importance: {{ task.importance }}
-			</span>
-		</small>
-	</div>
+	<span *ngIf="task.importance" class="badge importance-badge importance-{{ task.importance | lowercase }}">
+	  Importance: {{ task.importance }}
+	</span>
 	
 	<!-- Display due date if it exists -->
 	<div *ngIf="task.dueDate" class="task-due-display">

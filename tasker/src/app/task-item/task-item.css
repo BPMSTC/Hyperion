@@ -95,3 +95,15 @@
 }
 
 /* radialGradient */
+
+/* Importance Level */
+.importance-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+}
+.importance-high { background-color: #ffb3b3; color: #7a1f1f; }
+.importance-medium { background-color: #fff4cc; color: #a67c00; }
+.importance-low { background-color: #c8e6c9; color: #256029; }
