@@ -49,7 +49,8 @@ export class App implements OnInit {
         title: 'DEMO - Buy groceries',
         description: 'Milk, Bread, Eggs, Butter',
         category: 'Personal',
-        completed: false
+        completed: false,
+        importance: 'Medium'
       },
       {
         title: 'DEMO - Gym workout',
@@ -57,7 +58,8 @@ export class App implements OnInit {
         location: 'Fitness Center Downtown',
         dueDate: this.getFutureDate(2),
         category: 'Personal',
-        completed: false
+        completed: false,
+        importance: 'Medium'
       },
       // Work tasks
       {
@@ -65,7 +67,8 @@ export class App implements OnInit {
         description: 'Complete the final draft of the project report and send it to the manager.',
         dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
         category: 'Work',
-        completed: false
+        completed: false,
+        importance: 'High'
       },
       {
         title: 'DEMO - Team meeting prep',
@@ -73,7 +76,8 @@ export class App implements OnInit {
         location: 'Conference Room B',
         dueDate: this.getFutureDate(3),
         category: 'Work',
-        completed: false
+        completed: false,
+        importance: 'High'
       },
       // School tasks
       {
@@ -82,20 +86,23 @@ export class App implements OnInit {
         location: 'Publicc Library, Stevens Point WI',
         dueDate: this.getFutureDate(5),
         category: 'School',
-        completed: false
+        completed: false,
+        importance: 'High'
       },
       {
         title: 'DEMO - Study for Biology exam',
         description: 'Review cell biology and genetics chapters',
         dueDate: this.getFutureDate(7),
         category: 'School',
-        completed: false
+        completed: false,
+        importance: 'Medium'
       },
       // Task without category
       {
         title: 'DEMO - Drop off package',
         location: 'FedEx Office, Plover WI',
-        completed: false
+        completed: false,
+        importance: 'Low'
       }
     ];
 
