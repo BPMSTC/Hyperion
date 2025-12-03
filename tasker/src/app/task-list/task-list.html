@@ -81,6 +81,20 @@
                 </option>
               </select>
             </div>
+            <!-- Importance filter dropdown for tasks -->
+            <div class="mb-2">
+              <label class="form-label small mb-1">Filter by Importance:</label>
+              <select
+                name="filterImportance"
+                class="form-select form-select-sm"
+                [(ngModel)]="filterImportance"
+              >
+                <option value="">All Importance Levels</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -178,6 +192,7 @@
           </select>
         </div>
 
+        <!-- Importance dropdown for new task (added in 50-taskRating branch) -->
         <div class="mb-2">
           <select [(ngModel)]="newImportance" name="newImportance" class="form-select">
             <option value="">Select Importance Level (optional)</option>
@@ -325,6 +340,7 @@
                     />
                   </div>
                   
+                  <!-- Importance dropdown for editing a task (added in 50-taskRating branch) -->
                   <div class="form-row mb-2">
                     <select
                       name="editImportance"

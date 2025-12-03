@@ -63,8 +63,9 @@ export class TaskList implements OnInit {
   editCategory: TaskCategory | '' = ''; // bound while editing a task category
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
-  // Task Rating Properties
+  // Importance level for new task (added in 50-taskRating branch)
   newImportance: string ='';
+  // Importance level for editing a task (added in 50-taskRating branch)
   editImportance: string ='';
 
   // Filter toggles
@@ -74,6 +75,7 @@ export class TaskList implements OnInit {
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
+  // Importance filter for tasks (added in 50-taskRating branch)
   filterImportance: string = '';
 
   // Search Bar Property
@@ -102,22 +104,23 @@ export class TaskList implements OnInit {
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
-  return this.tasks.filter(t => {
-    // Filter by completion status
-    if (t.completed !== this.filterCompleted) return false;
+    // Importance filter logic added in 50-taskRating branch
+    return this.tasks.filter(t => {
+      // Filter by completion status
+      if (t.completed !== this.filterCompleted) return false;
 
-    // Filter by overdue status
-    if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
+      // Filter by overdue status
+      if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
 
-    // Filter by category
-    if (this.filterCategory && t.category !== this.filterCategory) return false;
+      // Filter by category
+      if (this.filterCategory && t.category !== this.filterCategory) return false;
 
-    // Filter by importance
-    if (this.filterImportance && t.importance !== this.filterImportance) return false;
+      // Filter by importance (added in 50-taskRating branch)
+      if (this.filterImportance && t.importance !== this.filterImportance) return false;
 
-    return true;
-  });
-}
+      return true;
+    });
+  }
 
   get visibleTasks(): Task[] {
     // 1. Start with tasks filtered by completion, overdue, and category filters
@@ -228,6 +231,7 @@ toggleComplete(task: Task): void {
     this.editLocation = task.location || '';
     this.editCategory = (task.category as TaskCategory) || '';
     this.editLocationSuggestions = [];
+    // Set importance for editing (added in 50-taskRating branch)
     this.editImportance = task.importance || "";
   }
 
@@ -245,7 +249,7 @@ toggleComplete(task: Task): void {
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
       task.category = this.editCategory || undefined;
-      this.taskService.updateTask(task).subscribe();
+      // Save importance level (added in 50-taskRating branch)
       task.importance = this.editImportance || undefined;
       this.taskService.updateTask(task).subscribe();
     }
