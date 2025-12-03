@@ -64,8 +64,8 @@ export class TaskList implements OnInit {
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Task Rating Properties
-  newImportance: 'High' | 'Medium' | 'Low' = 'Medium';
-  editImportance: 'High' | 'Medium' | 'Low' = 'Medium';
+  newImportance: string ='';
+  editImportance: string ='';
 
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
