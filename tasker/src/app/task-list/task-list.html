@@ -81,18 +81,18 @@
                 </option>
               </select>
             </div>
-            <!-- Importance filter dropdown for tasks -->
+            <!-- Importance filter dropdown for tasks
+                 This dropdown allows users to filter the visible task list by importance level.
+                 It binds to the filterImportance property in the component, which is used in the filteredTasks getter.
+                 Selecting an option will show only tasks with the chosen importance. -->
+            <!-- usr - 50 -->
             <div class="mb-2">
               <label class="form-label small mb-1">Filter by Importance:</label>
-              <select
-                name="filterImportance"
-                class="form-select form-select-sm"
-                [(ngModel)]="filterImportance"
-              >
+              <select name="filterImportance" class="form-select form-select-sm" [(ngModel)]="filterImportance"> <!-- Binds selected importance filter to component property -->
                 <option value="">All Importance Levels</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="High">High</option> <!-- Shows only tasks with High importance when selected -->
+                <option value="Medium">Medium</option> <!-- Shows only tasks with Medium importance when selected -->
+                <option value="Low">Low</option> <!-- Shows only tasks with Low importance when selected -->
               </select>
             </div>
           </div>
@@ -192,13 +192,16 @@
           </select>
         </div>
 
-        <!-- Importance dropdown for new task (added in 50-taskRating branch) -->
+        <!-- Importance dropdown for new task
+             This dropdown lets the user set the importance level when creating a new task.
+             The value is bound to newImportance, which is included in the new Task object sent to the backend. -->
+        <!-- usr - 50 -->
         <div class="mb-2">
-          <select [(ngModel)]="newImportance" name="newImportance" class="form-select">
+          <select [(ngModel)]="newImportance" name="newImportance" class="form-select"> <!-- Binds new task importance to component property -->
             <option value="">Select Importance Level (optional)</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
+            <option value="High">High</option> <!-- Sets new task importance to High -->
+            <option value="Medium">Medium</option> <!-- Sets new task importance to Medium -->
+            <option value="Low">Low</option> <!-- Sets new task importance to Low -->
           </select>
         </div>
 
@@ -340,17 +343,16 @@
                     />
                   </div>
                   
-                  <!-- Importance dropdown for editing a task (added in 50-taskRating branch) -->
+                  <!-- Importance dropdown for editing a task
+                       This dropdown lets the user change the importance level of an existing task while editing.
+                       It is bound to editImportance, which is saved to the task when the user clicks Save. -->
+                  <!-- usr - 50 -->
                   <div class="form-row mb-2">
-                    <select
-                      name="editImportance"
-                      class="form-select form-select-sm"
-                      [(ngModel)]="editImportance"
-                    >
+                    <select name="editImportance" class="form-select form-select-sm" [(ngModel)]="editImportance"> <!-- Binds edit task importance to component property -->
                       <option value="">Select Importance Level (optional)</option>
-                      <option value="High">High</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Low">Low</option>
+                      <option value="High">High</option> <!-- Sets edited task importance to High -->
+                      <option value="Medium">Medium</option> <!-- Sets edited task importance to Medium -->
+                      <option value="Low">Low</option> <!-- Sets edited task importance to Low -->
                     </select>
                   </div>
 

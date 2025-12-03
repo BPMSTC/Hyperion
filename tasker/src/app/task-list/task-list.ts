@@ -64,6 +64,7 @@ export class TaskList implements OnInit {
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
   // Importance level for new task (added in 50-taskRating branch)
+    // <!-- usr - 50 -->
   newImportance: string ='';
   // Importance level for editing a task (added in 50-taskRating branch)
   editImportance: string ='';
@@ -115,6 +116,7 @@ export class TaskList implements OnInit {
       // Filter by category
       if (this.filterCategory && t.category !== this.filterCategory) return false;
 
+      // <!-- usr - 50 -->
       // Filter by importance (added in 50-taskRating branch)
       if (this.filterImportance && t.importance !== this.filterImportance) return false;
 
@@ -231,7 +233,7 @@ toggleComplete(task: Task): void {
     this.editLocation = task.location || '';
     this.editCategory = (task.category as TaskCategory) || '';
     this.editLocationSuggestions = [];
-    // Set importance for editing (added in 50-taskRating branch)
+    // Set importance for editing (added in 50-taskRating branch) usr - 50
     this.editImportance = task.importance || "";
   }
 
@@ -249,7 +251,7 @@ toggleComplete(task: Task): void {
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
       task.category = this.editCategory || undefined;
-      // Save importance level (added in 50-taskRating branch)
+      // Save importance level (added in 50-taskRating branch) usr - 50
       task.importance = this.editImportance || undefined;
       this.taskService.updateTask(task).subscribe();
     }

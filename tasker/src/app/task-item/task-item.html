@@ -31,9 +31,9 @@
 		</small>
 	</div>
 
-	<!-- Display Importance level if it exists -->
-	<span *ngIf="task.importance" class="badge importance-badge importance-{{ task.importance | lowercase }}">
-	  Importance: {{ task.importance }}
+	<!-- usr - 50 -->
+	<span *ngIf="task.importance" class="badge importance-badge importance-{{ task.importance | lowercase }}"> <!-- Shows importance badge if task.importance is set -->
+		Importance: {{ task.importance }} <!-- Displays the importance value (High, Medium, Low) -->
 	</span>
 	
 	<!-- Display due date if it exists -->
