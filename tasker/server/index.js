@@ -32,7 +32,7 @@ const taskSchema = new mongoose.Schema({
   location: String,
   category: String,
   completed: Boolean,
-  importance: { type: String, enum: ['High', 'Medium', 'Low'], default: 'Select Importance Level (optional)' }
+  importance: { type: String, enum: ['High', 'Medium', 'Low'], required: false, default: undefined }
 });
 
 // This model lets us interact with the tasks collection in MongoDB
