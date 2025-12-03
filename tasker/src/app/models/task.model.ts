@@ -10,4 +10,5 @@ export interface Task {
   location?: string;
   category?: TaskCategory;
   completed: boolean;
+  importance?:string;
 }

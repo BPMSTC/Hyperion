@@ -63,6 +63,11 @@ export class TaskList implements OnInit {
   editCategory: TaskCategory | '' = ''; // bound while editing a task category
   editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
 
+  // Importance level for new task (added in 50-taskRating branch)
+    // <!-- usr - 50 -->
+  newImportance: string ='';
+  // Importance level for editing a task (added in 50-taskRating branch)
+  editImportance: string ='';
 
   // Filter toggles
   filterCompleted = false; // when true, show only completed tasks
@@ -71,6 +76,8 @@ export class TaskList implements OnInit {
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
+  // Importance filter for tasks (added in 50-taskRating branch)
+  filterImportance: string = '';
 
   // Search Bar Property
   searchTerm: string = '';
@@ -98,15 +105,21 @@ export class TaskList implements OnInit {
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
+    // Importance filter logic added in 50-taskRating branch
     return this.tasks.filter(t => {
-      //filter by completion status
+      // Filter by completion status
       if (t.completed !== this.filterCompleted) return false;
-      
+
       // Filter by overdue status
       if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
 
-      //Filter by category
+      // Filter by category
       if (this.filterCategory && t.category !== this.filterCategory) return false;
+
+      // <!-- usr - 50 -->
+      // Filter by importance (added in 50-taskRating branch)
+      if (this.filterImportance && t.importance !== this.filterImportance) return false;
+
       return true;
     });
   }
@@ -220,6 +233,8 @@ toggleComplete(task: Task): void {
     this.editLocation = task.location || '';
     this.editCategory = (task.category as TaskCategory) || '';
     this.editLocationSuggestions = [];
+    // Set importance for editing (added in 50-taskRating branch) usr - 50
+    this.editImportance = task.importance || "";
   }
 
   // Save the edited task and exit edit mode
@@ -236,6 +251,8 @@ toggleComplete(task: Task): void {
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
       task.category = this.editCategory || undefined;
+      // Save importance level (added in 50-taskRating branch) usr - 50
+      task.importance = this.editImportance || undefined;
       this.taskService.updateTask(task).subscribe();
     }
     this.cancelEdit();
