@@ -30,6 +30,15 @@
 			{{ task.location }}
 		</small>
 	</div>
+
+	<!-- Display Importance level if it exists -->
+	<div *ngIf="task.importance" class="task-importance-display mb-1">
+		<small class="text-muted">
+			<span>
+				Importance: {{ task.importance }}
+			</span>
+		</small>
+	</div>
 	
 	<!-- Display due date if it exists -->
 	<div *ngIf="task.dueDate" class="task-due-display">
