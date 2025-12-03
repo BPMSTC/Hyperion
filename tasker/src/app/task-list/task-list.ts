@@ -228,6 +228,7 @@ toggleComplete(task: Task): void {
     this.editLocation = task.location || '';
     this.editCategory = (task.category as TaskCategory) || '';
     this.editLocationSuggestions = [];
+    this.editImportance = task.importance || "";
   }
 
   // Save the edited task and exit edit mode
@@ -244,6 +245,8 @@ toggleComplete(task: Task): void {
       task.dueDate = this.editDueDate ? this.editDueDate : undefined;
       task.location = this.editLocation ? this.editLocation.trim() : undefined;
       task.category = this.editCategory || undefined;
+      this.taskService.updateTask(task).subscribe();
+      task.importance = this.editImportance || undefined;
       this.taskService.updateTask(task).subscribe();
     }
     this.cancelEdit();

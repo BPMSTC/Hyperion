@@ -324,6 +324,19 @@
                       aria-label="'Due date for task: ' + editTitle"
                     />
                   </div>
+                  
+                  <div class="form-row mb-2">
+                    <select
+                      name="editImportance"
+                      class="form-select form-select-sm"
+                      [(ngModel)]="editImportance"
+                    >
+                      <option value="">Select Importance Level (optional)</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </div>
 
                   <div class="edit-actions d-flex flex-column flex-sm-row gap-2">
                     <button class="btn-save btn btn-success btn-sm w-100 w-sm-auto" type="submit">
