@@ -74,6 +74,7 @@ export class TaskList implements OnInit {
   filterOldTasks = false; // when true, show only tasks older than 30 days
   // Controls whether the filter options panel is visible
   filterPanelOpen = false;
+  filterImportance: string = '';
 
   // Search Bar Property
   searchTerm: string = '';
@@ -101,18 +102,22 @@ export class TaskList implements OnInit {
 
   // Computed filtered list: tasks must match all active filters
   get filteredTasks(): Task[] {
-    return this.tasks.filter(t => {
-      //filter by completion status
-      if (t.completed !== this.filterCompleted) return false;
-      
-      // Filter by overdue status
-      if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
+  return this.tasks.filter(t => {
+    // Filter by completion status
+    if (t.completed !== this.filterCompleted) return false;
 
-      //Filter by category
-      if (this.filterCategory && t.category !== this.filterCategory) return false;
-      return true;
-    });
-  }
+    // Filter by overdue status
+    if (this.filterOverdue && !this.isTaskOverdue(t)) return false;
+
+    // Filter by category
+    if (this.filterCategory && t.category !== this.filterCategory) return false;
+
+    // Filter by importance
+    if (this.filterImportance && t.importance !== this.filterImportance) return false;
+
+    return true;
+  });
+}
 
   get visibleTasks(): Task[] {
     // 1. Start with tasks filtered by completion, overdue, and category filters
