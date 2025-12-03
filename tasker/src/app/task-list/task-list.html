@@ -178,6 +178,15 @@
           </select>
         </div>
 
+        <div class="mb-2">
+          <select [(ngModel)]="newImportance" name="newImportance" class="form-select">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+            <option value="">Select Importance Level (optional)</option>
+          </select>
+        </div>
+
         <!-- New: due date input for the new task (ISO date) -->
         <div
           class="mb-2 mb-md-3 d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-end"
