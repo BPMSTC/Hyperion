@@ -7,7 +7,7 @@ import { QuoteOfTheDayComponent } from './quote-of-the-day/quote-of-the-day.comp
 import { WeatherWidgetComponent } from './weather-widget/weather-widget.component'
 import { forkJoin, Observable } from 'rxjs';
 
-
+// AppComponent: root component, delegates task creation and manages app-level state
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -16,13 +16,15 @@ import { forkJoin, Observable } from 'rxjs';
   styleUrls: ['./app.css']
 })
 export class App implements OnInit {
-  @ViewChild(TaskList) taskListComponent!: TaskList;  // Add this line
-  tasks: Task[] = [];
-  taskForm!: FormGroup;
+  @ViewChild(TaskList) taskListComponent!: TaskList;  // Reference to TaskList component for task management
+  tasks: Task[] = [];  // Array of tasks
+  taskForm!: FormGroup;  // Reactive form for task input
 
   constructor(private fb: FormBuilder) { }
 
-
+  /**
+   * ngOnInit: Initializes the task form with validation.
+   */
   ngOnInit() {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(1)]],
@@ -30,10 +32,12 @@ export class App implements OnInit {
     });
   }
 
+  /**
+   * addTask: Adds a new task by submitting the task form and delegates creation to TaskList.
+   */
   addTask() {
     if (this.taskForm.valid) {
       const formValue = this.taskForm.value;
-      // Delegate to TaskList's addTask method, which uses TaskService and MongoDB
       if (this.taskListComponent) {
         this.taskListComponent.newTitle = formValue.title.trim();
         this.taskListComponent.newDescription = formValue.description?.trim() || '';
@@ -42,7 +46,11 @@ export class App implements OnInit {
       this.taskForm.reset();
     }
   }
-   loadDemoTasks(): void {
+  
+  /**
+   * loadDemoTasks: Loads demo tasks for testing or initial setup, adds them to the backend, and refreshes the list.
+   */
+  loadDemoTasks(): void {
     const demoTasks: Task[] = [
       // Personal tasks
       {
@@ -106,18 +114,18 @@ export class App implements OnInit {
       }
     ];
 
-  const addDemoTasksObservables = demoTasks.map(task => 
-    this.taskListComponent.addTaskFromService(task)  // Now this returns Observable<Task>
-  );
+    const addDemoTasksObservables = demoTasks.map(task => 
+      this.taskListComponent.addTaskFromService(task)
+    );
 
-  forkJoin(addDemoTasksObservables).subscribe({
-    next: (savedTasks) => {
-      this.taskListComponent.ngOnInit();
-    },
-    error: (error) => {
-      console.error('Error adding demo tasks:', error);
-    }
-  });
+    forkJoin(addDemoTasksObservables).subscribe({
+      next: (savedTasks) => {
+        this.taskListComponent.ngOnInit();
+      },
+      error: (error) => {
+        console.error('Error adding demo tasks:', error);
+      }
+    });
     
     // Visual feedback
     const button = document.querySelector('.btn-demo:not(.btn-demo-clear)') as HTMLButtonElement;
@@ -132,45 +140,46 @@ export class App implements OnInit {
     }
   }
 
-clearDemoTasks(): void {
-  // Find all demo tasks
-  const demoTasks = this.taskListComponent.tasks.filter(task => 
-    task.title?.startsWith('DEMO -')
-  );
+  /**
+   * clearDemoTasks: Clears demo tasks from the task list and database, then refreshes the list.
+   */
+  clearDemoTasks(): void {
+    const demoTasks = this.taskListComponent.tasks.filter(task => 
+      task.title?.startsWith('DEMO -')
+    );
 
-  // Delete each demo task from MongoDB using the public method
-  const deleteDemoTaskObservables = demoTasks.map(task => {
-    if (task._id) {
-      return this.taskListComponent.removeTask(task._id);  // Use removeTask instead
-    }
-    return new Observable(observer => observer.complete());
-  });
-
-  // Wait for all deletions to complete
-  forkJoin(deleteDemoTaskObservables).subscribe({
-    next: () => {
-      // Refresh the task list from database
-      this.taskListComponent.ngOnInit();
-      
-      // Visual feedback
-      const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
-      if (button) {
-        const originalText = button.textContent;
-        button.textContent = '✓ Demo Data Cleared!';
-        button.classList.add('success');
-        setTimeout(() => {
-          button.textContent = originalText;
-          button.classList.remove('success');
-        }, 2000);
+    const deleteDemoTaskObservables = demoTasks.map(task => {
+      if (task._id) {
+        return this.taskListComponent.removeTask(task._id);
       }
-    },
-    error: (error) => {
-      console.error('Error clearing demo tasks:', error);
-    }
-  });
+      return new Observable(observer => observer.complete());
+    });
+
+    forkJoin(deleteDemoTaskObservables).subscribe({
+      next: () => {
+        this.taskListComponent.ngOnInit();
+        
+        // Visual feedback
+        const button = document.querySelector('.btn-demo-clear') as HTMLButtonElement;
+        if (button) {
+          const originalText = button.textContent;
+          button.textContent = '✓ Demo Data Cleared!';
+          button.classList.add('success');
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove('success');
+          }, 2000);
+        }
+      },
+      error: (error) => {
+        console.error('Error clearing demo tasks:', error);
+      }
+    });
   }
 
-  // Helper to get a date N days in the future as an ISO string
+  /**
+   * getFutureDate: Helper to get a date N days in the future as an ISO string.
+   */
   private getFutureDate(daysAhead: number): string {
     const date = new Date();
     date.setDate(date.getDate() + daysAhead);

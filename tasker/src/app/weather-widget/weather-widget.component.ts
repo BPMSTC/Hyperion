@@ -29,6 +29,9 @@ import { WeatherService, WeatherData } from '../services/weather-service';
     this.loadSavedLocation();
   }
 
+  /**
+   * loadSavedLocation: Loads user's saved location from localStorage and fetches weather, or falls back to auto-detection.
+   */
   loadSavedLocation(): void {
     // Check if user has a saved location preference
     const savedLocation = localStorage.getItem('weatherLocation');
@@ -47,6 +50,9 @@ import { WeatherService, WeatherData } from '../services/weather-service';
     }
   }
 
+  /**
+   * loadWeather: Fetches weather for the current location using the weather service.
+   */
   loadWeather(): void {
     this.loading = true;
     this.error = false;
@@ -71,6 +77,9 @@ import { WeatherService, WeatherData } from '../services/weather-service';
     });
   }
 
+  /**
+   * loadWeatherByCoords: Fetches weather for specific latitude/longitude coordinates.
+   */
   loadWeatherByCoords(lat: number, lon: number): void {
     this.loading = true;
     this.error = false;
@@ -96,15 +105,24 @@ import { WeatherService, WeatherData } from '../services/weather-service';
     });
   }
 
+  /**
+   * refreshWeather: Reloads weather data using saved location or auto-detection.
+   */
   refreshWeather(): void {
     this.loadSavedLocation();
   }
 
+  /**
+   * toggleLocationInput: Shows or hides the location input field for manual search.
+   */
   toggleLocationInput(): void {
     this.showLocationInput = !this.showLocationInput;
     this.locationError = '';
   }
 
+  /**
+   * searchLocation: Searches for a location by name and fetches weather for it.
+   */
   searchLocation(): void {
     const query = this.locationQuery.trim();
     if (!query) return;
@@ -138,6 +156,9 @@ import { WeatherService, WeatherData } from '../services/weather-service';
     });
   }
 
+  /**
+   * useAutoLocation: Uses browser's location or default to fetch weather, clears saved location.
+   */
   useAutoLocation(): void {
     this.searching = true;
     this.locationError = '';
@@ -152,6 +173,9 @@ import { WeatherService, WeatherData } from '../services/weather-service';
     this.searching = false;
   }
 
+  /**
+   * getWeatherIcon: Returns the appropriate weather icon for the current weather code.
+   */
   getWeatherIcon(): string {
     return this.weather ? this.weatherService.getWeatherIcon(this.weather.weatherCode) : '🌤️';
   }
