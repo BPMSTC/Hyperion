@@ -21,6 +21,7 @@ import confetti from 'canvas-confetti';
   - All add/edit/delete/complete actions go to the database.
 */
 
+// Component decorator
 @Component({
   selector: 'app-task-list',
   standalone: true,
