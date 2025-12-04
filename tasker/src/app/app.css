@@ -1,4 +1,4 @@
- /*
+/*
    app.css - global application styles
    - This file contains the original global styles for the app shell and
      the task UI. Several width and layout adjustments were added so the
@@ -61,6 +61,21 @@
     color: var(--gray-900);
     margin: 0;
     text-align: center;
+  }
+
+  .widgets-panel {
+    transition: opacity 250ms ease, transform 250ms ease, max-height 250ms ease;
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 1000px;
+  }
+
+  .widgets-panel.widgets-hidden {
+    opacity: 0;
+    transform: translateY(-6px);
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
 
 
