@@ -28,45 +28,46 @@ import confetti from 'canvas-confetti';
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })
+// TaskList component: manages the list of tasks, task creation, editing, filtering, and UI state
 export class TaskList implements OnInit {
-  // Alert state variables
+  // Alert state variables for completion feedback
   showCompleteAlert = false;
   completeMessage = '';
   isFading = false;
 
-  // Character limit constants
+  // Character limit constants for validation
   readonly TITLE_MAX_LENGTH = 50;
   readonly DESCRIPTION_MAX_LENGTH = 250;
 
-  // available categoeries
+  // List of available categories for tasks
   readonly CATEGORIES: TaskCategory[] = ['School', 'Work', 'Personal'];
 
-  todayDate: string; // bound to the date input's min attribute
+  // Today's date in ISO format, used for date input min value
+  todayDate: string;
 
-  // The in-memory array of tasks displayed in the template
+  // Array of all tasks loaded from backend
   tasks: Task[] = [];
 
   // Form-bound properties for new task input
   newTitle = '';
   newDescription = '';
-  newLocation = ''; // bound to the location input
-  newDueDate = ''; // bound to the form's date input (ISO yyyy-mm-dd)
-  newCategory: TaskCategory | '' = ''; // bound to the category dropdown
-  locationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions
+  newLocation = '';
+  newDueDate = '';
+  newCategory: TaskCategory | '' = '';
+  locationSuggestions: AutocompleteResult[] = [];
 
   // Edit mode properties
   editingTaskId: string | null = null;
   editTitle = '';
   editDescription = '';
-  editLocation = ''; // bound while editing a task location
-  editDueDate = ''; // bound while editing a task
-  editCategory: TaskCategory | '' = ''; // bound while editing a task category
-  editLocationSuggestions: AutocompleteResult[] = []; // autocomplete suggestions for edit mode
+  editLocation = '';
+  editDueDate = '';
+  editCategory: TaskCategory | '' = '';
+  editLocationSuggestions: AutocompleteResult[] = [];
 
-  // Importance level for new task (added in 50-taskRating branch)
-    // <!-- usr - 50 -->
+  // Importance level for new tasks
   newImportance: string ='';
-  // Importance level for editing a task (added in 50-taskRating branch)
+  // Importance level for editing a task
   editImportance: string ='';
 
   // Filter toggles
@@ -95,17 +96,27 @@ export class TaskList implements OnInit {
     this.todayDate = today.toISOString().split('T')[0];
   }
 
+  /**
+   * addTaskFromService: Adds a task using the TaskService and returns the observable.
+   * Used for demo data and external task creation.
+   */
   public addTaskFromService(task: Task): Observable<Task> {
-  return this.taskService.addTask(task);
+    return this.taskService.addTask(task);
   }
 
+  /**
+   * removeTask: Removes a task by its ID using the TaskService.
+   * Used for demo data and external task deletion.
+   */
   public removeTask(taskId: string): Observable<void> {
     return this.taskService.deleteTask(taskId);
   }
 
-  // Computed filtered list: tasks must match all active filters
+  /**
+   * filteredTasks: Returns tasks filtered by completion, overdue, category, and importance.
+   * Used for filter panel and search logic.
+   */
   get filteredTasks(): Task[] {
-    // Importance filter logic added in 50-taskRating branch
     return this.tasks.filter(t => {
       // Filter by completion status
       if (t.completed !== this.filterCompleted) return false;
@@ -124,6 +135,10 @@ export class TaskList implements OnInit {
     });
   }
 
+  /**
+   * visibleTasks: Returns tasks filtered by all toggles and search term.
+   * Used for displaying the final list in the UI.
+   */
   get visibleTasks(): Task[] {
     // 1. Start with tasks filtered by completion, overdue, and category filters
     let filtered = this.filteredTasks;
@@ -149,14 +164,18 @@ export class TaskList implements OnInit {
     return filtered;
   }
 
+  /**
+   * ngOnInit: Loads tasks from backend on component initialization.
+   */
   ngOnInit(): void {
-  this.taskService.getTasks().subscribe(tasks => {
-    this.tasks = tasks;
-  });
-}
+    this.taskService.getTasks().subscribe(tasks => {
+      this.tasks = tasks;
+    });
+  }
 
-  // addTask() is wired to the form's ngSubmit. It validates input, creates
-  // a Task object, prepends it to the tasks list, and clears the form fields.
+  /**
+   * addTask: Adds a new task using form values, validates input, and clears the form.
+   */
   addTask(): void {
     const title = this.newTitle?.trim();
     if (!title) return;
@@ -182,11 +201,13 @@ export class TaskList implements OnInit {
     });
   }
 
- // Toggle the completed flag for a task; the checkbox in the template calls this.
-toggleComplete(task: Task): void {
-  task.completed = !task.completed;
-  
-  this.taskService.updateTask(task).subscribe(updatedTask => {
+  /**
+   * toggleComplete: Toggles completion status for a task and shows confetti if completed.
+   */
+  toggleComplete(task: Task): void {
+    task.completed = !task.completed;
+    
+    this.taskService.updateTask(task).subscribe(updatedTask => {
       if (task.completed) {
         // Trigger confetti animation
         confetti({
@@ -208,9 +229,11 @@ toggleComplete(task: Task): void {
         }, 3000);
       }
     });
-}
+  }
 
-  // Remove a task by id; used by the remove button in the template.
+  /**
+   * remove: Removes a task from the list and backend.
+   */
   remove(task: Task): void {
     if (!task._id) return;
     this.taskService.deleteTask(task._id).subscribe(() => {
@@ -218,13 +241,17 @@ toggleComplete(task: Task): void {
     });
   }
 
-  // Update the due date for an existing task and persist the change
+  /**
+   * updateDueDate: Updates the due date for a task and persists the change.
+   */
   updateDueDate(task: Task, isoDate: string | null): void {
     task.dueDate = isoDate || undefined;
     this.taskService.updateTask(task).subscribe();
   }
 
-  // Start editing a task by setting edit mode and populating edit fields
+  /**
+   * startEdit: Starts editing a task and populates edit fields.
+   */
   startEdit(task: Task): void {
     this.editingTaskId = task._id ?? null;
     this.editTitle = task.title;
@@ -237,7 +264,9 @@ toggleComplete(task: Task): void {
     this.editImportance = task.importance || "";
   }
 
-  // Save the edited task and exit edit mode
+  /**
+   * saveEdit: Saves the edited task and persists changes.
+   */
   saveEdit(): void {
     const title = this.editTitle?.trim();
     if (!title || this.editingTaskId === null) return;
@@ -258,7 +287,9 @@ toggleComplete(task: Task): void {
     this.cancelEdit();
   }
 
-  // Cancel editing and exit edit mode
+  /**
+   * cancelEdit: Cancels editing and exits edit mode.
+   */
   cancelEdit(): void {
     this.editingTaskId = null;
     this.editTitle = '';
@@ -273,12 +304,16 @@ toggleComplete(task: Task): void {
     }
   }
 
-  // Helper method to check if a task is being edited
+  /**
+   * isEditing: Helper method to check if a task is being edited.
+   */
   isEditing(task: Task): boolean {
     return this.editingTaskId === task._id;
   }
 
-  // Method to check if a task is overdue
+  /**
+   * isTaskOverdue: Checks if a task is overdue.
+   */
   isTaskOverdue(task: Task): boolean {
     if (!task.dueDate || task.completed) {
       return false;
@@ -291,7 +326,9 @@ toggleComplete(task: Task): void {
     return dueDate < today;
   }
 
-  // Method to get ID for overdue task rows
+  /**
+   * getOverdueRowId: Returns a special ID for overdue task rows (used for styling).
+   */
   getOverdueRowId(task: Task): string | null {
     return this.isTaskOverdue(task) ? 'overdueTaskRow' : null;
   }
