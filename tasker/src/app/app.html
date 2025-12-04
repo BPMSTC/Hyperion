@@ -21,7 +21,9 @@
           [attr.aria-pressed]="widgetVisibilityToggle.checked">
           {{ widgetVisibilityToggle.checked ? 'Hide Widgets' : 'Show Widgets' }}
         </button>
-        <div class="d-flex flex-column gap-1" *ngIf="widgetVisibilityToggle.checked">
+        <div
+          class="widgets-panel d-flex flex-column gap-1"
+          [class.widgets-hidden]="!widgetVisibilityToggle.checked">
           <app-weather-widget></app-weather-widget>
           <app-quote-of-the-day></app-quote-of-the-day>
         </div>
