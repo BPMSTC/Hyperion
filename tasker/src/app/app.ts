@@ -91,7 +91,7 @@ export class App implements OnInit {
       {
         title: 'DEMO - Complete Math homework',
         description: 'Finish chapters 5-7 exercises',
-        location: 'Publicc Library, Stevens Point WI',
+        location: 'Public Library, Stevens Point WI',
         dueDate: this.getFutureDate(5),
         category: 'School',
         completed: false,
