@@ -1,19 +1,29 @@
 <main class="app-container">
+  <input #widgetVisibilityToggle type="checkbox" class="d-none" checked>
   <div class="app-content">
     <div class="header-section">
-      <div class="demo-buttons-container d-flex gap-2 mb-3">
+      <div class="demo-buttons-container d-flex gap-2 mb-3 flex-wrap">
         <button class="btn-demo btn btn-outline-primary btn-sm" (click)="loadDemoTasks()">Load Demo Data</button>
         <button class="btn-demo btn-demo-clear btn btn-outline-danger btn-sm" (click)="clearDemoTasks()">Clear Demo Data</button>
       </div>
       <h1 class="app-title">Tasker</h1>
     </div>
-  
+
     <div class="row g-3 align-items-start">
       <div class="col-12 col-md-8">
         <app-task-list></app-task-list>
       </div>
       <div class="col-12 col-md-4">
-        <div class="d-flex flex-column gap-1">
+        <button
+          class="btn btn-outline-secondary btn-sm mb-2"
+          type="button"
+          (click)="widgetVisibilityToggle.checked = !widgetVisibilityToggle.checked"
+          [attr.aria-pressed]="widgetVisibilityToggle.checked">
+          {{ widgetVisibilityToggle.checked ? 'Hide Widgets' : 'Show Widgets' }}
+        </button>
+        <div
+          class="widgets-panel d-flex flex-column gap-1"
+          [class.widgets-hidden]="!widgetVisibilityToggle.checked">
           <app-weather-widget></app-weather-widget>
           <app-quote-of-the-day></app-quote-of-the-day>
         </div>
