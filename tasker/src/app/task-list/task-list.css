@@ -120,7 +120,8 @@
 .task-row.overdue-row,
 
 #overdueTaskRow {
-	background-color: #ff8c0045; 
+	/* Brighter / slightly less transparent orange for better visibility in dark mode */
+	background-color: rgba(228, 113, 47, 0.4);
 }
 
 /* Override text colors within overdue rows for visibility */
