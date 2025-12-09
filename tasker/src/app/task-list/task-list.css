@@ -87,17 +87,19 @@
 .task-list-card.card select:focus,
 .task-list-card.card .form-control:focus {
 	outline: none;
-	border-color: var(--bs-primary) !important;
-	background: #313a49 !important;
-	box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.12) !important;
+	/* keep background and border stable to avoid intrusive focus effects */
+	border-color: var(--input-border) !important;
+	background: var(--input-bg) !important;
+	box-shadow: none !important;
 }
 
 .task-list-card.card input:hover,
 .task-list-card.card textarea:hover,
 .task-list-card.card select:hover,
 .task-list-card.card .form-control:hover {
-	background: #303841 !important;
-	border-color: #465561 !important;
+	/* keep hover subtle and consistent with input background */
+	background: var(--input-bg) !important;
+	border-color: var(--input-border) !important;
 }
 
 .task-list-card.card input,
@@ -267,14 +269,26 @@
 	top: 100%;
 	left: 0;
 	right: 0;
-	background: var(--surface);
-	border: 1px solid var(--border);
+	 background: var(--surface);
+	 border: 1px solid var(--border);
 	border-top: none;
 	border-radius: 0 0 6px 6px;
 	max-height: 200px;
 	overflow-y: auto;
 	z-index: 1000;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Some templates add Bootstrap utility classes like `bg-white border shadow-sm`
+   to the suggestions dropdown. In dark mode those produce a bright box —
+   override them so suggestions follow our theme variables. */
+.location-suggestions.bg-white,
+.location-suggestions.bg-white.border,
+.location-suggestions.shadow-sm {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+  color: var(--text) !important;
 }
 
 .suggestion-item {

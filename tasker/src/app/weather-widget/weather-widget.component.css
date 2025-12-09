@@ -100,9 +100,9 @@
 
 .location-input:focus {
   outline: none;
-  border-color: var(--bs-primary);
-  background: #313a49;
-  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.08);
+  border-color: var(--input-border);
+  background: var(--input-bg);
+  box-shadow: none;
 }
 
 .location-search-btn,
