@@ -10,3 +10,64 @@
   --bs-secondary-hover: #5b2e91;
 
 }
+
+/* Dark-mode-first theme variables. These make the app dark by default
+   and provide compatibility vars used throughout the component CSS. */
+:root {
+  --bg: #1b1f23;        /* page background */
+  --surface: #0f1724;   /* cards, rows */
+  --card-elev: rgba(255,255,255,0.02);
+  --text: #e6eef8;      /* primary text */
+  --muted: #9aa6b2;     /* secondary text */
+  --border: #1f2937;    /* borders */
+  /* Widget background: subtle inverse gradient overlay on top of surface for dark mode */
+  /* Widget background: stronger inverse gradient overlay on top of surface for dark mode */
+  --widget-bg: linear-gradient(135deg, rgba(102,126,234,0.18) 0%, rgba(234,102,102,0.18) 100%), var(--surface);
+  --widget-text: var(--text);
+  --widget-border: rgba(255,255,255,0.04);
+
+  /* compatibility shims used earlier in styles */
+  --gray-900: var(--text);
+  --gray-700: var(--muted);
+  --gray-600: #94a3b8;
+  --gray-500: #9aa6b2;
+  /* form/input colors */
+  --input-bg: #2a3441;
+  --input-border: #384550;
+  --input-placeholder: #97a3b0;
+}
+
+/* Helper when author wants an explicit light theme later */
+html[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --card-elev: rgba(0,0,0,0.03);
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --widget-bg: linear-gradient(135deg,#667eea 0%, #764ba2 100%);
+  --widget-text: #ffffff;
+  --widget-border: rgba(0,0,0,0.06);
+  --gray-900: var(--text);
+  --gray-700: var(--muted);
+  /* Light-theme input overrides */
+  --input-bg: #ffffff;
+  --input-border: #e5e7eb;
+  --input-placeholder: #6b7280;
+}
+
+/* Base page application of variables */
+html, body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Smooth but quick transitions when toggling theme */
+* {
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+/* Ensure Bootstrap's .text-muted is readable in both themes by mapping to our --muted variable */
+.text-muted {
+  color: var(--muted) !important;
+}

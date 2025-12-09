@@ -46,6 +46,16 @@
 	padding: 0 !important;
 	width: 100%;
 	max-width: 100%;
+	background: var(--surface) !important;
+	color: var(--text);
+	border: 1px solid var(--border);
+}
+
+/* Ensure card body and headers inherit dark background when using Bootstrap card markup */
+.task-list-card.card .card-body,
+.task-list-card.card .card-header {
+	background: transparent;
+	color: inherit;
 }
 
 
@@ -55,17 +65,63 @@
 	padding: 0.5rem;
 }
 
+/* Form controls inside the task-list card should match the dark surface */
+.task-list-card.card input,
+.task-list-card.card textarea,
+.task-list-card.card select,
+.task-list-card.card .form-control {
+	background: var(--input-bg) !important;
+	color: var(--text) !important;
+	border: 1px solid var(--input-border) !important;
+	box-shadow: none !important;
+}
+
+.task-list-card.card input::placeholder,
+.task-list-card.card textarea::placeholder {
+	color: var(--input-placeholder) !important;
+	opacity: 1 !important;
+}
+
+.task-list-card.card input:focus,
+.task-list-card.card textarea:focus,
+.task-list-card.card select:focus,
+.task-list-card.card .form-control:focus {
+	outline: none;
+	/* keep background and border stable to avoid intrusive focus effects */
+	border-color: var(--input-border) !important;
+	background: var(--input-bg) !important;
+	box-shadow: none !important;
+}
+
+.task-list-card.card input:hover,
+.task-list-card.card textarea:hover,
+.task-list-card.card select:hover,
+.task-list-card.card .form-control:hover {
+	/* keep hover subtle and consistent with input background */
+	background: var(--input-bg) !important;
+	border-color: var(--input-border) !important;
+}
+
+.task-list-card.card input,
+.task-list-card.card textarea,
+.task-list-card.card select,
+.task-list-card.card .form-control {
+	transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
 
 .task-row {
-	background: #fafafa;
-	border: 1px solid #f2f2f2;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	box-shadow: 0 1px 0 var(--card-elev) inset;
 }
 
 /* Overdue task row styling - Highlights the entire task row in orange */
 .task-row.overdue-row,
 
 #overdueTaskRow {
-	background-color: #ff8c0045; 
+	/* Brighter / slightly less transparent orange for better visibility in dark mode */
+	background-color: rgba(228, 113, 47, 0.4);
 }
 
 /* Override text colors within overdue rows for visibility */
@@ -209,27 +265,39 @@
 	top: 100%;
 	left: 0;
 	right: 0;
-	background: white;
-	border: 1px solid #e6e6e6;
+	 background: var(--surface);
+	 border: 1px solid var(--border);
 	border-top: none;
 	border-radius: 0 0 6px 6px;
 	max-height: 200px;
 	overflow-y: auto;
 	z-index: 1000;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Some templates add Bootstrap utility classes like `bg-white border shadow-sm`
+   to the suggestions dropdown. In dark mode those produce a bright box —
+   override them so suggestions follow our theme variables. */
+.location-suggestions.bg-white,
+.location-suggestions.bg-white.border,
+.location-suggestions.shadow-sm {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+  color: var(--text) !important;
 }
 
 .suggestion-item {
 	padding: 0.75rem;
 	cursor: pointer;
-	border-bottom: 1px solid #f0f0f0;
+	border-bottom: 1px solid var(--border);
 	font-size: 0.9rem;
-	color: #333;
+	color: var(--text);
 	transition: background-color 0.2s;
 }
 
 .suggestion-item:hover {
-	background-color: #f8f9fa;
+	background-color: rgba(255,255,255,0.02);
 }
 
 .suggestion-item:last-child {

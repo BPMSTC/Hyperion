@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Task } from './models/task.model';
@@ -22,6 +22,29 @@ export class App implements OnInit {
 
   constructor(private fb: FormBuilder) { }
 
+  // Theme preference: 'light' | 'dark' | 'auto'
+  themePreference: 'light' | 'dark' | 'auto' = 'auto';
+  private colorSchemeMql?: MediaQueryList;
+  private colorSchemeListener?: (e: MediaQueryListEvent) => void;
+
+  /**
+   * Returns a human-friendly label for the current theme preference
+   */
+  get themeLabel(): string {
+    if (!this.themePreference) return 'Automatic';
+    return this.themePreference.charAt(0).toUpperCase() + this.themePreference.slice(1);
+  }
+
+  /**
+   * Cycle the theme preference: auto -> light -> dark -> auto
+   */
+  cycleTheme() {
+    const order: Array<'auto'|'light'|'dark'> = ['auto','light','dark'];
+    const idx = order.indexOf(this.themePreference as any);
+    const next = order[(idx + 1) % order.length];
+    this.setThemePreference(next);
+  }
+
   /**
    * ngOnInit: Initializes the task form with validation.
    */
@@ -30,6 +53,50 @@ export class App implements OnInit {
       title: ['', [Validators.required, Validators.minLength(1)]],
       description: ['']
     });
+
+    // Load persisted theme preference
+    try {
+      const saved = localStorage.getItem('themePreference');
+      if (saved === 'light' || saved === 'dark' || saved === 'auto') this.themePreference = saved;
+      else this.themePreference = 'auto';
+    } catch {
+      this.themePreference = 'auto';
+    }
+
+    // Apply initial theme
+    this.applyTheme(this.themePreference);
+
+    // Listen for system preference changes when in 'auto'
+    if (window && window.matchMedia) {
+      this.colorSchemeMql = window.matchMedia('(prefers-color-scheme: dark)');
+      this.colorSchemeListener = () => {
+        if (this.themePreference === 'auto') this.applyTheme('auto');
+      };
+      if (this.colorSchemeMql.addEventListener) this.colorSchemeMql.addEventListener('change', this.colorSchemeListener);
+      else (this.colorSchemeMql as any).addListener(this.colorSchemeListener);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.colorSchemeMql && this.colorSchemeListener) {
+      if (this.colorSchemeMql.removeEventListener) this.colorSchemeMql.removeEventListener('change', this.colorSchemeListener);
+      else (this.colorSchemeMql as any).removeListener(this.colorSchemeListener);
+    }
+  }
+
+  setThemePreference(pref: string) {
+    // Accept a broad string from the template and validate it here
+    const validated: 'light' | 'dark' | 'auto' = (pref === 'light' || pref === 'dark' || pref === 'auto') ? pref : 'auto';
+    this.themePreference = validated;
+    try { localStorage.setItem('themePreference', validated); } catch {}
+    this.applyTheme(validated);
+  }
+
+  private applyTheme(pref: 'light' | 'dark' | 'auto') {
+    const useDark = pref === 'dark' ? true : pref === 'light' ? false : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    try {
+      document.documentElement.setAttribute('data-theme', useDark ? 'dark' : 'light');
+    } catch {}
   }
 
   /**
