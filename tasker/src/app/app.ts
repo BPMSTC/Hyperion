@@ -54,34 +54,31 @@ export class App implements OnInit {
     const demoTasks: Task[] = [
       // Personal tasks
       {
-        title: 'DEMO - Buy groceries',
-        description: 'Milk, Bread, Eggs, Butter',
+        title: 'DEMO - Patch hole in spidey suit',
+        description: 'Use fabric glue to fix the tear on the left arm',
         category: 'Personal',
-        completed: false,
-        importance: 'Medium'
-      },
-      {
-        title: 'DEMO - Gym workout',
-        description: 'Upper body strength training and cardio',
-        location: 'Fitness Center Downtown',
-        dueDate: this.getFutureDate(2),
-        category: 'Personal',
-        completed: false,
-        importance: 'Medium'
-      },
-      // Work tasks
-      {
-        title: 'DEMO - Finish project report',
-        description: 'Complete the final draft of the project report and send it to the manager.',
-        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
-        category: 'Work',
         completed: false,
         importance: 'High'
       },
       {
-        title: 'DEMO - Team meeting prep',
-        description: 'Prepare agenda and review project milestones',
-        location: 'Conference Room B',
+        title: 'DEMO - Check in on Aunt May',
+        dueDate: this.getFutureDate(2),
+        category: 'Personal',
+        completed: false,
+        importance: 'Low'
+      },
+      // Work tasks
+      {
+        title: 'DEMO - Quick Workout',
+        description: 'Wall-crawling laps + 50 web-assisted pull-ups',
+        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
+        category: 'Personal',
+        completed: false,
+        importance: 'High'
+      },
+      {
+        title: 'DEMO - Photograph city skyline for Daily Bugle',
+        location: '30 W 39th St, New York, NY 10018',
         dueDate: this.getFutureDate(3),
         category: 'Work',
         completed: false,
@@ -89,26 +86,25 @@ export class App implements OnInit {
       },
       // School tasks
       {
-        title: 'DEMO - Complete Math homework',
-        description: 'Finish chapters 5-7 exercises',
-        location: 'Public Library, Stevens Point WI',
+        title: 'DEMO - Help neighborhood kid retrieve lost drone',
+        description: 'Find and retrieve the lost drone from the park',
+        location: 'Central Park, New York, NY',
         dueDate: this.getFutureDate(5),
-        category: 'School',
+        category: 'Personal',
         completed: false,
-        importance: 'High'
+        importance: 'Low'
       },
       {
-        title: 'DEMO - Study for Biology exam',
-        description: 'Review cell biology and genetics chapters',
+        title: 'DEMO - Pick up groceries',
+        description: 'Do not forget eggs this time',
         dueDate: this.getFutureDate(7),
-        category: 'School',
+        category: 'Personal',
         completed: false,
-        importance: 'Medium'
+        importance: 'Low'
       },
       // Task without category
       {
-        title: 'DEMO - Drop off package',
-        location: 'FedEx Office, Plover WI',
+        title: 'DEMO - Check mutation markers under microscope',
         completed: false,
         importance: 'Low'
       }
