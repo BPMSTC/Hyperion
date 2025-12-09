@@ -86,6 +86,23 @@
   border: none;
   border-radius: 6px;
   font-size: 14px;
+  /* match theme form controls */
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--input-border);
+  box-shadow: none;
+}
+
+.location-input::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: var(--bs-primary);
+  background: #313a49;
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.08);
 }
 
 .location-search-btn,
