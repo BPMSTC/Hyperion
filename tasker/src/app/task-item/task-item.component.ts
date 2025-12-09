@@ -23,8 +23,8 @@ export class TaskItemComponent {
     }
     const today = new Date();
     const dueDate = new Date(this.task.dueDate);
-    // Set time to start of day for accurate comparison
-    today.setHours(0, 0, 0, 0);
+    // Set time to midnight for accurate comparison
+    today.setHours(0, 0, 0, 0); // (hours, minutes, seconds, milliseconds)
     dueDate.setHours(0, 0, 0, 0);
     return dueDate < today;
   }
@@ -38,8 +38,8 @@ export class TaskItemComponent {
   formatDate(isoDate: string): string {
     const date = new Date(isoDate);
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0'); // Pads the current string with a given string
     const year = date.getFullYear();
-    return `${month}-${day}-${year}`;
+    return `${month}-${day}-${year}`; // $ formats variables to string value
   }
 }

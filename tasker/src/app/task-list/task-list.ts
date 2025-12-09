@@ -21,6 +21,7 @@ import confetti from 'canvas-confetti';
   - All add/edit/delete/complete actions go to the database.
 */
 
+// Component decorator
 @Component({
   selector: 'app-task-list',
   standalone: true,
@@ -188,6 +189,7 @@ export class TaskList implements OnInit {
       dueDate: this.newDueDate ? this.newDueDate : undefined,
       location: this.newLocation ? this.newLocation.trim() : undefined,
       category: this.newCategory || undefined,
+      importance: this.newImportance || undefined,
       completed: false
     };
     this.taskService.addTask(task).subscribe(newTask => {
@@ -198,6 +200,7 @@ export class TaskList implements OnInit {
       this.newDueDate = '';
       this.newCategory = '';
       this.locationSuggestions = [];
+      this.newImportance = "";
     });
   }
 
@@ -229,6 +232,20 @@ export class TaskList implements OnInit {
         }, 3000);
       }
     });
+  }
+
+  toggleCompletedFilter() {
+    this.filterCompleted = !this.filterCompleted;
+    if (this.filterCompleted) {
+      this.filterOverdue = false;
+    }
+  }
+
+  toggleOverdueFilter() {
+    this.filterOverdue = !this.filterOverdue;
+    if (this.filterOverdue) {
+      this.filterCompleted = false;
+    }
   }
 
   /**
