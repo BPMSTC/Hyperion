@@ -200,6 +200,7 @@ export class TaskList implements OnInit {
       this.newDueDate = '';
       this.newCategory = '';
       this.locationSuggestions = [];
+      this.newImportance = "";
     });
   }
 
