@@ -65,46 +65,52 @@ export class App implements OnInit {
         dueDate: this.getFutureDate(2),
         category: 'Personal',
         completed: false,
+        importance: 'Medium'
+      },
+      {
+        title: 'DEMO - Quick Workout',  
+        description: 'Wall-crawling laps + 50 web-assisted pull-ups',
+        category: 'Personal',
+        completed: false,
         importance: 'Low'
       },
       // Work tasks
       {
-        title: 'DEMO - Quick Workout',
-        description: 'Wall-crawling laps + 50 web-assisted pull-ups',
-        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
-        category: 'Personal',
-        completed: false,
-        importance: 'High'
-      },
-      {
         title: 'DEMO - Photograph city skyline for Daily Bugle',
         location: '30 W 39th St, New York, NY 10018',
-        dueDate: this.getFutureDate(3),
+        dueDate: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0],
         category: 'Work',
         completed: false,
         importance: 'High'
       },
+      {
+        title: 'DEMO - Research story leads for “Spider-Man sightings” article',
+        category: 'Work',
+        completed: false,
+        importance: 'Medium'
+      },
       // School tasks
       {
-        title: 'DEMO - Help neighborhood kid retrieve lost drone',
-        description: 'Find and retrieve the lost drone from the park',
-        location: 'Central Park, New York, NY',
+        title: 'DEMO - Meet Ned/MJ for group project planning',
+        description: 'Make sure to bring notes and laptop',
         dueDate: this.getFutureDate(5),
-        category: 'Personal',
+        category: 'School',
         completed: false,
         importance: 'Low'
       },
       {
-        title: 'DEMO - Pick up groceries',
-        description: 'Do not forget eggs this time',
+        title: 'DEMO - Reserve science lab for after-school spider research',
         dueDate: this.getFutureDate(7),
-        category: 'Personal',
+        category: 'School',
         completed: false,
         importance: 'Low'
       },
       // Task without category
       {
-        title: 'DEMO - Check mutation markers under microscope',
+        title: 'DEMO - Help neighborhood kid retrieve lost drone',
+        description: 'Find and retrieve the lost drone from the park',
+        location: 'Central Park, New York, NY',
+        dueDate: this.getFutureDate(5),
         completed: false,
         importance: 'Low'
       }
