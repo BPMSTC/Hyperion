@@ -21,8 +21,10 @@
   --muted: #9aa6b2;     /* secondary text */
   --border: #1f2937;    /* borders */
   /* Widget background: subtle inverse gradient overlay on top of surface for dark mode */
-  --widget-bg: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(234,102,102,0.06) 100%), var(--surface);
+  /* Widget background: stronger inverse gradient overlay on top of surface for dark mode */
+  --widget-bg: linear-gradient(135deg, rgba(102,126,234,0.18) 0%, rgba(234,102,102,0.18) 100%), var(--surface);
   --widget-text: var(--text);
+  --widget-border: rgba(255,255,255,0.04);
 
   /* compatibility shims used earlier in styles */
   --gray-900: var(--text);
@@ -45,6 +47,7 @@ html[data-theme="light"] {
   --border: #e5e7eb;
   --widget-bg: linear-gradient(135deg,#667eea 0%, #764ba2 100%);
   --widget-text: #ffffff;
+  --widget-border: rgba(0,0,0,0.06);
   --gray-900: var(--text);
   --gray-700: var(--muted);
   /* Light-theme input overrides */
