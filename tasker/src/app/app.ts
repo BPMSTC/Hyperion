@@ -28,10 +28,10 @@ export class App implements OnInit {
   ngOnInit() {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(1)]],
-      description: ['']
+      description: [''],
+      importance: [''] // Optional field, default is empty
     });
   }
-
   /**
    * addTask: Adds a new task by submitting the task form and delegates creation to TaskList.
    */
@@ -41,6 +41,7 @@ export class App implements OnInit {
       if (this.taskListComponent) {
         this.taskListComponent.newTitle = formValue.title.trim();
         this.taskListComponent.newDescription = formValue.description?.trim() || '';
+        this.taskListComponent.newImportance = formValue.importance;
         this.taskListComponent.addTask();
       }
       this.taskForm.reset();

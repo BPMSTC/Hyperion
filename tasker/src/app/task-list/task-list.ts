@@ -189,6 +189,7 @@ export class TaskList implements OnInit {
       dueDate: this.newDueDate ? this.newDueDate : undefined,
       location: this.newLocation ? this.newLocation.trim() : undefined,
       category: this.newCategory || undefined,
+      importance: this.newImportance || undefined,
       completed: false
     };
     this.taskService.addTask(task).subscribe(newTask => {
