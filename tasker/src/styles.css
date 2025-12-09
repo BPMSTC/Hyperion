@@ -14,7 +14,7 @@
 /* Dark-mode-first theme variables. These make the app dark by default
    and provide compatibility vars used throughout the component CSS. */
 :root {
-  --bg: #0b0f14;        /* page background */
+  --bg: #1b1f23;        /* page background */
   --surface: #0f1724;   /* cards, rows */
   --card-elev: rgba(255,255,255,0.02);
   --text: #e6eef8;      /* primary text */
