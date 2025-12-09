@@ -233,6 +233,20 @@ export class TaskList implements OnInit {
     });
   }
 
+  toggleCompletedFilter() {
+    this.filterCompleted = !this.filterCompleted;
+    if (this.filterCompleted) {
+      this.filterOverdue = false;
+    }
+  }
+
+  toggleOverdueFilter() {
+    this.filterOverdue = !this.filterOverdue;
+    if (this.filterOverdue) {
+      this.filterCompleted = false;
+    }
+  }
+
   /**
    * remove: Removes a task from the list and backend.
    */

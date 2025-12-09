@@ -53,7 +53,7 @@
                 type="button"
                 class="filter-btn btn btn-outline-primary"
                 [class.active]="filterCompleted"
-                (click)="filterCompleted = !filterCompleted"
+                (click)="toggleCompletedFilter()"
               >
                 Completed
               </button>
@@ -61,7 +61,7 @@
                 type="button"
                 class="filter-btn btn btn-outline-primary"
                 [class.active]="filterOverdue"
-                (click)="filterOverdue = !filterOverdue"
+                (click)="toggleOverdueFilter()"
               >
                 Overdue
               </button>
