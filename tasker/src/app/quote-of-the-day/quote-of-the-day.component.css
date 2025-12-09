@@ -4,7 +4,6 @@
   border-radius: 10px;
   padding: 12px;
   border: 1px solid var(--widget-border);
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.55);
 }
 
 .card-title {
