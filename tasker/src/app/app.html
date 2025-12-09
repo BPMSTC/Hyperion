@@ -2,9 +2,12 @@
   <input #widgetVisibilityToggle type="checkbox" class="d-none" checked>
   <div class="app-content">
     <div class="header-section">
-      <div class="demo-buttons-container d-flex gap-2 mb-3 flex-wrap">
+      <div class="demo-buttons-container d-flex gap-2 mb-3 flex-wrap align-items-center">
         <button class="btn-demo btn btn-outline-primary btn-sm" (click)="loadDemoTasks()">Load Demo Data</button>
         <button class="btn-demo btn-demo-clear btn btn-outline-danger btn-sm" (click)="clearDemoTasks()">Clear Demo Data</button>
+        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cycleTheme()">
+          <strong>Theme</strong>: {{ themeLabel }}
+        </button>
       </div>
       <h1 class="app-title">Tasker</h1>
     </div>
