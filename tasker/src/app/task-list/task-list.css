@@ -65,6 +65,53 @@
 	padding: 0.5rem;
 }
 
+/* Form controls inside the task-list card should match the dark surface */
+.task-list-card.card input,
+.task-list-card.card textarea,
+.task-list-card.card select,
+.task-list-card.card .form-control {
+	background: var(--input-bg) !important;
+	color: var(--text) !important;
+	border: 1px solid var(--input-border) !important;
+	box-shadow: none !important;
+}
+
+.task-list-card.card input::placeholder,
+.task-list-card.card textarea::placeholder {
+	color: var(--input-placeholder) !important;
+	opacity: 1 !important;
+}
+
+.task-list-card.card input:focus,
+.task-list-card.card textarea:focus,
+.task-list-card.card select:focus,
+.task-list-card.card .form-control:focus {
+	outline: none;
+	border-color: var(--bs-primary) !important;
+	background: #313a49 !important;
+	box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.12) !important;
+}
+
+.task-list-card.card input:hover,
+.task-list-card.card textarea:hover,
+.task-list-card.card select:hover,
+.task-list-card.card .form-control:hover {
+	background: #303841 !important;
+	border-color: #465561 !important;
+}
+
+.task-list-card.card input,
+.task-list-card.card textarea,
+.task-list-card.card select,
+.task-list-card.card .form-control {
+	transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+/* Make small action buttons inside the card contrast on dark background */
+.task-list-card.card .btn {
+	color: var(--text);
+}
+
 
 .task-row {
 	background: var(--surface);

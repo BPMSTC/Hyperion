@@ -20,7 +20,8 @@
   --text: #e6eef8;      /* primary text */
   --muted: #9aa6b2;     /* secondary text */
   --border: #1f2937;    /* borders */
-  --widget-bg: linear-gradient(135deg,#0f1724 0%, #111827 100%);
+  /* Widget background: subtle inverse gradient overlay on top of surface for dark mode */
+  --widget-bg: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(234,102,102,0.06) 100%), var(--surface);
   --widget-text: var(--text);
 
   /* compatibility shims used earlier in styles */
@@ -28,6 +29,10 @@
   --gray-700: var(--muted);
   --gray-600: #94a3b8;
   --gray-500: #9aa6b2;
+  /* form/input colors */
+  --input-bg: #2a3441;
+  --input-border: #384550;
+  --input-placeholder: #97a3b0;
 }
 
 /* Helper when author wants an explicit light theme later */
@@ -42,6 +47,10 @@ html[data-theme="light"] {
   --widget-text: #ffffff;
   --gray-900: var(--text);
   --gray-700: var(--muted);
+  /* Light-theme input overrides */
+  --input-bg: #ffffff;
+  --input-border: #e5e7eb;
+  --input-placeholder: #6b7280;
 }
 
 /* Base page application of variables */
